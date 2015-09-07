@@ -1,0 +1,21 @@
+You have received feedback on your PyCon talk proposal,
+
+"{{proposal.title}}"
+
+A program committee member sent you the following comment,
+
+- - - - - - - - - - - - - - - - - - - - - - -
+{{body}}
+- - - - - - - - - - - - - - - - - - - - - - -
+
+To response to this message directly, please go here:
+
+{{url}}
+
+To edit your talk, please go here:
+
+{{edit_url}}
+
+Regards,
+
+The PyCon Program Committee
