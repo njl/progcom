@@ -1,0 +1,47 @@
+{%extends "base.html"%}
+{%block body %}
+<div class="row">
+    <div class="col-md-8">
+        <h1>{{proposal.title}}</h1>
+        <h4>Category: {{proposal.category}}</h4>
+        <h4>Duration: {{proposal.duration}}</h4>
+        <h4>Python Level: {{proposal.python_level}}</h4>
+        <h4>Proposed By: {{proposal.submitter_name}}</h4>
+        <h4>Last Updated: {{proposal.updated_on.isoformat()}}</h4>
+        <h4>Created: {{proposal.created_on.isoformat()}}</h4>
+        <h3>Audience</h3>
+        <p>
+        {{proposal.audience}}
+        </p>
+        <h3>Description</h3>
+        <p>
+        {{proposal.description}}
+        </p>
+        <h3>Objectives</h3>
+        <p>
+        {{proposal.objectives}}
+        </p>
+        <h3>Detailed Abstract</h3>
+        <p>
+        {{proposal.abstract}}
+        </p>
+        <h3>Outline</h3>
+        <p>
+        {{proposal.outline}}
+        </p>
+        <h3>Additional Notes</h3>
+        <p>
+        {{proposal.additional_notes}}
+        </p>
+        <h3>Additional Requirements</h3>
+        <p>
+        {{proposal.additional_requirements}}
+        </p>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            {{reasons}}
+        </div>
+    </div>
+</div>
+{%endblock body%}

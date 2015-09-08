@@ -5,8 +5,19 @@
         <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css">
     </head>
     <body>
+        <div class="container-fluid">
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-warning" role="alert">{{message}}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
         {% block body %}
         {% endblock %}
+        </div>
         <script src="/static/js/jquery-2.1.4.min.js"></script>
         <script src="/static/js/underscore-1.8.3.min.js"></script>
         <script src="/static/js/bootstrap.3.3.5.min.js"></script>

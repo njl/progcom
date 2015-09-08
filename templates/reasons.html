@@ -1,0 +1,18 @@
+{%extends "base.html"%}
+{%block body %}
+<h3>Reasons</h3>
+<ul>
+    {% for r in reasons %}
+    <li>{{r}}</li>
+    {% endfor %}
+</ul>
+<form method="POST">
+    <div class="form-group">
+        <label for="text">Reason</label>
+        <input type="text" class="form-control" id="text"
+                                                placeholder="New reason text" name="text">
+    </div>
+  <button type="submit" class="btn btn-default">Submit</button>
+</form>
+
+{%endblock body%}
