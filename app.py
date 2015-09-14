@@ -9,6 +9,10 @@ import logic as l
 app = Flask(__name__)
 app.secret_key = os.environ['FLASK_SECRET_KEY']
 
+@app.template_filter('date')
+def date_filter(d):
+    return d.strftime('%b-%-d %I:%M')
+
 """
 Account Silliness
 """

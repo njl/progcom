@@ -7,8 +7,8 @@
         <h4>Duration: {{proposal.duration}}</h4>
         <h4>Python Level: {{proposal.python_level}}</h4>
         <h4>Proposed By: {{proposal.submitter_name}}</h4>
-        <h4>Last Updated: {{proposal.updated_on.isoformat()}}</h4>
-        <h4>Created: {{proposal.created_on.isoformat()}}</h4>
+        <h4>Last Updated: {{proposal.updated_on|date}}</h4>
+        <h4>Created: {{proposal.created_on|date}}</h4>
         <h3>Audience</h3>
         <p>
         {{proposal.audience}}
@@ -100,7 +100,7 @@
                     <td>{%if v.sign == 1%}+{%else%}-{%endif%}{{v.magnitude}}</td>
                     <td>{{v.voter.display_name}}</td>
                     <td>{{v.reason}}</td>
-                    <td>{{v.added_on.isoformat()}}</td>
+                    <td>{{v.added_on|date}}</td>
                 </tr>
             {% endfor %}
                 </table>
@@ -118,17 +118,17 @@
             <div class="panel panel-danger">
                 <div class="panel-heading">
                     <h4>Sent To Proposer</h4>
-                    <p>{{d.frm.display_name}} @{{d.created.isoformat()}}</p>
+                    <p>{{d.frm.display_name}} @{{d.created|date}}</p>
                 </div>
             {% else %}
                 {% if d.frm %}
                 <div class="panel panel-warning">
-                    <div class="panel-heading">{{d.frm.display_name}} @{{d.created.isoformat()}}</div>
+                    <div class="panel-heading">{{d.frm.display_name}} @{{d.created|date}}</div>
                 {%else%}
                 <div class="panel panel-success">
                     <div class="panel-heading">
                     <h4>Message From Proposer</h4>
-                    {{d.frm.display_name}} @{{d.created.isoformat()}}
+                    {{d.frm.display_name}} @{{d.created|date}}
                     </div>
                 {%endif%}
             {% endif %}
