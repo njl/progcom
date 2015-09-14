@@ -49,7 +49,7 @@ CREATE TABLE votes (
     voter       BIGINT REFERENCES users,
     proposal    BIGINT REFERENCES proposals,
 
-    reason      VARCHAR(127),
+    reason      VARCHAR(63),
 
     added_on    TIMESTAMP WITH TIME ZONE DEFAULT now(),
     UNIQUE (voter, proposal)

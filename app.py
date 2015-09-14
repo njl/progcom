@@ -18,6 +18,9 @@ def login_check():
     uid = session.get('userid', None)
     if uid:
         request.user = l.get_user(uid)
+        if not request.user:
+            session.clear()
+            return redirect(url_for('login'))
         return
     if request.path.startswith('/static'):
         return
@@ -104,13 +107,64 @@ Kittendome
 @app.route('/kitten/<int:id>/')
 def kitten(id):
     proposal = l.get_proposal(id)
-    votes = l.get_votes(id)
-    discussion = l.get_discussion(id)
+    raw_votes = l.get_votes(id)
+    raw_discussion = l.get_discussion(id)
     reasons = l.get_reasons()
+    progress = l.kitten_progress()
+    users = set(x.frm for x in raw_discussion if x.frm)
+    users.update(x.voter for x in raw_votes)
+    users = {x:l.get_user(x) for x in users}
+    discussion = []
+    for x in raw_discussion:
+        x = x._asdict()
+        x['frm'] = users[x['frm']] if x['frm'] else None
+        discussion.append(x)
 
+    votes = []
+    for x in raw_votes:
+        x = x._asdict()
+        x['voter'] = users[x['voter']]
+        votes.append(x)
     return render_template('kitten_proposal.html', proposal=proposal,
                             votes=votes, discussion=discussion,
-                            reasons=reasons)
+                            reasons=reasons, progress=progress)
+
+@app.route('/kitten/<int:id>/vote/', methods=['POST'])
+def vote(id):
+    v = request.values.get('vote', None)
+    redir = redirect(url_for('kitten', id=id))
+    if v not in ('+1', '+0', '-0', '-1'):
+        return redir
+    magnitude = int(v[-1])
+    sign = -1 if v[0] == '-' else 1
+    reason = request.values.get('reason', None)
+    if not reason or not reason.strip():
+        reason = None
+    if l.vote(request.user.id, id, magnitude, sign, reason):
+        proposal = l.get_proposal(id)
+        flash('You voted "{}" for "{}" #{}'.format(v, proposal.title, proposal.id))
+        return redirect(url_for('pick'))
+    return redir
+
+@app.route('/kitten/<int:id>/comment/', methods=['POST'])
+def comment(id):
+    comment = request.values.get('comment').strip()
+    redir = redirect(url_for('kitten', id=id))
+    if not comment:
+        flash("Empty comment")
+        return redir
+    l.add_to_discussion(request.user.id, id, comment, feedback=False)
+    return redir
+
+@app.route('/kitten/<int:id>/feedback/', methods=['POST'])
+def feedback(id):
+    comment = request.values.get('feedback').strip()
+    redir = redirect(url_for('kitten', id=id))
+    if not comment:
+        flash('Empty comment')
+        return redir
+    l.add_to_discussion(request.user.id, id, comment, feedback=True)
+    return redir
 
 @app.route('/')
 def pick():

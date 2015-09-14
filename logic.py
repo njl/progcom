@@ -171,6 +171,10 @@ def needs_votes(email):
     results = [x for x in results if x.vote_count == min_vote]
     return random.choice(results).id
 
+def kitten_progress():
+    q = 'SELECT vote_count, COUNT(vote_count) as quantity FROM proposals GROUP BY vote_count'
+    return fetchall(q)
+
 """
 Discussion
 """
@@ -194,8 +198,8 @@ def add_to_discussion(userid, proposal, body, feedback=False):
 
     if userid in users:
         users.remove(userid)
-    q = 'INSERT INTO discussion(frm, proposal, body) VALUES (%s, %s,%s)'
-    execute(q, userid, proposal, body)
+    q = 'INSERT INTO discussion(frm, proposal, body, feedback) VALUES (%s, %s,%s,%s)'
+    execute(q, userid, proposal, body, feedback)
     if users:
         q = '''INSERT INTO unread (proposal, voter) SELECT %s, %s
                 WHERE NOT EXISTS 
