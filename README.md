@@ -14,14 +14,14 @@ to scale the whole thing.
 Configuring the Applications
 ------------------------
 As currently configured, the application connects to a local postgresql
-database. With username, password, and database name 'test'. The unit tests
+database, with username, password, and database name 'test'. The unit tests
 will create the tables for you, or I presume you can do something like
 `psql test < tables.sql`.
 
 The application picks up configuration from environment variables. I like to
 use the envdir tool, but you can set them however you like. A complete set of
-configuration values, reasonable for testing are available in `dev-config/`,
-with the exception of `MANDRILL_API_KEY`. You'll have to get your own one of
+configuration values, reasonable for testing, are available in `dev-config/`.
+The exception is `MANDRILL_API_KEY`. You'll have to get your own one of
 those.
 
 
@@ -38,9 +38,9 @@ Understanding The PyCon Talk Review Process
 ------------
 The process runs in two rounds; the first is called "kittendome", and is
 basically the process of winnowing out talks. Talks which aren't relevant for
-PyCon, poorly prepared proposals, or what-have-you, get eliminated from
-consideration. Talks aren't compared to one another; a low-ish bar is set, and
-talks that don't make it over the bar are removed.
+PyCon, have poorly prepared proposals, or otherwise won't make the cut, get
+eliminated from consideration early. Talks aren't compared to one another; a
+low-ish bar is set, and talks that don't make it over the bar are removed.
 
 The second part of the process is "thunderdome". In thunderdome, talks are
 moved into groups, and those groups are then reviewed one at a time, with
