@@ -129,9 +129,11 @@ def kitten(id):
         x = x._asdict()
         x['voter'] = users[x['voter']]
         votes.append(x)
+    authors = ', '.join(x['name'] for x in proposal['authors'])
     return render_template('kitten_proposal.html', proposal=proposal,
                             votes=votes, discussion=discussion,
-                            reasons=reasons, progress=progress)
+                            reasons=reasons, progress=progress,
+                            authors=authors)
 
 @app.route('/kitten/<int:id>/vote/', methods=['POST'])
 def vote(id):
@@ -146,7 +148,8 @@ def vote(id):
         reason = None
     if l.vote(request.user.id, id, magnitude, sign, reason):
         proposal = l.get_proposal(id)
-        flash('You voted "{}" for "{}" #{}'.format(v, proposal.title, proposal.id))
+        flash('You voted "{}" for "{}" #{}'.format(v, proposal['title'],
+                                                    proposal['id']))
         return redirect(url_for('pick'))
     return redir
 
@@ -172,7 +175,7 @@ def feedback(id):
 
 @app.route('/')
 def pick():
-    id = l.needs_votes(request.user.email)
+    id = l.needs_votes(request.user.email, request.user.id)
     return redirect(url_for('kitten', id=id))
 
 if __name__ == '__main__':

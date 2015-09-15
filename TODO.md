@@ -1,4 +1,3 @@
-- [ ] Multiple authors
 - [ ] Feedback from proposal authors
 - [ ] Better "available" logic (not already voted on should count!)
 - [ ] Integrate with us.pycon.org

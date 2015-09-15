@@ -77,15 +77,14 @@ data = {'id': 123, 'title': 'Title Here', 'category': 'Python',
         'outline':"First I'll talk about one thing, then another",
         'additional_notes': 'Additional stuff',
         'additional_requirements':'I need a fishtank',
-        'submitter_name':'Person Personson',
-        'submitter_email':'person@example.com'}
+        'authors': [{'name':'Person Personson','email':'person@example.com'}]}
 
 def test_proposal_basics():
     assert l.add_proposal(data)
     assert len(l.get_revisions(data['id'])) == 1
     assert not l.add_proposal(data)
     assert len(l.get_revisions(data['id'])) == 1
-    assert l.get_proposal(data['id']).outline == data['outline']
+    assert l.get_proposal(data['id'])['outline'] == data['outline']
 
     changed = data.copy()
     changed['abstract'] = 'This is a longer abstract.'
@@ -103,64 +102,67 @@ def test_voting_basics():
     assert not l.vote(uid, 123, 1, 1)
     assert not l.get_votes(123)
 
-    assert l.get_proposal(123).vote_count == 0
+    assert l.get_proposal(123)['vote_count'] == 0
 
     l.approve_user(uid)
 
     assert l.vote(uid, 123, 112, 112)
     assert l.get_votes(123)[0].magnitude == 1
     assert l.get_votes(123)[0].sign == 1
-    assert l.get_proposal(123).vote_count == 1
+    assert l.get_proposal(123)['vote_count'] == 1
 
     assert l.vote(uid, 123, 0, 1)
     assert len(l.get_votes(123)) == 1
     assert l.get_votes(123)[0].magnitude == 0
     assert l.get_votes(123)[0].sign == 1
-    assert l.get_proposal(123).vote_count == 1
+    assert l.get_proposal(123)['vote_count'] == 1
 
 
 def test_needs_votes():
     proposals = []
+    users = {}
     for n in range(1,10):
         prop = data.copy()
         prop['id'] = n*2
         prop['abstract'] = 'Proposal {}'.format(n)
-        prop['submitter_email'] = '{}@example.com'.format(n)
+        email = '{}@example.com'.format(n)
+        uid = l.add_user(email, email, email)
+        l.approve_user(uid)
+        users[email] = uid
+        prop['authors'] = [{'email':email, 'name':'foo'}]
         l.add_proposal(prop)
         proposals.append(n*2)
-    
-    users = []
-    for n in range(10):
-        uid = l.add_user('{}@example.com'.format(n), 'User {}'.format(n), 'test')
-        l.approve_user(uid)
-        users.append(uid)
+
+    non_author_email = 'none@example.com'
+    non_author_id = l.add_user(non_author_email, non_author_email, non_author_email)
+    l.approve_user(non_author_id)
 
     random.seed(0)
     seen_ids = set()
     for n in range(100):
-        seen_ids.add(l.needs_votes('none@example.com'))
+        seen_ids.add(l.needs_votes(non_author_email, non_author_id))
     assert seen_ids == set(proposals)
 
     seen_ids = set()
     for n in range(100):
-        seen_ids.add(l.needs_votes('2@example.com'))
+        seen_ids.add(l.needs_votes('2@example.com', users['2@example.com']))
     not_2_proposals = set(proposals)
     not_2_proposals.remove(4)
     assert seen_ids == not_2_proposals
 
     for n in range(1, 9):
-        l.vote(users[0], n*2, 1, 1)
+        l.vote(users['8@example.com'], n*2, 1, 1)
 
     seen_ids = set()
     for n in range(100):
-        seen_ids.add(l.needs_votes('none@example.com'))
+        seen_ids.add(l.needs_votes(non_author_email, non_author_id))
     assert seen_ids == set([18])
 
-    l.vote(users[0], 18, 1, 1)
+    l.vote(users['8@example.com'], 18, 1, 1)
 
     seen_ids = set()
     for n in range(100):
-        seen_ids.add(l.needs_votes('none@example.com'))
+        seen_ids.add(l.needs_votes(non_author_email, non_author_id))
     assert seen_ids == set(proposals)
 
 def test_reasons():

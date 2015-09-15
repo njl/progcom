@@ -90,16 +90,24 @@ def list_users():
 """
 Proposal Management
 """
+def _get_proposal_authors(id):
+    q = 'SELECT email, name FROM authors WHERE revision=%s'
+    return [x._asdict() for x in fetchall(q, id)]
+
 def get_proposal(id):
     q = '''SELECT p.id, p.added_on as created_on, r.added_on as updated_on,
                 r.title, r.category, r.duration, r.description, r.audience,
                 r.python_level, r.objectives, r.abstract, r.outline,
-                r.additional_notes, r.additional_requirements, r.submitter_name,
-                p.submitter_email, p.vote_count
+                r.additional_notes, r.additional_requirements,
+                p.vote_count, r.id as rev_id
                 FROM proposals as p, revisions as r
                 WHERE p.id = r.public_id AND p.id=%s 
                 ORDER BY r.added_on DESC LIMIT 1'''
-    return fetchone(q, id)
+    raw = fetchone(q, id)
+    if raw:
+        raw = raw._asdict()
+        raw['authors'] = _get_proposal_authors(raw['rev_id'])
+    return raw
 
 def get_revisions(id):
     q = 'SELECT * FROM revisions WHERE public_id = %s ORDER BY added_on DESC'
@@ -108,27 +116,29 @@ def get_revisions(id):
 def add_proposal(data):
     proposal = get_proposal(data['id'])
     if proposal:
-        raw = proposal._asdict()
         for k,v in data.items():
-            if raw[k] != v:
+            if proposal[k] != v:
                 break
         else:
             return None
     else:
-        q = 'INSERT INTO proposals (id, submitter_email) VALUES (%s, lower(%s))'
-        execute(q, data['id'], data['submitter_email'])
+        q = 'INSERT INTO proposals (id) VALUES (%s)'
+        execute(q, data['id'])
 
     q = '''INSERT INTO revisions 
                 (public_id, title, category, duration, description,
                 audience, python_level, objectives, abstract, outline,
-                additional_notes, additional_requirements, submitter_name)
+                additional_notes, additional_requirements)
                 VALUES
                 (%(id)s, %(title)s, %(category)s, %(duration)s, %(description)s,
                 %(audience)s, %(python_level)s, %(objectives)s, %(abstract)s,
-                %(outline)s, %(additional_notes)s, %(additional_requirements)s,
-                %(submitter_name)s)
+                %(outline)s, %(additional_notes)s, %(additional_requirements)s)
                 RETURNING id'''
-    return scalar(q, **data)
+
+    rev_id = scalar(q, **data)
+    q = 'INSERT INTO authors (email, name, revision) VALUES (%s, %s, %s)'
+    execute(q, [(x['email'], x['name'], rev_id) for x in data['authors']])
+    return rev_id
 
 """
 Voting
@@ -162,11 +172,14 @@ def vote(voter, proposal, magnitude, sign, reason=None):
 def get_votes(proposal):
     return fetchall('SELECT * FROM votes WHERE proposal=%s', proposal)
 
-def needs_votes(email):
+def needs_votes(email, uid):
     q = '''SELECT id, vote_count FROM proposals
-            WHERE submitter_email != lower(%s)
+            WHERE NOT (lower(%s) = ANY(author_emails) )
+            AND NOT (%s = ANY(voters))
             ORDER BY vote_count ASC'''
-    results = fetchall(q, email)
+    results = fetchall(q, email, uid)
+    if not results:
+        return None
     min_vote = results[0].vote_count
     results = [x for x in results if x.vote_count == min_vote]
     return random.choice(results).id
