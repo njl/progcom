@@ -5,6 +5,31 @@
         <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css">
     </head>
     <body>
+        <nav class="navbar navbar-default navbar-static-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">
+                    PyCon Talk Review
+                </a>
+            </div>
+            {% if not request.user %}
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a href="{{url_for("login")}}">Log In</a></li>
+                    <li><a href="{{url_for("new_user")}}">Create Account</a></li>
+                </ul>
+            </div>
+            {% else %}
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a href="{{url_for("
+                    <li><a href="{{url_for("logout")}}">Log Out</a></li>
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+        </nav>
+
         <div class="container-fluid">
 
         {% with messages = get_flashed_messages() %}
