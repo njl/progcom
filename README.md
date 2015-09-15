@@ -9,10 +9,14 @@ busy professionals to come together at the same time to chat on IRC is hard,
 and doesn't feel very scalable. This is my first step towards understanding how
 to scale the whole thing.
 
+
+
 Configuring the Applications
 ------------------------
 As currently configured, the application connects to a local postgresql
-database in the normal place, with username test and password test.
+database. With username, password, and database name 'test'. The unit tests
+will create the tables for you, or I presume you can do something like
+`psql test < tables.sql`.
 
 The application picks up configuration from environment variables. I like to
 use the envdir tool, but you can set them however you like. A complete set of
@@ -20,13 +24,17 @@ configuration values, reasonable for testing are available in `dev-config/`,
 with the exception of `MANDRILL_API_KEY`. You'll have to get your own one of
 those.
 
+
+
 Running the Application
 -----------------
 Make a virtualenv, `pip install -r requirements.pip`. Run the application
 locally via `envdir dev-config ./app.py`, run the tests via
 `envdir dev-config py.test`.
 
-Understanding The Process
+
+
+Understanding The PyCon Talk Review Process
 ------------
 The process runs in two rounds; the first is called "kittendome", and is
 basically the process of winnowing out talks. Talks which aren't relevant for
