@@ -1,4 +1,4 @@
 - [ ] Feedback from proposal authors
-- [ ] Better "available" logic (not already voted on should count!)
+- [ ] Simplify history model?
 - [ ] Integrate with us.pycon.org
 - [ ] Thunderdome!
