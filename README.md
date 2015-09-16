@@ -24,6 +24,9 @@ configuration values, reasonable for testing, are available in `dev-config/`.
 The exception is `MANDRILL_API_KEY`. You'll have to get your own one of
 those.
 
+You can install envdir via `brew install daemontools` on OS X, and `apt-get
+install daemontools` on Ubuntu and Debian.
+
 
 
 Running the Application
