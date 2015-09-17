@@ -49,26 +49,14 @@
 
                 <div class="radio">
                     <label>
-                    <input type="radio" name="vote" id="plus-one" value="+1">
-                    +1 (I am in favor of this proposal and would argue strongly for its inclusion)
+                    <input type="radio" name="vote" id="yea" value="yea">
+                    Yea (I believe this talk should be considered for PyCon)
                     </label>
                 </div>
                 <div class="radio">
                     <label>
-                    <input type="radio" name="vote" id="plus-one" value="+0">
-                    +0 (I don't have any issues with this proposal being included)
-                    </label>
-                </div>
-                <div class="radio">
-                    <label>
-                    <input type="radio" name="vote" id="plus-one" value="-0">
-                    -0 (I don't think this proposal should be included, but would not argue my point strongly)
-                    </label>
-                </div>
-                <div class="radio">
-                    <label>
-                    <input type="radio" name="vote" id="plus-one" value="-1">
-                    -1 (I don't think this proposal belongs at PyCon, and would argue that position strongly)
+                    <input type="radio" name="vote" id="plus-one" value="nay">
+                    Nay (I believe this talk has fatal flaws)
                     </label>
                 </div>
                 <select id="comment-reason">
@@ -98,7 +86,7 @@
                 <table class="table table-condensed table-striped">
             {% for v in votes %}
                 <tr>
-                    <td>{%if v.sign == 1%}+{%else%}-{%endif%}{{v.magnitude}}</td>
+                    <td>{%if v.yea%}Yea{%else%}Nay{%endif%}</td>
                     <td>{{v.voter.display_name}}</td>
                     <td>{{v.reason}}</td>
                     <td>{{v.added_on|date}}</td>

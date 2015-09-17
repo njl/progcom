@@ -99,22 +99,20 @@ def test_voting_basics():
     l.add_proposal(data)
     uid = l.add_user('bob@example.com', 'Bob', 'bob')
     assert not l.get_votes(123)
-    assert not l.vote(uid, 123, 1, 1)
+    assert not l.vote(uid, 123, True)
     assert not l.get_votes(123)
 
     assert l.get_proposal(123)['vote_count'] == 0
 
     l.approve_user(uid)
 
-    assert l.vote(uid, 123, 112, 112)
-    assert l.get_votes(123)[0].magnitude == 1
-    assert l.get_votes(123)[0].sign == 1
+    assert l.vote(uid, 123, True)
+    assert l.get_votes(123)[0].yea
     assert l.get_proposal(123)['vote_count'] == 1
 
-    assert l.vote(uid, 123, 0, 1)
+    assert l.vote(uid, 123, False)
     assert len(l.get_votes(123)) == 1
-    assert l.get_votes(123)[0].magnitude == 0
-    assert l.get_votes(123)[0].sign == 1
+    assert not l.get_votes(123)[0].yea
     assert l.get_proposal(123)['vote_count'] == 1
 
 
@@ -151,14 +149,14 @@ def test_needs_votes():
     assert seen_ids == not_2_proposals
 
     for n in range(1, 9):
-        l.vote(users['8@example.com'], n*2, 1, 1)
+        l.vote(users['8@example.com'], n*2, True)
 
     seen_ids = set()
     for n in range(100):
         seen_ids.add(l.needs_votes(non_author_email, non_author_id))
     assert seen_ids == set([18])
 
-    l.vote(users['8@example.com'], 18, 1, 1)
+    l.vote(users['8@example.com'], 18, True)
 
     seen_ids = set()
     for n in range(100):

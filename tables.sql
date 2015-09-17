@@ -64,8 +64,7 @@ CREATE TABLE vote_reasons (
 CREATE TABLE votes (
     id          BIGSERIAL PRIMARY KEY,
 
-    magnitude   SMALLINT,
-    sign        SMALLINT,
+    yea         BOOLEAN,
 
     voter       BIGINT REFERENCES users,
     proposal    BIGINT REFERENCES proposals,

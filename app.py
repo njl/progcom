@@ -137,18 +137,14 @@ def kitten(id):
 
 @app.route('/kitten/<int:id>/vote/', methods=['POST'])
 def vote(id):
-    v = request.values.get('vote', None)
+    yea  = request.values.get('vote', None) == 'yea'
     redir = redirect(url_for('kitten', id=id))
-    if v not in ('+1', '+0', '-0', '-1'):
-        return redir
-    magnitude = int(v[-1])
-    sign = -1 if v[0] == '-' else 1
     reason = request.values.get('reason', None)
     if not reason or not reason.strip():
         reason = None
-    if l.vote(request.user.id, id, magnitude, sign, reason):
+    if l.vote(request.user.id, id, yea, reason):
         proposal = l.get_proposal(id)
-        flash('You voted "{}" for "{}" #{}'.format(v, proposal['title'],
+        flash('You voted "{}" for "{}" #{}'.format('Yea' if yea else 'Nay', proposal['title'],
                                                     proposal['id']))
         return redirect(url_for('pick'))
     return redir

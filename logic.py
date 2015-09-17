@@ -152,21 +152,19 @@ def add_reason(s):
     q = 'INSERT INTO vote_reasons (description) VALUES (%s) RETURNING id'
     return scalar(q, s)
 
-def vote(voter, proposal, magnitude, sign, reason=None):
+def vote(voter, proposal, yea, reason=None):
     if not get_user(voter).approved:
         return None
 
-    magnitude = 1 if magnitude else 0
-    sign = -1 if sign < 0 else 1
-    q = '''INSERT INTO votes (magnitude, sign, voter, proposal, reason)
-            VALUES (%s, %s, %s, %s, %s)  RETURNING id'''
+    q = '''INSERT INTO votes (voter, proposal, yea, reason)
+            VALUES (%s, %s, %s, %s)  RETURNING id'''
     try:
-        return scalar(q, magnitude, sign, voter, proposal, reason)
+        return scalar(q, voter, proposal, yea, reason)
     except IntegrityError as e:
         pass
-    q = '''UPDATE votes SET magnitude=%s, sign=%s, reason=%s
+    q = '''UPDATE votes SET yea=%s, reason=%s
             WHERE voter=%s AND proposal=%s RETURNING id'''
-    return scalar(q, magnitude, sign, reason, voter, proposal)
+    return scalar(q, yea, reason, voter, proposal)
 
 
 def get_votes(proposal):
