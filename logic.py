@@ -100,7 +100,6 @@ def get_proposal(id):
     raw = result.fetchone()
     if not raw:
         return None
-    print 'raw', raw
     raw = dict(zip(result.keys(), raw))
     authorsT = build_tuple(('name', 'email'))
     raw['authors'] = tuple(authorsT(name, email) 
@@ -132,10 +131,6 @@ def add_proposal(data):
 
     if proposal == data:
         return None
-
-    print 'proposal != data'
-    print proposal
-    print data
 
     if not proposal:
         q = 'INSERT INTO proposals ({}) VALUES ({})'

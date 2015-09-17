@@ -144,8 +144,8 @@ def vote(id):
         reason = None
     if l.vote(request.user.id, id, yea, reason):
         proposal = l.get_proposal(id)
-        flash('You voted "{}" for "{}" #{}'.format('Yea' if yea else 'Nay', proposal['title'],
-                                                    proposal['id']))
+        flash('You voted "{}" for "{}" #{}'.format('Yea' if yea else 'Nay', proposal.title,
+                                                    proposal.id))
         return redirect(url_for('pick'))
     return redir
 
