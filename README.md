@@ -1,3 +1,9 @@
+CURRENTLY A MOVING TARGET
+--------------
+
+This is currently in a pretty unstable state, as I'm just fleshing
+out features. Let me know if you want to help out!
+
 PyCon Program Committee Web App
 -------------------------------
 
