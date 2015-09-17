@@ -1,9 +1,12 @@
 flask
 sqlalchemy
-pytest
-gevent
 bcrypt
 psycopg2
 itsdangerous
 mandrill
+
+gevent
+
+pytest
 mock
+pytest-cov
