@@ -1,4 +1,4 @@
+- [ ] Better user tools (bookmarks, unread, changed since vote)
 - [ ] Feedback from proposal authors
-- [ ] Simplify history model?
 - [ ] Integrate with us.pycon.org
 - [ ] Thunderdome!
