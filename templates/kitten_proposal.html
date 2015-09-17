@@ -97,6 +97,20 @@
             </div>
         </div>
 
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                {% if bookmarked %}
+                    <form method="POST" action="bookmark/remove/">
+                        <button type="submit" class="btn btn-default">Remove Bookmark</button>
+                    </form>
+                {% else %}
+                    <form method="POST" action="bookmark/add/">
+                        <button type="submit" class="btn btn-default">Add Bookmark</button>
+                    </form>
+                {% endif%}
+            </div>
+        </div>
+
 
         <div class="panel panel-primary">
             <div class="panel-heading">

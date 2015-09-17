@@ -31,6 +31,12 @@ CREATE TABLE proposals (
     additional_requirements TEXT
 );
 
+CREATE TABLE bookmarks (
+    voter       BIGINT,
+    proposal    BIGINT,
+    UNIQUE (voter, proposal)
+);
+
 CREATE TABLE vote_reasons (
     id          BIGSERIAL PRIMARY KEY,
     description VARCHAR(127)

@@ -1,4 +1,3 @@
-- [ ] Bookmarks
 - [ ] Unread
 - [ ] Feedback from proposal authors
 - [ ] Integrate with us.pycon.org

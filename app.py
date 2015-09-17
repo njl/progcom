@@ -111,6 +111,10 @@ Kittendome
 def show_votes():
     return render_template('my_votes.html', votes=l.get_my_votes(request.user.id))
 
+@app.route('/bookmarks/')
+def show_bookmarks():
+    return render_template('bookmarks.html', bookmarks=l.get_bookmarks(request.user.id))
+
 @app.route('/kitten/<int:id>/')
 def kitten(id):
     proposal = l.get_proposal(id)
@@ -133,10 +137,11 @@ def kitten(id):
         x['voter'] = users[x['voter']]
         votes.append(x)
     authors = ', '.join(x.name for x in proposal.authors)
+    bookmarked = l.has_bookmark(request.user.id, id)
     return render_template('kitten_proposal.html', proposal=proposal,
                             votes=votes, discussion=discussion,
                             reasons=reasons, progress=progress,
-                            authors=authors)
+                            authors=authors, bookmarked=bookmarked)
 
 @app.route('/kitten/<int:id>/vote/', methods=['POST'])
 def vote(id):
@@ -171,6 +176,16 @@ def feedback(id):
         return redir
     l.add_to_discussion(request.user.id, id, comment, feedback=True)
     return redir
+
+@app.route('/kitten/<int:id>/bookmark/add/', methods=['POST'])
+def add_bookmark(id):
+    l.add_bookmark(request.user.id, id)
+    return redirect(url_for('kitten', id=id))
+
+@app.route('/kitten/<int:id>/bookmark/remove/', methods=['POST'])
+def remove_bookmark(id):
+    l.remove_bookmark(request.user.id, id)
+    return redirect(url_for('kitten', id=id))
 
 @app.route('/')
 def pick():
