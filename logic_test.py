@@ -81,19 +81,13 @@ data = {'id': 123, 'title': 'Title Here', 'category': 'Python',
 
 def test_proposal_basics():
     assert l.add_proposal(data)
-    assert len(l.get_revisions(data['id'])) == 1
     assert not l.add_proposal(data)
-    assert len(l.get_revisions(data['id'])) == 1
-    assert l.get_proposal(data['id'])['outline'] == data['outline']
+    assert l.get_proposal(data['id']).outline == data['outline']
 
     changed = data.copy()
     changed['abstract'] = 'This is a longer abstract.'
 
     assert l.add_proposal(changed)
-    revs = l.get_revisions(data['id'])
-    assert len(revs) == 2
-    assert revs[0].abstract == changed['abstract']
-    assert revs[1].abstract == data['abstract']
 
 def test_voting_basics():
     l.add_proposal(data)
@@ -102,18 +96,18 @@ def test_voting_basics():
     assert not l.vote(uid, 123, True)
     assert not l.get_votes(123)
 
-    assert l.get_proposal(123)['vote_count'] == 0
+    assert l.get_proposal(123).vote_count == 0
 
     l.approve_user(uid)
 
     assert l.vote(uid, 123, True)
     assert l.get_votes(123)[0].yea
-    assert l.get_proposal(123)['vote_count'] == 1
+    assert l.get_proposal(123).vote_count == 1
 
     assert l.vote(uid, 123, False)
     assert len(l.get_votes(123)) == 1
     assert not l.get_votes(123)[0].yea
-    assert l.get_proposal(123)['vote_count'] == 1
+    assert l.get_proposal(123).vote_count == 1
 
 
 def test_needs_votes():

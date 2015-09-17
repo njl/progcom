@@ -95,50 +95,57 @@ def _get_proposal_authors(id):
     return [x._asdict() for x in fetchall(q, id)]
 
 def get_proposal(id):
-    q = '''SELECT p.id, p.added_on as created_on, r.added_on as updated_on,
-                r.title, r.category, r.duration, r.description, r.audience,
-                r.python_level, r.objectives, r.abstract, r.outline,
-                r.additional_notes, r.additional_requirements,
-                p.vote_count, r.id as rev_id
-                FROM proposals as p, revisions as r
-                WHERE p.id = r.public_id AND p.id=%s 
-                ORDER BY r.added_on DESC LIMIT 1'''
-    raw = fetchone(q, id)
-    if raw:
-        raw = raw._asdict()
-        raw['authors'] = _get_proposal_authors(raw['rev_id'])
-    return raw
-
-def get_revisions(id):
-    q = 'SELECT * FROM revisions WHERE public_id = %s ORDER BY added_on DESC'
-    return fetchall(q, id)
+    q = 'SELECT * FROM proposals WHERE id=%s'
+    result = _e.execute(q, id)
+    raw = result.fetchone()
+    if not raw:
+        return None
+    print 'raw', raw
+    raw = dict(zip(result.keys(), raw))
+    authorsT = build_tuple(('name', 'email'))
+    raw['authors'] = tuple(authorsT(name, email) 
+                            for name, email in zip(raw['author_names'],
+                                                raw['author_emails']))
+    del raw['author_names']
+    del raw['author_emails']
+    keys, values = zip(*raw.items())
+    T = build_tuple(keys)
+    return T(*values)
 
 def add_proposal(data):
-    proposal = get_proposal(data['id'])
+    data = data.copy()
+    emails, names = zip(*((x['email'], x['name']) for x in data['authors']))
+    data['author_emails'] = list(emails)
+    data['author_names'] = list(names)
+    del data['authors']
+
+    keys = ('id', 'author_emails', 'author_names', 'title',
+            'category', 'duration', 'description', 'audience',
+            'python_level', 'objectives', 'abstract', 'outline',
+            'additional_notes', 'additional_requirements')
+
+    q = 'SELECT {} FROM proposals WHERE id=%s'.format(', '.join(keys))
+    proposal = fetchone(q, data['id'])
+
     if proposal:
-        for k,v in data.items():
-            if proposal[k] != v:
-                break
-        else:
-            return None
+        proposal = proposal._asdict()
+
+    if proposal == data:
+        return None
+
+    print 'proposal != data'
+    print proposal
+    print data
+
+    if not proposal:
+        q = 'INSERT INTO proposals ({}) VALUES ({})'
+        q = q.format(', '.join(keys), ', '.join('%({})s'.format(x) for x in keys))
     else:
-        q = 'INSERT INTO proposals (id) VALUES (%s)'
-        execute(q, data['id'])
+        q = 'UPDATE proposals SET {}, updated=now() WHERE id=%(id)s'
+        q = q.format(', '.join('{0}=%({0})s'.format(x) for x in keys))
 
-    q = '''INSERT INTO revisions 
-                (public_id, title, category, duration, description,
-                audience, python_level, objectives, abstract, outline,
-                additional_notes, additional_requirements)
-                VALUES
-                (%(id)s, %(title)s, %(category)s, %(duration)s, %(description)s,
-                %(audience)s, %(python_level)s, %(objectives)s, %(abstract)s,
-                %(outline)s, %(additional_notes)s, %(additional_requirements)s)
-                RETURNING id'''
-
-    rev_id = scalar(q, **data)
-    q = 'INSERT INTO authors (email, name, revision) VALUES (%s, %s, %s)'
-    execute(q, [(x['email'], x['name'], rev_id) for x in data['authors']])
-    return rev_id
+    execute(q, **data)
+    return data['id']
 
 """
 Voting

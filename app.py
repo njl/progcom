@@ -129,7 +129,7 @@ def kitten(id):
         x = x._asdict()
         x['voter'] = users[x['voter']]
         votes.append(x)
-    authors = ', '.join(x['name'] for x in proposal['authors'])
+    authors = ', '.join(x.name for x in proposal.authors)
     return render_template('kitten_proposal.html', proposal=proposal,
                             votes=votes, discussion=discussion,
                             reasons=reasons, progress=progress,

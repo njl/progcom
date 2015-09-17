@@ -10,18 +10,14 @@ CREATE UNIQUE INDEX idx_users_email
     ON users (lower(email));
 
 CREATE TABLE proposals (
-    id              BIGINT PRIMARY KEY,
-    added_on        TIMESTAMP WITH TIME ZONE DEFAULT now(),
-    vote_count      INT DEFAULT 0,     --Total # of votes
-    author_emails   VARCHAR(254)[] DEFAULT '{}',
-    voters          BIGINT[] DEFAULT '{}'
-);
-
-
-CREATE TABLE revisions (
-    id                      BIGSERIAL PRIMARY KEY,
-    public_id               BIGINT REFERENCES proposals,
+    id                      BIGINT PRIMARY KEY,
+    updated                 TIMESTAMP WITH TIME ZONE DEFAULT now(),
     added_on                TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    vote_count              INT DEFAULT 0,     --Total # of votes
+    voters                  BIGINT[] DEFAULT '{}',
+
+    author_emails           VARCHAR(254)[],
+    author_names            VARCHAR(254)[],
     title                   VARCHAR(254),
     category                VARCHAR(127),
     duration                VARCHAR(63),
@@ -34,27 +30,6 @@ CREATE TABLE revisions (
     additional_notes        TEXT,
     additional_requirements TEXT
 );
-CREATE INDEX idx_proposal_id ON revisions (public_id);
-
-CREATE TABLE authors (
-    id          BIGSERIAL PRIMARY KEY,
-    email       VARCHAR(254),
-    name        VARCHAR(254),
-    revision    BIGINT REFERENCES revisions
-);
-
-CREATE OR REPLACE FUNCTION authors_change() RETURNS trigger AS
-$$
-BEGIN
-    UPDATE proposals SET
-    author_emails=ARRAY(SELECT lower(email) FROM authors 
-                        WHERE revision=NEW.revision)
-    WHERE id=(SELECT public_id FROM revisions WHERE id=NEW.revision);
-    RETURN NEW;
-END;
-$$ LANGUAGE 'plpgsql';
-CREATE TRIGGER authors_change_trigger AFTER INSERT OR UPDATE
-    ON authors FOR EACH ROW EXECUTE PROCEDURE authors_change();
 
 CREATE TABLE vote_reasons (
     id          BIGSERIAL PRIMARY KEY,
