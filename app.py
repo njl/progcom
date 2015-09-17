@@ -107,6 +107,9 @@ def add_reason():
 """
 Kittendome
 """
+@app.route('/votes/')
+def show_votes():
+    return render_template('my_votes.html', votes=l.get_my_votes(request.user.id))
 
 @app.route('/kitten/<int:id>/')
 def kitten(id):

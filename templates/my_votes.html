@@ -1,0 +1,14 @@
+{%extends "base.html"%}
+{%block body %}
+<table class="table table-striped table-condensed">
+    {% for v in votes %}
+    {% with updated = v.added_on < v.updated %}
+    <tr{%if updated%} class="warning"{%endif%}>
+        <td><a href="{{url_for("kitten", id=v.proposal)}}">{{v.title}} (#{{v.proposal}})</a></td>
+        <td>{%if v.yea%}Yea{%else%}Nay{%endif%}</td>
+        <td>{{v.added_on|date}}</td>
+        <td>{% if updated%}Updated Since Your Vote{%endif%}</td>
+    {% endwith%}
+    {% endfor %}
+</table>
+{%endblock body%}

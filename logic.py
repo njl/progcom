@@ -123,11 +123,18 @@ def add_proposal(data):
             'python_level', 'objectives', 'abstract', 'outline',
             'additional_notes', 'additional_requirements')
 
+
     q = 'SELECT {} FROM proposals WHERE id=%s'.format(', '.join(keys))
     proposal = fetchone(q, data['id'])
 
     if proposal:
         proposal = proposal._asdict()
+
+    for k in set(data.keys()) - set(keys):
+        del data[k]
+
+    for k in set(proposal.keys()) - set(keys):
+        del proposal[k]
 
     if proposal == data:
         return None
@@ -164,7 +171,7 @@ def vote(voter, proposal, yea, reason=None):
         return scalar(q, voter, proposal, yea, reason)
     except IntegrityError as e:
         pass
-    q = '''UPDATE votes SET yea=%s, reason=%s
+    q = '''UPDATE votes SET yea=%s, reason=%s, added_on=now()
             WHERE voter=%s AND proposal=%s RETURNING id'''
     return scalar(q, yea, reason, voter, proposal)
 
@@ -187,6 +194,13 @@ def needs_votes(email, uid):
 def kitten_progress():
     q = 'SELECT vote_count, COUNT(vote_count) as quantity FROM proposals GROUP BY vote_count'
     return fetchall(q)
+
+def get_my_votes(uid):
+    q = '''SELECT votes.*, proposals.updated AS updated,
+            proposals.title AS title
+            FROM votes INNER JOIN proposals ON (votes.proposal = proposals.id)
+            WHERE votes.voter = %s'''
+    return fetchall(q, uid)
 
 """
 Discussion

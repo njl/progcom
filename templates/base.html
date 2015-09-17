@@ -22,6 +22,7 @@
             {% else %}
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
+                    <li><a href="{{url_for("show_votes")}}">Your Votes</a></li>
                     <li><a href="{{url_for("logout")}}">Log Out</a></li>
                 </ul>
             </div>
