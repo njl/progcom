@@ -45,34 +45,35 @@
             </div>
             <div class="panel-body">
                 <form method="POST" action="vote/">
-
-
-                <div class="radio">
+                <div class="radio vote-radio">
                     <label>
                     <input type="radio" name="vote" id="yea" value="yea">
-                    Yea (I believe this talk should be considered for PyCon)
+                    <strong>Yea</strong> (I believe this talk meets minimal requirements for consideration as a talk at PyCon)
                     </label>
                 </div>
-                <div class="radio">
+                <div class="radio vote-radio">
                     <label>
                     <input type="radio" name="vote" id="plus-one" value="nay">
-                    Nay (I believe this talk has fatal flaws)
+                    <strong>Nay</strong> (I believe this talk doesn't meet the minimal threshold for consideration)
                     </label>
                 </div>
-                <select id="comment-reason">
-                    <option disabled="disabled" selected="selected">Default Reasons for Negative Votes</option>
-                    {% for r in reasons %}
-                        <option>{{r}}</option>
-                    {% endfor %}
-                </select>
-                </section>
+                <div class="panel panel-default" style="display:none;" id="reasons-panel">
+                      <div class="panel-body">
+
                     <div class="form-group">
-                        <label for="reason">Vote Reason</label>
+                        <label for="reason">Vote Reason (<span id="character-count">63</span> characters left)</label>
                         <input type="text" class="form-control" id="reason" placeholder="Short Vote Reason" name="reason">
-                        <p class="help-block">Characters left <span id="character-count">63</span>.
-                            A simple reason isn't necessary, but it is encouraged!</p>
+                        <p class="help-block">A simple reason isn't necessary, but it is encouraged!</p>
                     </div>
-                    <button type="submit" class="btn btn-default">Submit</button>
+                    <select id="comment-reason">
+                        <option disabled="disabled" selected="selected">Default Reasons for Negative Votes</option>
+                        {% for r in reasons %}
+                            <option>{{r}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+                <button type="submit" class="btn btn-default">Submit</button>
                 </form>
         </div>
         </div>
