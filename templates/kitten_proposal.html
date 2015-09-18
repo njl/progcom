@@ -83,7 +83,6 @@
             <div class="panel-heading">
                 <h3 class="panel-title">Votes</h3>
             </div>
-            <div class="panel-body">
                 <table class="table table-condensed table-striped">
             {% for v in votes %}
                 <tr>
@@ -94,7 +93,6 @@
                 </tr>
             {% endfor %}
                 </table>
-            </div>
         </div>
 
         <div class="panel panel-primary">
@@ -190,14 +188,13 @@
             </div>
             </div>
         <div class="panel panel-primary">
-            <div class="panel-body">
+            <div class="panel-heading">Overall Progress</div>
                 <table class="table table-condensed table-hover">
                     <tr><th>Votes</th><th>Proposals</th></tr>
                     {% for p in progress%}
                     <tr><td>{{p.vote_count}}</td><td>{{p.quantity}}</td></tr>
                     {%endfor%}
                 </table>
-            </div>
         </div>
     </div>
 </div>
