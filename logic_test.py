@@ -182,9 +182,9 @@ def test_discussion():
     assert l.get_discussion(proposal)[0].body == 'Lorem ipsum'
 
     l.add_to_discussion(users[-1], proposal, 'dolor sit')
-    assert l.get_unread(users[0]) == [proposal]
+    assert [x.id for x in l.get_unread(users[0])] == [proposal]
     l.add_to_discussion(users[-1], proposal, 'amet, consectetur')
-    assert l.get_unread(users[0]) == [proposal]
+    assert [x.id for x in l.get_unread(users[0])] == [proposal]
 
     l.mark_read(users[0], proposal)
     for u in users:

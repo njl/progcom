@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css">
+    </head>
+    <body>
+
+        <div class="container-fluid">
+            <div class="col-md-6">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-warning" role="alert">{{message}}</div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+        <h3>Author Feedback</h3>
+        <h4>You Are: {{name}}</h4>
+        <h4>Proposal: {{proposal.title}} (#{{proposal.id}})</h4>
+        <p>This page is for you to provide feedback to the PyCon program
+            committee. We have some suggestions or questions, shown below.</p>
+
+        <p>Please be aware that any changes you make to your proposal will take
+        a few hours to propagate to our proposal review system.</p>
+
+        <table class="table table-striped">
+            {% for m in messages %}
+            {% if m.feedback %}
+                <tr>
+                    <th>{{m.display_name}}</th>
+                    <td>{{m.created|date}}</td>
+                    <td>{{m.body}}</td>
+                </tr>
+            {% endif %}
+            {% if m.name %}
+                <tr class="success">
+                    <th>{{m.name}}</th>
+                    <td>{{m.created|date}}</td>
+                    <td>{{m.body}}</td>
+                </tr>
+            {% endif %}
+            {% endfor %}
+        </table>
+
+        <form method="POST">
+            <div class="form-group">
+            <textarea name="message" class="form-control" rows="3"></textarea>
+            </div>
+              <div class="form-group">
+            <button type="submit" class="btn btn-default">Send</button>
+              </div>
+
+        </form>
+
+        </div>
+    </body>
+</html>

@@ -91,9 +91,6 @@ def list_users():
 """
 Proposal Management
 """
-def _get_proposal_authors(id):
-    q = 'SELECT email, name FROM authors WHERE revision=%s'
-    return [x._asdict() for x in fetchall(q, id)]
 
 def get_proposal(id):
     q = 'SELECT * FROM proposals WHERE id=%s'
@@ -205,7 +202,10 @@ def vote(voter, proposal, yea, reason=None):
 
 
 def get_votes(proposal):
-    return fetchall('SELECT * FROM votes WHERE proposal=%s', proposal)
+    q = '''SELECT votes.*, users.display_name
+            FROM votes LEFT JOIN users ON (votes.voter=users.id)
+            WHERE proposal=%s'''
+    return fetchall(q, proposal)
 
 def needs_votes(email, uid):
     q = '''SELECT id, vote_count FROM proposals
@@ -242,10 +242,12 @@ _TEMPLATE_PATH = os.path.join(os.path.dirname(__file__), 'templates')
 _JINJA = Environment(loader=FileSystemLoader(_TEMPLATE_PATH))
 
 def get_discussion(proposal):
-    q = 'SELECT * FROM discussion WHERE proposal=%s ORDER BY created ASC'
+    q = '''SELECT discussion.*, users.display_name
+           FROM discussion LEFT JOIN users ON (users.id=discussion.frm)
+            WHERE proposal=%s ORDER BY created ASC'''
     return fetchall(q, proposal)
 
-def add_to_discussion(userid, proposal, body, feedback=False):
+def add_to_discussion(userid, proposal, body, feedback=False, name=None):
     q = 'SELECT voter FROM votes WHERE proposal=%s'
     users = set(x.voter for x in fetchall(q, proposal))
     q = 'SELECT frm FROM discussion WHERE proposal=%s AND frm IS NOT NULL'
@@ -253,8 +255,14 @@ def add_to_discussion(userid, proposal, body, feedback=False):
 
     if userid in users:
         users.remove(userid)
-    q = 'INSERT INTO discussion(frm, proposal, body, feedback) VALUES (%s, %s,%s,%s)'
-    execute(q, userid, proposal, body, feedback)
+
+    if userid:
+        q = 'INSERT INTO discussion(frm, proposal, body, feedback) VALUES (%s, %s,%s,%s)'
+        execute(q, userid, proposal, body, feedback)
+    else:
+        q = 'INSERT INTO discussion(proposal, body, name) VALUES (%s, %s, %s)'
+        execute(q, proposal, body, name)
+
     if users:
         q = '''INSERT INTO unread (proposal, voter) SELECT %s, %s
                 WHERE NOT EXISTS 
@@ -264,15 +272,20 @@ def add_to_discussion(userid, proposal, body, feedback=False):
     if feedback:
         full_proposal = get_proposal(proposal)
         email = _JINJA.get_template('feedback_notice.txt')
-        email = email.render(proposal=full_proposal, body=body, url='TODO',
-                                edit_url='TODO') #TODO
-        msg = {'text': email,
-                'subject': 'Feedback on Your PyCon Talk Proposal',
-                'from_email': _EMAIL_FROM,
-                'from_name': 'PyCon Program Committee',
-                'to': [{'email':'TODO'}],
-                'auto_html':False,}
-        _MANDRILL.messages.send(msg)
+        for to, key in generate_author_keys(proposal).items():
+            url = 'http://{}/feedback/{}'.format(_WEB_HOST, key)
+            email = email.render(proposal=full_proposal, body=body, 
+                                url=url, edit_url='TODO') #TODO
+            msg = {'text': email,
+                    'subject': 'Feedback on Your PyCon Talk Proposal',
+                    'from_email': _EMAIL_FROM,
+                    'from_name': 'PyCon Program Committee',
+                    'to': [{'email':email}],
+                    'auto_html':False,}
+            print msg
+            print msg['text']
+            #TODO: Turn emailing back on
+            #_MANDRILL.messages.send(msg)
 
 
 def mark_read(userid, proposal):
@@ -288,3 +301,17 @@ def get_unread(userid):
 def is_unread(userid, proposal):
     q = 'SELECT 1 FROM unread WHERE voter=%s AND proposal=%s'
     return bool(scalar(q, userid, proposal))
+
+def generate_author_keys(id):
+    q = 'SELECT author_names, author_emails FROM proposals WHERE id=%s'
+    authors = fetchone(q, id)
+    rv = {}
+    for e, name in zip(authors.author_emails, authors.author_names):
+        rv[e] = _USER_FB_ITSD.dumps([name, id])
+    return rv
+
+def check_author_key(key):
+    try:
+        return _USER_FB_ITSD.loads(key)
+    except Exception as e:
+        return None, None

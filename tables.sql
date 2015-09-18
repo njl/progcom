@@ -73,6 +73,7 @@ CREATE TRIGGER votes_change_trigger AFTER INSERT OR UPDATE
 CREATE TABLE discussion (
     id          BIGSERIAL PRIMARY KEY,
 
+    name        VARCHAR(254) DEFAULT NULL, --Author feedback force
     frm         BIGINT REFERENCES users,
     proposal    BIGINT REFERENCES proposals,
     created     TIMESTAMP WITH TIME ZONE DEFAULT now(),

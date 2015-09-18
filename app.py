@@ -30,6 +30,8 @@ def login_check():
         return
     if request.path.startswith('/user'):
         return
+    if request.path.startswith('/feedback/'):
+        return
     return redirect(url_for('login'))
 
 @app.route('/user/login/')
@@ -121,32 +123,20 @@ def show_unread():
 
 @app.route('/kitten/<int:id>/')
 def kitten(id):
+    #TODO: Can't manually view your own proposal
     unread = l.is_unread(request.user.id, id)
     proposal = l.get_proposal(id)
-    raw_votes = l.get_votes(id)
-    raw_discussion = l.get_discussion(id)
+    discussion = l.get_discussion(id)
+
+    votes = l.get_votes(id)
     reasons = l.get_reasons()
     progress = l.kitten_progress()
-    users = set(x.frm for x in raw_discussion if x.frm)
-    users.update(x.voter for x in raw_votes)
-    users = {x:l.get_user(x) for x in users}
-    discussion = []
-    for x in raw_discussion:
-        x = x._asdict()
-        x['frm'] = users[x['frm']] if x['frm'] else None
-        discussion.append(x)
-
-    votes = []
-    existing_vote = None
-    for x in raw_votes:
-        x = x._asdict()
-        if x['voter'] == request.user.id:
-            existing_vote = x
-        x['voter'] = users[x['voter']]
-        votes.append(x)
     authors = ', '.join(x.name for x in proposal.authors)
     bookmarked = l.has_bookmark(request.user.id, id)
 
+    existing_vote = None
+    if request.user.id in [x.voter for x in votes]:
+        existing_vote = [x for x in votes if x.voter == request.user.id][0]
 
     return render_template('kitten_proposal.html', proposal=proposal,
                             votes=votes, discussion=discussion,
@@ -203,6 +193,31 @@ def remove_bookmark(id):
 def mark_read(id):
     l.mark_read(request.user.id, id)
     return redirect(url_for('kitten', id=id))
+
+@app.route('/feedback/<key>')
+def author_feedback(key):
+    name, id = l.check_author_key(key)
+    if not name:
+        return render_template('bad_feedback_key.html')
+    proposal = l.get_proposal(id)
+    return render_template('author_feedback.html', name=name, 
+                            proposal=proposal, messages=l.get_discussion(id))
+
+
+@app.route('/feedback/<key>', methods=['POST'])
+def author_post_feedback(key):
+    name, id = l.check_author_key(key)
+    if not name:
+        return render_template('bad_feedback_key.html')
+    message = request.values.get('message', '').strip()
+    redir = redirect(url_for('author_feedback', key=key)) 
+    if not message:
+        flash('Empty message')
+        return redir
+    l.add_to_discussion(None, id, request.values.get('message'), name=name)
+    flash('Your message has been saved!')
+    return redir
+
 
 @app.route('/')
 def pick():

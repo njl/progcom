@@ -87,7 +87,7 @@
             {% for v in votes %}
                 <tr>
                     <td>{%if v.yea%}Yea{%else%}Nay{%endif%}</td>
-                    <td>{{v.voter.display_name}}</td>
+                    <td>{{v.display_name}}</td>
                     <td>{{v.reason}}</td>
                     <td>{{v.added_on|date}}</td>
                 </tr>
@@ -122,8 +122,14 @@
 {% endif %}
             <table class="table table-striped">
             {% for d in discussion %}
-            <tr {%if d.feedback%}class="danger"{%endif%}>
-                <td>{{d.frm.display_name}}</td><td>{{d.created|date}}</td><td>{%if d.feedback%}<strong>Feedback to Author</strong>{%endif%}</td></tr>
+            <tr {%if d.feedback%}class="danger"{%endif%} 
+                        {% if d.name%}class="success"{%endif%}>
+                <td>{%if d.name%}{{d.name}}{%else%}{{d.display_name}}{%endif%}</td>
+                <td>{{d.created|date}}</td>
+                <td>{%if d.feedback%}<strong>To Author</strong>{%endif%}
+                    {%if d.name%}<strong>From Author</strong>{%endif%}
+                </td>
+            </tr>
             <tr><td  style="padding-bottom:2em;" colspan="2">{{d.body}}</td></tr>
             {% endfor %}
             </table>
