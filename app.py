@@ -132,16 +132,22 @@ def kitten(id):
         discussion.append(x)
 
     votes = []
+    existing_vote = None
     for x in raw_votes:
         x = x._asdict()
+        if x['voter'] == request.user.id:
+            existing_vote = x
         x['voter'] = users[x['voter']]
         votes.append(x)
     authors = ', '.join(x.name for x in proposal.authors)
     bookmarked = l.has_bookmark(request.user.id, id)
+
+
     return render_template('kitten_proposal.html', proposal=proposal,
                             votes=votes, discussion=discussion,
                             reasons=reasons, progress=progress,
-                            authors=authors, bookmarked=bookmarked)
+                            authors=authors, bookmarked=bookmarked,
+                            existing_vote=existing_vote)
 
 @app.route('/kitten/<int:id>/vote/', methods=['POST'])
 def vote(id):

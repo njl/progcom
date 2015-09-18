@@ -47,22 +47,22 @@
                 <form method="POST" action="vote/">
                 <div class="radio vote-radio">
                     <label>
-                    <input type="radio" name="vote" id="yea" value="yea">
+                        <input type="radio" name="vote" id="yea" value="yea" {%if existing_vote and existing_vote.yea %} checked="checked"{%endif%}>
                     <strong>Yea</strong> (I believe this talk meets minimal requirements for consideration as a talk at PyCon)
                     </label>
                 </div>
                 <div class="radio vote-radio">
                     <label>
-                    <input type="radio" name="vote" id="plus-one" value="nay">
+                    <input type="radio" name="vote" id="plus-one" value="nay"{%if existing_vote and not existing_vote.yea %} checked="checked"{%endif%}>
                     <strong>Nay</strong> (I believe this talk doesn't meet the minimal threshold for consideration)
                     </label>
                 </div>
-                <div class="panel panel-default" style="display:none;" id="reasons-panel">
+                <div class="panel panel-default" {% if not existing_vote or existing_vote.yea%}style="display:none;"{%endif%} id="reasons-panel">
                       <div class="panel-body">
 
                     <div class="form-group">
                         <label for="reason">Vote Reason (<span id="character-count">63</span> characters left)</label>
-                        <input type="text" class="form-control" id="reason" placeholder="Short Vote Reason" name="reason">
+                        <input type="text" class="form-control" id="reason" placeholder="Short Vote Reason" name="reason" {%if existing_vote and not existing_vote.yea%} value="{{existing_vote.reason}}"{%endif%}>
                         <p class="help-block">A simple reason isn't necessary, but it is encouraged!</p>
                     </div>
                     <select id="comment-reason">
