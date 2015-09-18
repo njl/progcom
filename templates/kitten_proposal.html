@@ -97,11 +97,6 @@
 
         <div class="panel panel-primary">
             <div class="panel-body">
-                {% if unread %}
-                <form method="POST" action="mark_read/">
-                    <button type="submit" class="btn btn-danger">Mark Read</button>
-                </form>
-                {% endif %}
                 {% if bookmarked %}
                     <form method="POST" action="bookmark/remove/">
                         <button type="submit" class="btn btn-default">Remove Bookmark</button>
@@ -125,44 +120,30 @@
                 <h3 class="panel-title">Discussion</h3>
             </div>
 {% endif %}
-            <div class="panel-body">
+            <table class="table table-striped">
             {% for d in discussion %}
-            {% if d.feedback %}
-            <div class="panel panel-danger">
-                <div class="panel-heading">
-                    <h4>Sent To Proposer</h4>
-                    <p>{{d.frm.display_name}} @{{d.created|date}}</p>
-                </div>
-            {% else %}
-                {% if d.frm %}
-                <div class="panel panel-warning">
-                    <div class="panel-heading">{{d.frm.display_name}} @{{d.created|date}}</div>
-                {%else%}
-                <div class="panel panel-success">
-                    <div class="panel-heading">
-                    <h4>Message From Proposer</h4>
-                    {{d.frm.display_name}} @{{d.created|date}}
-                    </div>
-                {%endif%}
-            {% endif %}
-            <div class="panel-body">
-<pre>
-{{d.body}}
-</pre>
-            </div>
-            </div>
+            <tr {%if d.feedback%}class="danger"{%endif%}>
+                <td>{{d.frm.display_name}}</td><td>{{d.created|date}}</td><td>{%if d.feedback%}<strong>Feedback to Author</strong>{%endif%}</td></tr>
+            <tr><td  style="padding-bottom:2em;" colspan="2">{{d.body}}</td></tr>
             {% endfor %}
-            <div class="">
+            </table>
+            <div class="panel-body">
+                {% if unread %}
+                <form method="POST" action="mark_read/">
+                    <button type="submit" class="btn btn-danger">Mark Read</button>
+                </form>
+                {% endif %}
+            </div>
+            <div class="panel-body">
                 <form method="POST" action="comment/">
                     <div class="form-group">
                         <label for="comment">Add Comment</label>
                         <textarea type="" class="form-control" id="comment" placeholder="Internal Comment" name="comment"></textarea>
-                        <p class="help-block">Please be kind and succinct in your comments.</p>
+                        <p class="help-block">Please be both kind and succinct with your comments.</p>
                     </div>
                     <button type="submit" class="btn btn-default">Submit</button>
                 </form>
             </div>
-        </div>
         </div>
 
 
