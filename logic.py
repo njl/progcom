@@ -78,9 +78,10 @@ def change_pw(id, pw):
     return bool(scalar(q, _mangle_pw(pw), id))
 
 def get_user(id):
-    q = '''SELECT id, email, display_name, approved_on IS NOT NULL AS approved
+    q = '''SELECT id, email, display_name, approved_on IS NOT NULL AS approved,
+            EXISTS (SELECT 1 FROM unread WHERE voter=%s limit 1) as unread
             FROM users WHERE id=%s'''
-    return fetchone(q, id)
+    return fetchone(q, id, id)
 
 def list_users():
     q = '''SELECT id, email, display_name, created_on, approved_on
@@ -279,6 +280,11 @@ def mark_read(userid, proposal):
     execute(q, userid, proposal)
 
 def get_unread(userid):
-    q = 'SELECT proposal FROM unread WHERE voter=%s'
-    return [x.proposal for x in fetchall(q, userid)]
+    q = '''SELECT unread.proposal as id, proposals.title as title
+                FROM unread LEFT JOIN proposals ON (unread.proposal = proposals.id)
+                WHERE voter=%s'''
+    return fetchall(q, userid)
 
+def is_unread(userid, proposal):
+    q = 'SELECT 1 FROM unread WHERE voter=%s AND proposal=%s'
+    return bool(scalar(q, userid, proposal))

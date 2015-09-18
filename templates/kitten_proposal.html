@@ -99,6 +99,11 @@
 
         <div class="panel panel-primary">
             <div class="panel-body">
+                {% if unread %}
+                <form method="POST" action="mark_read/">
+                    <button type="submit" class="btn btn-danger">Mark Read</button>
+                </form>
+                {% endif %}
                 {% if bookmarked %}
                     <form method="POST" action="bookmark/remove/">
                         <button type="submit" class="btn btn-default">Remove Bookmark</button>
@@ -111,11 +116,17 @@
             </div>
         </div>
 
-
+{% if unread %}
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <h3 class="panel-title">Unread Discussion</h3>
+            </div>
+{% else %}
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h3 class="panel-title">Discussion</h3>
             </div>
+{% endif %}
             <div class="panel-body">
             {% for d in discussion %}
             {% if d.feedback %}

@@ -1,0 +1,12 @@
+
+{%extends "base.html"%}
+{%block body %}
+<table class="table table-striped table-condensed">
+    {% for u in unread %}
+    <tr><td><a href="{{url_for("kitten", id=u.id)}}">{{u.title}}</a></td>
+        <td>#{{u.id}}</td></tr>
+    {% else %}
+    <tr><td>Nothing unread!</td></tr>
+    {% endfor %}
+</table>
+{%endblock body%}

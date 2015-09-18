@@ -115,8 +115,13 @@ def show_votes():
 def show_bookmarks():
     return render_template('bookmarks.html', bookmarks=l.get_bookmarks(request.user.id))
 
+@app.route('/unread/')
+def show_unread():
+    return render_template('unread.html', unread=l.get_unread(request.user.id)) 
+
 @app.route('/kitten/<int:id>/')
 def kitten(id):
+    unread = l.is_unread(request.user.id, id)
     proposal = l.get_proposal(id)
     raw_votes = l.get_votes(id)
     raw_discussion = l.get_discussion(id)
@@ -147,7 +152,8 @@ def kitten(id):
                             votes=votes, discussion=discussion,
                             reasons=reasons, progress=progress,
                             authors=authors, bookmarked=bookmarked,
-                            existing_vote=existing_vote)
+                            existing_vote=existing_vote,
+                            unread=unread)
 
 @app.route('/kitten/<int:id>/vote/', methods=['POST'])
 def vote(id):
@@ -191,6 +197,11 @@ def add_bookmark(id):
 @app.route('/kitten/<int:id>/bookmark/remove/', methods=['POST'])
 def remove_bookmark(id):
     l.remove_bookmark(request.user.id, id)
+    return redirect(url_for('kitten', id=id))
+
+@app.route('/kitten/<int:id>/mark_read/', methods=['POST'])
+def mark_read(id):
+    l.mark_read(request.user.id, id)
     return redirect(url_for('kitten', id=id))
 
 @app.route('/')
