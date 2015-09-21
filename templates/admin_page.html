@@ -1,0 +1,8 @@
+{%extends "base.html"%}
+{%block body %}
+<ul class="nav nav-pills nav-stacked">
+    <li role="presentation"><a href="{{url_for("list_users")}}">List Users</a></li>
+    <li role="presentation"><a href="{{url_for("list_reasons")}}">Edit Default Reasons</a></li>
+
+</ul>
+{%endblock body%}
