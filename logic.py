@@ -78,6 +78,8 @@ def change_pw(id, pw):
     return bool(scalar(q, _mangle_pw(pw), id))
 
 def get_user(id):
+    if not id:
+        return None
     q = '''SELECT id, email, display_name, approved_on IS NOT NULL AS approved,
             EXISTS (SELECT 1 FROM unread WHERE voter=%s limit 1) as unread
             FROM users WHERE id=%s'''

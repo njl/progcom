@@ -2,7 +2,7 @@
 import os
 import json
 from flask import (Flask, render_template, request, session, url_for, redirect,
-                    flash)
+                    flash, abort)
 
 import logic as l
 
@@ -15,23 +15,25 @@ def date_filter(d):
 
 """
 Account Silliness
-"""
+""" 
 
+_ADMIN_EMAILS = set(json.loads(os.environ['ADMIN_EMAILS']))
 @app.before_request
-def login_check():
-    uid = session.get('userid', None)
-    if uid:
-        request.user = l.get_user(uid)
-        if not request.user:
-            session.clear()
-            return redirect(url_for('login'))
+def security_check():
+    request.user = l.get_user(session.get('userid'))
+   
+    path = request.path
+    if (request.user and path.startswith('/admin') 
+            and request.user.email not in _ADMIN_EMAILS):
+        abort(403)
+
+    if request.user:
         return
-    if request.path.startswith('/static'):
-        return
-    if request.path.startswith('/user'):
-        return
-    if request.path.startswith('/feedback/'):
-        return
+
+    for prefix in ('/static', '/user', '/feedback'):
+        if path.startswith(prefix):
+            return
+
     return redirect(url_for('login'))
 
 @app.route('/user/login/')
@@ -73,18 +75,17 @@ def logout():
 Admin
 """
 
-_ADMIN_EMAILS = set(json.loads(os.environ['ADMIN_EMAILS']))
+
+@app.route('/admin/')
+def admin_menu():
+    return render_template('admin_page.html')
 
 @app.route('/admin/users/')
 def list_users():
-    if request.user.email not in _ADMIN_EMAILS:
-        return redirect('/')
     return render_template('user_list.html', users=l.list_users())
 
 @app.route('/admin/users/<int:uid>/approve/', methods=['POST'])
 def approve_user(uid):
-    if request.user.email not in _ADMIN_EMAILS:
-        return redirect('/')
     l.approve_user(uid)
     user = l.get_user(uid)
     flash('Approved user {}'.format(user.email))
@@ -92,14 +93,10 @@ def approve_user(uid):
 
 @app.route('/admin/reasons/')
 def list_reasons():
-    if request.user.email not in _ADMIN_EMAILS:
-        return redirect('/')
     return render_template('reasons.html', reasons=l.get_reasons())
 
 @app.route('/admin/reasons/', methods=['POST'])
 def add_reason():
-    if request.user.email not in _ADMIN_EMAILS:
-        return redirect('/')
     text = request.values.get('text')
     l.add_reason(text)
     flash('Added reason "{}"'.format(text))
@@ -222,6 +219,9 @@ def author_post_feedback(key):
 @app.route('/')
 def pick():
     id = l.needs_votes(request.user.email, request.user.id)
+    if not id:
+        flash("You have voted on every proposal!")
+        return redirect(url_for('show_votes'))
     return redirect(url_for('kitten', id=id))
 
 if __name__ == '__main__':
