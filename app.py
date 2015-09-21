@@ -16,7 +16,6 @@ def date_filter(d):
 """
 Account Silliness
 """ 
-
 _ADMIN_EMAILS = set(json.loads(os.environ['ADMIN_EMAILS']))
 @app.before_request
 def security_check():
@@ -74,8 +73,6 @@ def logout():
 """
 Admin
 """
-
-
 @app.route('/admin/')
 def admin_menu():
     return render_template('admin_page.html')
@@ -104,7 +101,7 @@ def add_reason():
 
 
 """
-Kittendome
+User State
 """
 @app.route('/votes/')
 def show_votes():
@@ -118,11 +115,19 @@ def show_bookmarks():
 def show_unread():
     return render_template('unread.html', unread=l.get_unread(request.user.id)) 
 
+"""
+Kittendome Action
+"""
 @app.route('/kitten/<int:id>/')
 def kitten(id):
-    #TODO: Can't manually view your own proposal
-    unread = l.is_unread(request.user.id, id)
     proposal = l.get_proposal(id)
+    if not proposal:
+        abort(404)
+
+    if request.user.email in (x.email.lower() for x in proposal.authors):
+        abort(404)
+
+    unread = l.is_unread(request.user.id, id)
     discussion = l.get_discussion(id)
 
     votes = l.get_votes(id)
@@ -151,8 +156,8 @@ def vote(id):
         reason = None
     if l.vote(request.user.id, id, yea, reason):
         proposal = l.get_proposal(id)
-        flash('You voted "{}" for "{}" #{}'.format('Yea' if yea else 'Nay', proposal.title,
-                                                    proposal.id))
+        flash('You voted "{}" for "{}" #{}'.format('Yea' if yea else 'Nay',
+                proposal.title, proposal.id))
         return redirect(url_for('pick'))
     return redir
 
@@ -191,6 +196,9 @@ def mark_read(id):
     l.mark_read(request.user.id, id)
     return redirect(url_for('kitten', id=id))
 
+"""
+Author Feedback
+"""
 @app.route('/feedback/<key>')
 def author_feedback(key):
     name, id = l.check_author_key(key)
@@ -215,7 +223,9 @@ def author_post_feedback(key):
     flash('Your message has been saved!')
     return redir
 
-
+"""
+Default Action
+"""
 @app.route('/')
 def pick():
     id = l.needs_votes(request.user.email, request.user.id)

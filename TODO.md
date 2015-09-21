@@ -4,7 +4,7 @@
 - [ ] Integrate with us.pycon.org
 - [ ] Thunderdome!
 - [ ] Password reset
-- [ ] Disallow viewing own proposal
+- [x] Disallow viewing own proposal
 - [ ] Link to edit URL on us.pycon.org
 - [ ] Turn emailing back on
 - [ ] Email reminders/updates to committee members
