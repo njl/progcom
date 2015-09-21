@@ -1,11 +1,15 @@
 - [x] Unread
 - [x] Feedback from proposal authors
 - [x] Votes should reload
-- [ ] Integrate with us.pycon.org
-- [ ] Thunderdome!
-- [ ] Password reset
+- [x] Thunderdome Logic
 - [x] Disallow viewing own proposal
+- [ ] Display talk data as markdown
+- [ ] Thunderdome voting UI
+- [ ] Integrate with us.pycon.org
+- [ ] Thunderdome grouping
+- [ ] Password reset
 - [ ] Link to edit URL on us.pycon.org
-- [ ] Turn emailing back on
 - [ ] Email reminders/updates to committee members
 - [ ] Link login and new users stuff to mailing list
+- [ ] Turn emailing back on
+

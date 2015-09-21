@@ -9,12 +9,19 @@ CREATE TABLE users (
 CREATE UNIQUE INDEX idx_users_email
     ON users (lower(email));
 
+CREATE TABLE thundergroups (
+    id      BIGSERIAL PRIMARY KEY,
+    name    VARCHAR(254)
+);
+
+
 CREATE TABLE proposals (
     id                      BIGINT PRIMARY KEY,
     updated                 TIMESTAMP WITH TIME ZONE DEFAULT now(),
     added_on                TIMESTAMP WITH TIME ZONE DEFAULT now(),
     vote_count              INT DEFAULT 0,     --Total # of votes
     voters                  BIGINT[] DEFAULT '{}',
+    thundergroup            BIGINT REFERENCES thundergroups DEFAULT NULL,
 
     author_emails           VARCHAR(254)[],
     author_names            VARCHAR(254)[],
@@ -29,6 +36,15 @@ CREATE TABLE proposals (
     outline                 TEXT,
     additional_notes        TEXT,
     additional_requirements TEXT
+);
+
+CREATE TABLE thundervotes (
+    thundergroup    BIGINT REFERENCES thundergroups,
+    voter           BIGINT REFERENCES users,
+    ranked          BIGINT[],
+    accept          INT,
+    UNIQUE(voter, thundergroup)
+
 );
 
 CREATE TABLE bookmarks (

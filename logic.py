@@ -93,14 +93,7 @@ def list_users():
 """
 Proposal Management
 """
-
-def get_proposal(id):
-    q = 'SELECT * FROM proposals WHERE id=%s'
-    result = _e.execute(q, id)
-    raw = result.fetchone()
-    if not raw:
-        return None
-    raw = dict(zip(result.keys(), raw))
+def _clean_proposal(raw):
     authorsT = build_tuple(('name', 'email'))
     raw['authors'] = tuple(authorsT(name, email) 
                             for name, email in zip(raw['author_names'],
@@ -110,6 +103,13 @@ def get_proposal(id):
     keys, values = zip(*raw.items())
     T = build_tuple(keys)
     return T(*values)
+
+def get_proposal(id):
+    q = 'SELECT * FROM proposals WHERE id=%s'
+    raw = fetchone(q, id)
+    if not raw:
+        return None
+    return _clean_proposal(raw._asdict())
 
 def add_proposal(data):
     data = data.copy()
@@ -177,7 +177,7 @@ def get_bookmarks(uid):
 
 
 """
-Voting
+Kittendome Voting
 """
 
 def get_reasons():
@@ -222,7 +222,8 @@ def needs_votes(email, uid):
     return random.choice(results).id
 
 def kitten_progress():
-    q = 'SELECT vote_count, COUNT(vote_count) as quantity FROM proposals GROUP BY vote_count'
+    q = '''SELECT vote_count, COUNT(vote_count) as quantity
+            FROM proposals GROUP BY vote_count'''
     return fetchall(q)
 
 def get_my_votes(uid):
@@ -231,6 +232,48 @@ def get_my_votes(uid):
             FROM votes INNER JOIN proposals ON (votes.proposal = proposals.id)
             WHERE votes.voter = %s'''
     return fetchall(q, uid)
+
+"""
+Thunderdome
+"""
+def create_group(name, proposals):
+    q = 'INSERT INTO thundergroups (name) VALUES (%s) RETURNING id'
+    id = scalar(q, name)
+    q = 'UPDATE proposals SET thundergroup=%s WHERE id = ANY(%s)'
+    execute(q, id, proposals)
+    return id
+
+def vote_group(thundergroup, voter, ranked, accept):
+    try:
+        q = '''INSERT INTO thundervotes (thundergroup, voter, ranked, accept)
+                VALUES (%s, %s, %s, %s)'''
+        execute(q, thundergroup, voter, ranked, accept)
+        return
+    except IntegrityError as e:
+        pass
+    q = '''UPDATE thundervotes SET ranked=%s, accept=%s
+            WHERE thundergroup=%s AND voter=%s'''
+    execute(q, [[ranked, accept, thundergroup, voter]])
+
+
+def list_groups(userid):
+    q = '''SELECT tg.*, tv.thundergroup IS NOT NULL AS voted
+            FROM thundergroups as tg
+            LEFT JOIN thundervotes as tv 
+            ON tg.id=tv.thundergroup AND tv.voter = %s'''
+    return fetchall(q, userid)
+
+def get_group(thundergroup):
+    return fetchone('SELECT * FROM thundergroups WHERE id=%s', thundergroup)
+
+def get_group_proposals(thundergroup):
+    q = 'SELECT * FROM proposals WHERE thundergroup=%s'
+    rv = fetchall(q, thundergroup)
+    return [_clean_proposal(x._asdict()) for x in rv]
+
+def get_thunder_vote(thundergroup, voter):
+    q = 'SELECT * FROM thundervotes WHERE thundergroup=%s AND voter=%s'
+    return fetchone(q, thundergroup, voter)
 
 """
 Discussion

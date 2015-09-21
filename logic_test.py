@@ -193,3 +193,45 @@ def test_discussion():
     l.add_to_discussion(users[0], proposal, 'LOREM IPSUM')
     assert l.get_discussion(proposal)[-1].body == 'LOREM IPSUM'
     assert l.get_discussion(proposal)[0].body == 'Lorem ipsum'
+
+def test_thunderdome():
+
+    user = l.add_user('example@example.com', 'Voter', '123')
+    l.approve_user(user)
+
+    proposals = []
+    for n in range(1,50):
+        prop = data.copy()
+        prop['id'] = n
+        proposals.append(l.add_proposal(prop))
+
+    group_one = l.create_group('Group One', proposals[4:10])
+    group_two = l.create_group('Group Two', proposals[16:27])
+
+    assert l.get_group(group_one).name == 'Group One'
+
+    group_one_proposals = l.get_group_proposals(group_one)
+    assert set(x.id for x in group_one_proposals) == set(proposals[4:10])
+   
+    all_groups = l.list_groups(user)
+    assert set([group_one, group_two]) == set(x.id for x in all_groups)
+    assert not any(x.voted for x in all_groups)
+
+    votes1 = list(reversed(proposals[5:9]))
+    votes2 = proposals[4:10]
+
+    l.vote_group(group_one, user, votes1, 1)
+
+    all_groups = {x.id:x.voted for x in l.list_groups(user)}
+    assert all_groups[group_one]
+    assert not all_groups[group_two]
+
+    assert l.get_thunder_vote(group_one, user).ranked == votes1
+    assert l.get_thunder_vote(group_one, user).accept == 1
+
+    l.vote_group(group_one, user, votes2, 2)
+
+    assert l.get_thunder_vote(group_one, user).ranked == votes2
+    assert l.get_thunder_vote(group_one, user).accept == 2
+
+
