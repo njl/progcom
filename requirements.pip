@@ -5,6 +5,9 @@ psycopg2
 itsdangerous
 mandrill
 
+requests
+pytz
+
 gevent
 
 pytest
