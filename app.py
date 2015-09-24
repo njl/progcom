@@ -1,8 +1,12 @@
 #!/usr/bin/env python
 import os
 import json
+
 from flask import (Flask, render_template, request, session, url_for, redirect,
                     flash, abort)
+from jinja2 import Markup
+import bleach
+import markdown
 
 import logic as l
 
@@ -12,6 +16,11 @@ app.secret_key = os.environ['FLASK_SECRET_KEY']
 @app.template_filter('date')
 def date_filter(d):
     return d.strftime('%b-%-d %I:%M')
+
+@app.template_filter('markdown')
+def markdown_filter(s):
+    return Markup(bleach.clean(markdown.markdown(s), 
+                    tags=bleach.ALLOWED_TAGS+['p', 'h1', 'h2']))
 
 """
 Account Silliness

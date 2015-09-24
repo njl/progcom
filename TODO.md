@@ -3,7 +3,7 @@
 - [x] Votes should reload
 - [x] Thunderdome Logic
 - [x] Disallow viewing own proposal
-- [ ] Display talk data as markdown
+- [x] Display talk data as markdown
 - [ ] Thunderdome voting UI
 - [ ] Integrate with us.pycon.org
 - [ ] Thunderdome grouping

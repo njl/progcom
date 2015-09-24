@@ -4,6 +4,8 @@ bcrypt
 psycopg2
 itsdangerous
 mandrill
+bleach
+markdown
 
 requests
 pytz
