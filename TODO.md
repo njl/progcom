@@ -6,6 +6,7 @@
 - [x] Display talk data as markdown
 - [ ] Thunderdome voting UI
 - [ ] Integrate with us.pycon.org
+- [ ] Handle withdrawn talks
 - [ ] Thunderdome grouping
 - [ ] Password reset
 - [ ] Link to edit URL on us.pycon.org
