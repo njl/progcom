@@ -23,6 +23,8 @@ CREATE TABLE proposals (
     voters                  BIGINT[] DEFAULT '{}',
     thundergroup            BIGINT REFERENCES thundergroups DEFAULT NULL,
 
+    withdrawn               BOOLEAN DEFAULT FALSE,
+
     author_emails           VARCHAR(254)[],
     author_names            VARCHAR(254)[],
     title                   VARCHAR(254),

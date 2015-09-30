@@ -46,6 +46,7 @@ script `envdir dev-config ./fill_db_with_fakes.py`. You can then log in with
 an email from the sequence `user{0-24}@example.com`, and a password of `abc123`.
 `user0@example.com` is an administrator.
 
+To turn on Thunderdome, `echo 1 > dev-config/THUNDERDOME`.
 
 Understanding The PyCon Talk Review Process
 ------------

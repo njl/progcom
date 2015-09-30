@@ -5,10 +5,8 @@
 - [x] Disallow viewing own proposal
 - [x] Display talk data as markdown
 - [x] Thunderdome voting UI
+- [x] Handle withdrawn talks
 - [ ] Integrate with us.pycon.org
-- [ ] Handle withdrawn talks
-- [ ] Thunderdome group tweaking UI
-- [ ] Thunderdome analysis export
 - [ ] Kittendome analysis export
 - [ ] Password reset
 - [ ] Link to edit URL on us.pycon.org
@@ -16,3 +14,6 @@
 - [ ] Link login and new users stuff to mailing list
 - [ ] Turn emailing back on
 - [ ] Markdown links should target _blank
+- [ ] Thunderdome group tweaking UI
+- [ ] Thunderdome analysis export
+

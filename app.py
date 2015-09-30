@@ -180,7 +180,7 @@ Kittendome Actions
 @app.route('/kitten/<int:id>/')
 def kitten(id):
     proposal = l.get_proposal(id)
-    if not proposal:
+    if not proposal or proposal.canceled:
         abort(404)
 
     if request.user.email in (x.email.lower() for x in proposal.authors):
