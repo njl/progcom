@@ -4,7 +4,7 @@
 - [x] Thunderdome Logic
 - [x] Disallow viewing own proposal
 - [x] Display talk data as markdown
-- [ ] Thunderdome voting UI
+- [x] Thunderdome voting UI
 - [ ] Integrate with us.pycon.org
 - [ ] Handle withdrawn talks
 - [ ] Thunderdome group tweaking UI
@@ -15,4 +15,4 @@
 - [ ] Email reminders/updates to committee members
 - [ ] Link login and new users stuff to mailing list
 - [ ] Turn emailing back on
-
+- [ ] Markdown links should target _blank

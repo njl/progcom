@@ -30,7 +30,7 @@ def main():
         prop_id = n*2
         data = {'id': prop_id, 'authors': [{'email': random.choice(emails),
                                         'name': 'Speaker Name Here'}],
-                'title': words(3,8),
+                'title': words(3,8).title(),
                 'category': words(1,2),
                 'duration': '30 minutes',
                 'description': ipsum(4),
@@ -59,7 +59,7 @@ def main():
 
     proposal_ids = proposal_ids[:70]
     for n in range(0, len(proposal_ids), 5):
-        l.create_group(words(2,4),
+        l.create_group(words(2,4).title(),
                 proposal_ids[n:n+5])
 
 

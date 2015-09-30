@@ -1,0 +1,112 @@
+{%extends "base.html"%}
+{%import "proposal_render.html" as pr%}
+{%block body %}
+<h1>Group: {{group.name}}</h1>
+
+<div class="row">
+    <div class="col-md-8">
+        <ul class="nav nav-tabs" id="proposal-tabs">
+            {% for p in proposals %}
+            <li> <a href="#proposal-{{p.proposal.id}}">{{p.proposal.title}}</a>
+            {% endfor %}
+        </ul>
+        <div class="tab-content">
+            {% for p in proposals %}
+            <div role="tabpanel" class="tab-pane" id="proposal-{{p.proposal.id}}">
+                {{pr.proposal_render(p.proposal)}}
+                <hr>
+                <h2>Kittendome Discussion</h2>
+                {% for msg in p.discussion%}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            {% if msg.name %}
+                            {{msg.name}}
+                            {% else %}
+                            {{msg.display_name}}
+                            {% endif %}
+                        </div>
+                        <div class="panel-body">
+                            {{msg.body}}
+                        </div>
+                            {% if msg.name %}
+                            <div class="panel-footer">
+                            <strong> Message From Author</strong>
+                            </div>
+                            {% endif %}
+                            {% if msg.feedback %}
+                            <div class="panel-footer">
+                                <strong>Message To Author</strong>
+                            </div>
+                            {% endif %}
+                        </div>
+                {% else %}
+                    <p>No dicussion in Kittendom</p>
+                {% endfor %}
+
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+    <script type="underscore/template" id="ordered_row">
+        <tr data-id="<%=id%>" class="ordered">
+            <td><%=title%></td>
+            <td>
+
+            <div class="btn-group btn-group-xs" role="group" aria-label="...">
+              <button type="button" class="btn btn-default thunder-up"><span class="glyphicon glyphicon-arrow-up"></span></button>
+              <button type="button" class="btn btn-default thunder-down"><span class="glyphicon glyphicon-arrow-down"></span></button>
+            </div>
+            </td>
+            </tr>
+    </script>
+    <div class="col-md-4">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Your Ordering</h3>
+            </div>
+            <table class="table">
+                <tbody id="ranked">
+                </tbody>
+            </table>
+            <div class="panel-footer">
+                <form class="form-horizontal" action="vote/" method="POST">
+                    <input type="hidden" name="ranked" id="hidden-ranked" value="[]">
+                  <div class="form-group">
+                      <label class="col-md-8" for="quantity-selector">Number of Talks To Accept</label>
+                      <div class="col-md-4">
+                      <select class="form-control" id="quantity-selector" name="accept">
+                          {% for p in proposals %}
+                            <option>{{loop.index0}}</option>
+                          {% endfor %}
+                      </select>
+                      </div>
+                  </div>
+                <button type="submit" class="btn btn-success btn-block" id="save" disabled="disabled">Save Vote</button>
+                </form>
+            </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Unranked</h3>
+            </div>
+            <table class="table" id="unranked">
+                {% for p in proposals%}
+                <tr data-id="{{p.proposal.id}}" 
+                    id="unranked-prop-{{p.proposal.id}}">
+                    <td>{{p.proposal.title}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+    </div><!--end side column-->
+</div>
+
+<script>
+var TALKS = {{basics|tojson}};
+var VOTE = {{vote|tojson}};
+</script>
+
+{%endblock body%}
+

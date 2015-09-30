@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import os
 import json
+import random
 
 from flask import (Flask, render_template, request, session, url_for, redirect,
                     flash, abort)
@@ -12,6 +13,12 @@ import logic as l
 
 app = Flask(__name__)
 app.secret_key = os.environ['FLASK_SECRET_KEY']
+
+THIS_IS_THUNDERDOME = 'THUNDERDOME' in os.environ
+if THIS_IS_THUNDERDOME:
+    print 'THIS IS THUNDERDOME'
+else:
+    print 'This is Kittendome!'
 
 @app.template_filter('date')
 def date_filter(d):
@@ -33,6 +40,12 @@ def security_check():
     path = request.path
     if (request.user and path.startswith('/admin') 
             and request.user.email not in _ADMIN_EMAILS):
+        abort(403)
+
+    if path.startswith('/kitten') and THIS_IS_THUNDERDOME:
+        abort(403)
+
+    if path.startswith('/thunder') and not THIS_IS_THUNDERDOME:
         abort(403)
 
     if request.user:
@@ -125,7 +138,44 @@ def show_unread():
     return render_template('unread.html', unread=l.get_unread(request.user.id)) 
 
 """
-Kittendome Action
+Thunderdome Actions
+"""
+@app.route('/thunder/')
+def thunder_splash_page():
+    return render_template('thunderdome.html', 
+                            groups=l.list_groups(request.user.id))
+
+@app.route('/thunder/<int:id>/')
+def thunder_view(id):
+    proposals = [{'proposal':x, 'discussion':l.get_discussion(x.id)}
+                    for x in l.get_group_proposals(id)]
+    random.shuffle(proposals)
+    basics = {x['proposal'].id:x['proposal'].title for x in proposals}
+    vote = l.get_thunder_vote(id, request.user.id)
+    return render_template('thundergroup.html', group=l.get_group(id),
+                            proposals=proposals, basics=basics,
+                            vote = vote._asdict() if vote else None)
+
+@app.route('/thunder/<int:id>/vote/', methods=['POST'])
+def thunder_vote(id):
+    ranked = json.loads(request.values.get('ranked', '[]'))
+    proposals = {x.id:x.title for x in l.get_group_proposals(id)}
+
+    if set(proposals.keys()) != set(ranked):
+        flash("You didn't vote on the right proposals!")
+        return redirect('thunder_view', id=id)
+
+    accept = int(request.values['accept'])
+
+    l.vote_group(id, request.user.id, ranked, accept)
+
+    rank_titles = ', '.join('"{}"'.format(proposals[x]) for x in ranked)
+    msg = 'You chose {} talks from group "{}", and ranked them {}.'
+    flash(msg.format(accept, l.get_group(id).name, rank_titles))
+    return redirect(url_for('thunder_splash_page'))
+
+"""
+Kittendome Actions
 """
 @app.route('/kitten/<int:id>/')
 def kitten(id):
@@ -237,6 +287,9 @@ Default Action
 """
 @app.route('/')
 def pick():
+    if THIS_IS_THUNDERDOME:
+        return redirect(url_for('thunder_splash_page'))
+
     id = l.needs_votes(request.user.email, request.user.id)
     if not id:
         flash("You have voted on every proposal!")
