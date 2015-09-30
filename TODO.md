@@ -7,7 +7,9 @@
 - [ ] Thunderdome voting UI
 - [ ] Integrate with us.pycon.org
 - [ ] Handle withdrawn talks
-- [ ] Thunderdome grouping
+- [ ] Thunderdome group tweaking UI
+- [ ] Thunderdome analysis export
+- [ ] Kittendome analysis export
 - [ ] Password reset
 - [ ] Link to edit URL on us.pycon.org
 - [ ] Email reminders/updates to committee members
