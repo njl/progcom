@@ -41,6 +41,10 @@ Make a virtualenv, `pip install -r requirements.pip`. Run the application
 locally via `envdir dev-config ./app.py`, run the tests via
 `envdir dev-config py.test`.
 
+You can fill the database up with lots of lorem ipsum nonsense by running the
+script `envdir dev-config ./fill_db_with_fakes.py`. You can then log in with
+an email from the sequence `user{0-24}@example.com`, and a password of `abc123`.
+`user0@example.com` is an administrator.
 
 
 Understanding The PyCon Talk Review Process
