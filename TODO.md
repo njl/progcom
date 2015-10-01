@@ -7,11 +7,15 @@
 - [x] Thunderdome voting UI
 - [x] Handle withdrawn talks
 - [x] Markdown links should target blank
+- [ ] Thunderdome hide your groups from yourself
+- [ ] Thunderdome chat?
 - [ ] Integrate with us.pycon.org
 - [ ] Kittendome analysis export
 - [ ] Link to edit URL on us.pycon.org
 - [ ] Email reminders/updates to committee members
 - [ ] Link login and new users stuff to mailing list
 - [ ] Turn emailing back on
-- [ ] Thunderdome group tweaking UI
+- [ ] ~~Thunderdome group tweaking UI~~
 - [ ] Thunderdome analysis export
+- [ ] Vetting & Selection?
+- [ ] Deployment
