@@ -38,7 +38,7 @@ def main():
                 'python_level': 'Novice',
                 'objectives': ipsum(1),
                 'abstract': ipsum(1),
-                'outline': ipsum(5),
+                'outline': ipsum(5)+"\n[test](http://www.google.com/)\n",
                 'additional_notes': ipsum(1),
                 'additional_requirements': ipsum(1)}
         l.add_proposal(data)

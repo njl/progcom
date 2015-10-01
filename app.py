@@ -24,10 +24,17 @@ else:
 def date_filter(d):
     return d.strftime('%b-%-d %I:%M')
 
+def set_nofollow(attrs, new=False):
+    attrs['target'] = '_blank'
+    return attrs
+
+
 @app.template_filter('markdown')
 def markdown_filter(s):
-    return Markup(bleach.clean(markdown.markdown(s), 
-                    tags=bleach.ALLOWED_TAGS+['p', 'h1', 'h2']))
+    raw = bleach.clean(markdown.markdown(s), 
+                    tags=bleach.ALLOWED_TAGS+['p', 'h1', 'h2'])
+    raw = bleach.linkify(raw, callbacks=[set_nofollow])
+    return Markup(raw)
 
 """
 Account Silliness
@@ -180,7 +187,7 @@ Kittendome Actions
 @app.route('/kitten/<int:id>/')
 def kitten(id):
     proposal = l.get_proposal(id)
-    if not proposal or proposal.canceled:
+    if not proposal or proposal.withdrawn:
         abort(404)
 
     if request.user.email in (x.email.lower() for x in proposal.authors):
