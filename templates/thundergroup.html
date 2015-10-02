@@ -76,7 +76,7 @@
                       <label class="col-md-8" for="quantity-selector">Number of Talks To Accept</label>
                       <div class="col-md-4">
                       <select class="form-control" id="quantity-selector" name="accept">
-                          {% for p in proposals %}
+                          {% for i in range(3)%}
                             <option>{{loop.index0}}</option>
                           {% endfor %}
                       </select>
