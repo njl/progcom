@@ -55,7 +55,7 @@ CREATE TABLE bookmarks (
     UNIQUE (voter, proposal)
 );
 
-CREATE TABLE vote_reasons (
+CREATE TABLE standards (
     id          BIGSERIAL PRIMARY KEY,
     description VARCHAR(127)
 );
@@ -63,12 +63,10 @@ CREATE TABLE vote_reasons (
 CREATE TABLE votes (
     id          BIGSERIAL PRIMARY KEY,
 
-    yea         BOOLEAN,
+    missed      BIGINT[] DEFAULT '{}',
 
     voter       BIGINT REFERENCES users,
     proposal    BIGINT REFERENCES proposals,
-
-    reason      VARCHAR(63),
 
     added_on    TIMESTAMP WITH TIME ZONE DEFAULT now(),
     UNIQUE (voter, proposal)

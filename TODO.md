@@ -7,6 +7,8 @@
 - [x] Thunderdome voting UI
 - [x] Handle withdrawn talks
 - [x] Markdown links should target blank
+- [ ] Remove random chat from talks
+- [ ] Change voting style for kittendome
 - [ ] Thunderdome hide your groups from yourself
 - [ ] Thunderdome chat?
 - [ ] Integrate with us.pycon.org

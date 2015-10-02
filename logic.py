@@ -180,27 +180,26 @@ def get_bookmarks(uid):
 Kittendome Voting
 """
 
-def get_reasons():
-    return [x.description for x in
-                fetchall('SELECT description FROM vote_reasons')]
+def get_standards():
+    return fetchall('SELECT * FROM standards ORDER BY id')
 
-def add_reason(s):
-    q = 'INSERT INTO vote_reasons (description) VALUES (%s) RETURNING id'
+def add_standard(s):
+    q = 'INSERT INTO standards (description) VALUES (%s) RETURNING id'
     return scalar(q, s)
 
-def vote(voter, proposal, yea, reason=None):
+def vote(voter, proposal, missed):
     if not get_user(voter).approved:
         return None
 
-    q = '''INSERT INTO votes (voter, proposal, yea, reason)
-            VALUES (%s, %s, %s, %s)  RETURNING id'''
+    q = '''INSERT INTO votes (voter, proposal, missed)
+            VALUES (%s, %s, %s) RETURNING id'''
     try:
-        return scalar(q, voter, proposal, yea, reason)
+        return scalar(q, voter, proposal, missed)
     except IntegrityError as e:
         pass
-    q = '''UPDATE votes SET yea=%s, reason=%s, added_on=now()
+    q = '''UPDATE votes SET missed=%s, added_on=now()
             WHERE voter=%s AND proposal=%s RETURNING id'''
-    return scalar(q, yea, reason, voter, proposal)
+    return scalar(q, [[missed, voter, proposal]])
 
 
 def get_votes(proposal):

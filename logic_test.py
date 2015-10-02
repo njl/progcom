@@ -93,20 +93,20 @@ def test_voting_basics():
     l.add_proposal(data)
     uid = l.add_user('bob@example.com', 'Bob', 'bob')
     assert not l.get_votes(123)
-    assert not l.vote(uid, 123, True)
+    assert not l.vote(uid, 123, [])
     assert not l.get_votes(123)
 
     assert l.get_proposal(123).vote_count == 0
 
     l.approve_user(uid)
 
-    assert l.vote(uid, 123, True)
-    assert l.get_votes(123)[0].yea
+    assert l.vote(uid, 123, [])
+    assert l.get_votes(123)[0].missed == []
     assert l.get_proposal(123).vote_count == 1
 
-    assert l.vote(uid, 123, False)
+    assert l.vote(uid, 123, [1])
     assert len(l.get_votes(123)) == 1
-    assert not l.get_votes(123)[0].yea
+    assert l.get_votes(123)[0].missed == [1L]
     assert l.get_proposal(123).vote_count == 1
 
 
@@ -143,24 +143,24 @@ def test_needs_votes():
     assert seen_ids == not_2_proposals
 
     for n in range(1, 9):
-        l.vote(users['8@example.com'], n*2, True)
+        l.vote(users['8@example.com'], n*2, [])
 
     seen_ids = set()
     for n in range(100):
         seen_ids.add(l.needs_votes(non_author_email, non_author_id))
     assert seen_ids == set([18])
 
-    l.vote(users['8@example.com'], 18, True)
+    l.vote(users['8@example.com'], 18, [])
 
     seen_ids = set()
     for n in range(100):
         seen_ids.add(l.needs_votes(non_author_email, non_author_id))
     assert seen_ids == set(proposals)
 
-def test_reasons():
-    assert l.get_reasons() == []
-    l.add_reason('Bob')
-    assert l.get_reasons() == ['Bob']
+def test_standards():
+    assert l.get_standards() == []
+    l.add_standard('Bob')
+    assert l.get_standards()[0].description == 'Bob'
 
 
 def test_discussion():
