@@ -134,7 +134,8 @@ User State
 """
 @app.route('/votes/')
 def show_votes():
-    return render_template('my_votes.html', votes=l.get_my_votes(request.user.id))
+    return render_template('my_votes.html', votes=l.get_my_votes(request.user.id),
+                            standards = l.get_standards())
 
 @app.route('/bookmarks/')
 def show_bookmarks():
@@ -206,7 +207,6 @@ def kitten(id):
     votes = {}
     for k, vals in raw_votes.items():
         votes[k] = ','.join(str(vals[i]) for i in range(4))
-    print votes
 
     return render_template('kitten_proposal.html', proposal=proposal,
                             votes=votes, discussion=discussion,

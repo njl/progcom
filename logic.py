@@ -189,6 +189,9 @@ def add_standard(s):
     q = 'INSERT INTO standards (description) VALUES (%s) RETURNING id'
     return scalar(q, s)
 
+def _clean_vote(vote):
+    return vote._replace(scores={int(k):v for k,v in vote.scores.items()}) 
+
 def vote(voter, proposal, scores):
     if not get_user(voter).approved:
         return None
@@ -217,7 +220,7 @@ def get_user_vote(userid, proposal):
     if not rv:
         return None
 
-    return rv._replace(scores={int(k):v for k,v in rv.scores.items()})
+    return _clean_vote(rv)
 
 def get_votes(proposal):
     q = '''SELECT * FROM votes
@@ -251,7 +254,7 @@ def get_my_votes(uid):
             proposals.title AS title
             FROM votes INNER JOIN proposals ON (votes.proposal = proposals.id)
             WHERE votes.voter = %s'''
-    return fetchall(q, uid)
+    return [_clean_vote(v) for v in fetchall(q, uid)]
 
 """
 Thunderdome
