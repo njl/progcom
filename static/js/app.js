@@ -64,6 +64,30 @@ function thunder_quantity_change(){
     $('#hidden-ranked').val(JSON.stringify(ranked));
 }
 
+function star_click(){
+    var $this = $(this);
+    $this.prevAll().removeClass('glyphicon-star-empty').addClass('glyphicon-star');
+    $this.nextAll().removeClass('glyphicon-star').addClass('glyphicon-star-empty');
+    $this.removeClass('glyphicon-star-empty').addClass('glyphicon-star');
+    score_stars();
+}
+
+function score_stars(){
+    var rv = {},
+        complete = true;
+    $('.voting-stripe').each(function(){
+        var $this = $(this),
+            stars = $this.find('.glyphicon-star').length;
+        if(stars){
+            rv[$this.data().standard] = stars-1;
+        }else{
+            complete = false;
+        }
+    });
+    $('#scores').val(JSON.stringify(rv));
+    $('#save').attr('disabled', !complete)
+}
+
 TEMPLATES = {};
 
 $(document).ready(function(){
@@ -81,6 +105,7 @@ $(document).ready(function(){
     $('#ranked').on('click', 'button.thunder-down', thunder_down);
     $('#ranked').on('click', 'button.thunder-up', thunder_up);
     $('#quantity-selector').on('change', thunder_quantity_change);
+    $('.voting-stripe span').on('click', star_click);
     if($('#proposal-tabs').length){
         //It's Thunderdome
         $('#proposal-tabs a').first().tab("show");

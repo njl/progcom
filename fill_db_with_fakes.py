@@ -19,11 +19,11 @@ def main():
         l.approve_user(uid)
 
 
-    for n in range(10):
-        l.add_reason(words(3, 10)[:50])
+    for n in range(6):
+        l.add_standard(words(3, 10)[:50])
 
     user_ids = [x.id for x in l.list_users()]
-    reasons = l.get_reasons()
+    standards = [x.id for x in l.get_standards()]
     
     proposal_ids = []
     for n in range(200):
@@ -50,9 +50,8 @@ def main():
 
         if random.randint(0, 3) == 2:
             for n in range(random.randint(1, 5)):
-                yea = random.random() > 0.5
-                reason = None if yea else random.choice(reasons)
-                l.vote(random.choice(user_ids), prop_id, yea, reason)
+                vote = {k:random.randint(0, 3) for k in standards}
+                l.vote(random.choice(user_ids), prop_id, vote)
 
 
     random.shuffle(proposal_ids)

@@ -196,35 +196,33 @@ def kitten(id):
     unread = l.is_unread(request.user.id, id)
     discussion = l.get_discussion(id)
 
-    votes = l.get_votes(id)
-    reasons = l.get_reasons()
+    standards = l.get_standards()
     progress = l.kitten_progress()
     authors = ', '.join(x.name for x in proposal.authors)
     bookmarked = l.has_bookmark(request.user.id, id)
 
-    existing_vote = None
-    if request.user.id in [x.voter for x in votes]:
-        existing_vote = [x for x in votes if x.voter == request.user.id][0]
+    existing_vote = l.get_user_vote(request.user.id, id)
+    raw_votes = l.get_votes(id)
+    votes = {}
+    for k, vals in raw_votes.items():
+        votes[k] = ','.join(str(vals[i]) for i in range(4))
+    print votes
 
     return render_template('kitten_proposal.html', proposal=proposal,
                             votes=votes, discussion=discussion,
-                            reasons=reasons, progress=progress,
+                            standards=standards, progress=progress,
                             authors=authors, bookmarked=bookmarked,
                             existing_vote=existing_vote,
                             unread=unread)
 
 @app.route('/kitten/<int:id>/vote/', methods=['POST'])
 def vote(id):
-    missed = json.loads(request.values.get('missed', '[]'))
+    scores = json.loads(request.values.get('scores', {}))
+    scores = {long(k):v for k,v in scores.items()}
     redir = redirect(url_for('kitten', id=id))
-    if not set(missed).issubset(x.id for x in l.get_standards()):
-        flash('internal error')
-        return redir
-    if l.vote(request.user.id, id, yea, reason):
+    if l.vote(request.user.id, id, scores):
         proposal = l.get_proposal(id)
-        flash('You voted "{}" for "{}" #{}'.format('Yea' if yea else 'Nay',
-                proposal.title, proposal.id))
-        return redirect(url_for('pick'))
+        return redir
     return redir
 
 @app.route('/kitten/<int:id>/comment/', methods=['POST'])

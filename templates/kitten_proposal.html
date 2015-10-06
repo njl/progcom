@@ -10,56 +10,46 @@
             <div class="panel-heading">
                 <h3 class="panel-title">Voting</h3>
             </div>
-            <div class="panel-body">
                 <form method="POST" action="vote/">
-                <div class="radio vote-radio">
-                    <label>
-                        <input type="radio" name="vote" id="yea" value="yea" {%if existing_vote and existing_vote.yea %} checked="checked"{%endif%}>
-                    <strong>Yea</strong> (I believe this talk meets minimal requirements for consideration as a talk at PyCon)
-                    </label>
-                </div>
-                <div class="radio vote-radio">
-                    <label>
-                    <input type="radio" name="vote" id="plus-one" value="nay"{%if existing_vote and not existing_vote.yea %} checked="checked"{%endif%}>
-                    <strong>Nay</strong> (I believe this talk doesn't meet the minimal threshold for consideration)
-                    </label>
-                </div>
-                <div class="panel panel-default" {% if not existing_vote or existing_vote.yea%}style="display:none;"{%endif%} id="reasons-panel">
-                      <div class="panel-body">
-
-                    <div class="form-group">
-                        <label for="reason">Vote Reason (<span id="character-count">63</span> characters left)</label>
-                        <input type="text" class="form-control" id="reason" placeholder="Short Vote Reason" name="reason" {%if existing_vote and not existing_vote.yea%} value="{{existing_vote.reason}}"{%endif%}>
-                        <p class="help-block">A simple reason isn't necessary, but it is encouraged!</p>
-                    </div>
-                    <select id="comment-reason">
-                        <option disabled="disabled" selected="selected">Default Reasons for Negative Votes</option>
-                        {% for r in reasons %}
-                            <option>{{r}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-                <button type="submit" class="btn btn-default">Submit</button>
-                </form>
-        </div>
-        </div>
-
-
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title">Votes</h3>
-            </div>
-                <table class="table table-condensed table-striped">
-            {% for v in votes %}
+                <input type="hidden" name="scores" value="{}" id="scores">
+                  <table class="table">
+                {% for s in standards %}
                 <tr>
-                    <td>{%if v.yea%}Yea{%else%}Nay{%endif%}</td>
-                    <td>{{v.display_name}}</td>
-                    <td>{{v.reason}}</td>
-                    <td>{{v.added_on|date}}</td>
+                        {% if existing_vote %}
+                        <td>
+                            {% with v = votes[s.id] %}
+                            <span class="sparkbar" values="{{v}}"></span>
+                            {% endwith %}
+                        </td>
+                        {% endif %}
+                    <td class="voting-stripe" data-standard="{{s.id}}"
+                        style="font-size:120%">
+                        {% for l in range(4) %}
+                        <span class="glyphicon 
+                            {% if existing_vote and 
+                                    loop.index0 <= existing_vote.scores[s.id]%}
+                            glyphicon-star
+                            {% else %}
+                            glyphicon-star-empty
+                            {% endif %}
+                            "></span>
+                        {% endfor %}
+                    </td>
+                    <td><small>{{s.description}}</small></td>
                 </tr>
-            {% endfor %}
+                {% endfor %}
                 </table>
+            <div class="panel-footer">
+                <button type="Submit" class="btn btn-primary" id="save"
+                    {% if not existing_vote %}
+                        disabled="disabled"
+                    {% endif %}
+                    >Save Votes</button>
+                {% if existing_vote %}
+                <a href="/" class="btn btn-primary">Next</a>
+                {% endif %}
+            </div>
+            </form>
         </div>
 
         <div class="panel panel-primary">

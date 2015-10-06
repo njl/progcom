@@ -1,6 +1,8 @@
-from collections import namedtuple
+from collections import namedtuple, defaultdict, Counter
 import os 
 import random
+import json
+
 import itsdangerous
 import mandrill
 
@@ -187,26 +189,44 @@ def add_standard(s):
     q = 'INSERT INTO standards (description) VALUES (%s) RETURNING id'
     return scalar(q, s)
 
-def vote(voter, proposal, missed):
+def vote(voter, proposal, scores):
     if not get_user(voter).approved:
         return None
 
-    q = '''INSERT INTO votes (voter, proposal, missed)
+    if set(scores.keys()) != set(x.id for x in get_standards()):
+        return None
+    for v in scores.values():
+        if not 0 <= v <= 3:
+            return None
+
+    q = '''INSERT INTO votes (voter, proposal, scores)
             VALUES (%s, %s, %s) RETURNING id'''
     try:
-        return scalar(q, voter, proposal, missed)
+        return scalar(q, voter, proposal, json.dumps(scores))
     except IntegrityError as e:
         pass
-    q = '''UPDATE votes SET missed=%s, added_on=now()
-            WHERE voter=%s AND proposal=%s RETURNING id'''
-    return scalar(q, [[missed, voter, proposal]])
 
+    q = '''UPDATE votes SET scores=%s, added_on=now()
+            WHERE voter=%s AND proposal=%s RETURNING id'''
+    return scalar(q, [[json.dumps(scores), voter, proposal]])
+
+def get_user_vote(userid, proposal):
+    q = '''SELECT * FROM votes WHERE
+            voter=%s AND proposal=%s'''
+    rv = fetchone(q, userid, proposal)
+    if not rv:
+        return None
+
+    return rv._replace(scores={int(k):v for k,v in rv.scores.items()})
 
 def get_votes(proposal):
-    q = '''SELECT votes.*, users.display_name
-            FROM votes LEFT JOIN users ON (votes.voter=users.id)
+    q = '''SELECT * FROM votes
             WHERE proposal=%s'''
-    return fetchall(q, proposal)
+    rv = defaultdict(Counter)
+    for r in fetchall(q, proposal):
+        for k,v in r.scores.items():
+            rv[int(k)][int(v)] += 1
+    return rv
 
 def needs_votes(email, uid):
     q = '''SELECT id, vote_count FROM proposals

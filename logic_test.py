@@ -91,28 +91,37 @@ def test_proposal_basics():
 
 def test_voting_basics():
     l.add_proposal(data)
+    standards = [l.add_standard("About Pythong"), l.add_standard("Awesome")]
     uid = l.add_user('bob@example.com', 'Bob', 'bob')
     assert not l.get_votes(123)
-    assert not l.vote(uid, 123, [])
+    assert not l.vote(uid, 123, {k:3 for k in standards})
     assert not l.get_votes(123)
 
     assert l.get_proposal(123).vote_count == 0
 
     l.approve_user(uid)
 
-    assert l.vote(uid, 123, [])
-    assert l.get_votes(123)[0].missed == []
+    assert not l.vote(uid, 123, {})
+    assert not l.get_votes(123)
+
+    assert l.vote(uid, 123, {k:2 for k in standards})
+    assert l.get_votes(123)[0].scores == {str(k):2 for k in standards}
     assert l.get_proposal(123).vote_count == 1
 
-    assert l.vote(uid, 123, [1])
+    assert not l.vote(uid, 123, {k:7 for k in standards})
+    assert l.get_votes(123)[0].scores == {str(k):2 for k in standards}
+
+    assert l.vote(uid, 123, {k:0 for k in standards})
     assert len(l.get_votes(123)) == 1
-    assert l.get_votes(123)[0].missed == [1L]
+    assert l.get_votes(123)[0].scores == {str(k):0 for k in standards}
     assert l.get_proposal(123).vote_count == 1
 
 
 def test_needs_votes():
     proposals = []
     users = {}
+    standards = [l.add_standard("About Pythong"), l.add_standard("Awesome")]
+    sample_vote = {k:3 for k in standards}
     for n in range(1,10):
         prop = data.copy()
         prop['id'] = n*2
@@ -143,14 +152,14 @@ def test_needs_votes():
     assert seen_ids == not_2_proposals
 
     for n in range(1, 9):
-        l.vote(users['8@example.com'], n*2, [])
+        l.vote(users['8@example.com'], n*2, sample_vote)
 
     seen_ids = set()
     for n in range(100):
         seen_ids.add(l.needs_votes(non_author_email, non_author_id))
     assert seen_ids == set([18])
 
-    l.vote(users['8@example.com'], 18, [])
+    l.vote(users['8@example.com'], 18, sample_vote)
 
     seen_ids = set()
     for n in range(100):

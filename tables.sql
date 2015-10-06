@@ -63,7 +63,7 @@ CREATE TABLE standards (
 CREATE TABLE votes (
     id          BIGSERIAL PRIMARY KEY,
 
-    missed      BIGINT[] DEFAULT '{}',
+    scores      JSONB,
 
     voter       BIGINT REFERENCES users,
     proposal    BIGINT REFERENCES proposals,
