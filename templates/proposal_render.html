@@ -1,9 +1,12 @@
-{%macro proposal_render(proposal) %}
+{%macro proposal_render(proposal, anonymize=False) %}
         <h1>{{proposal.title}}</h1>
         <h4>Category: {{proposal.category}}</h4>
         <h4>Duration: {{proposal.duration}}</h4>
         <h4>Python Level: {{proposal.python_level}}</h4>
-        <h4>Proposed By: {{authors}}</h4>
+        {% if not anonymize %}
+        <h4>Proposed By: 
+                {{proposal.authors|map(attribute='name')|join(", ")}}</h4>
+        {% endif %}
         <h4>Last Updated: {{proposal.updated|date}}</h4>
         <h4>Created: {{proposal.added_on|date}}</h4>
         <h3>Audience</h3>
@@ -26,10 +29,12 @@
         <p>
         {{proposal.outline|markdown}}
         </p>
+        {% if not anonymize %}
         <h3>Additional Notes</h3>
         <p>
         {{proposal.additional_notes|markdown}}
         </p>
+        {% endif %}
         <h3>Additional Requirements</h3>
         <p>
         {{proposal.additional_requirements|markdown}}

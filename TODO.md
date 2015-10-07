@@ -7,17 +7,19 @@
 - [x] Thunderdome voting UI
 - [x] Handle withdrawn talks
 - [x] Markdown links should target blank
-- [ ] Change voting style for kittendome
-- [ ] Remove random chat from talks
-- [ ] Thunderdome hide your groups from yourself
-- [ ] Thunderdome chat?
+- [x] Change voting style for kittendome
+- [x] Tweak voting on thunderdome
+- [ ] Deployment
 - [ ] Integrate with us.pycon.org
-- [ ] Kittendome analysis export
 - [ ] Link to edit URL on us.pycon.org
+- [ ] Fix names
+- [ ] Thunderdome chat
+- [ ] Thunderdome hide your groups from yourself
 - [ ] Email reminders/updates to committee members
 - [ ] Link login and new users stuff to mailing list
 - [ ] Turn emailing back on
-- [ ] ~~Thunderdome group tweaking UI~~
 - [ ] Thunderdome analysis export
-- [ ] Vetting & Selection?
-- [ ] Deployment
+- [ ] Kittendome analysis export
+- [ ] ~~Remove random chat from talks~~
+- [ ] ~~Thunderdome group tweaking UI~~
+
