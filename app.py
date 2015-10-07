@@ -213,8 +213,10 @@ def kitten(id):
 
 @app.route('/kitten/<int:id>/vote/', methods=['POST'])
 def vote(id):
-    scores = json.loads(request.values.get('scores', {}))
-    scores = {long(k):v for k,v in scores.items()}
+    standards = l.get_standards()
+    scores = {}
+    for s in standards:
+        scores[s.id] = int(request.values['standard-{}'.format(s.id)])
     redir = redirect(url_for('kitten', id=id))
     if l.vote(request.user.id, id, scores):
         proposal = l.get_proposal(id)

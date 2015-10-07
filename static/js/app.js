@@ -23,26 +23,17 @@ function thunder_rem(ev){
 
 function star_click(){
     var $this = $(this);
-    $this.prevAll().removeClass('glyphicon-star-empty').addClass('glyphicon-star');
-    $this.nextAll().removeClass('glyphicon-star').addClass('glyphicon-star-empty');
+    $this.prevAll('span').removeClass('glyphicon-star-empty').addClass('glyphicon-star');
+    $this.nextAll('span').removeClass('glyphicon-star').addClass('glyphicon-star-empty');
     $this.removeClass('glyphicon-star-empty').addClass('glyphicon-star');
-    score_stars();
-}
-
-function score_stars(){
-    var rv = {},
-        complete = true;
+    $this.siblings('input').val($this.siblings('.glyphicon-star').length+1);
+    var ready = true;
     $('.voting-stripe').each(function(){
-        var $this = $(this),
-            stars = $this.find('.glyphicon-star').length;
-        if(stars){
-            rv[$this.data().standard] = stars-1;
-        }else{
-            complete = false;
+        if($(this).find('.glyphicon-star').length <= 0){
+            ready = false;
         }
     });
-    $('#scores').val(JSON.stringify(rv));
-    $('#save').attr('disabled', !complete)
+    $('#save').attr('disabled', !ready);
 }
 
 TEMPLATES = {};

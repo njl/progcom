@@ -11,7 +11,6 @@
                 <h3 class="panel-title">Voting</h3>
             </div>
                 <form method="POST" action="vote/">
-                <input type="hidden" name="scores" value="{}" id="scores">
                   <table class="table">
                 {% for s in standards %}
                 <tr>
@@ -21,13 +20,19 @@
                         {% for l in range(4) %}
                         <span class="glyphicon 
                             {% if existing_vote and 
-                                    loop.index0 <= existing_vote.scores[s.id]%}
+                                    loop.index <= existing_vote.scores[s.id]%}
                             glyphicon-star
                             {% else %}
                             glyphicon-star-empty
                             {% endif %}
                             "></span>
                         {% endfor %}
+                    <input name="standard-{{s.id}}" type="hidden"
+                    {% if existing_vote %}
+                               value="{{existing_vote.scores[s.id]}}"
+                    {% else %}
+                               value=""
+                    {% endif %}>
                     </td>
                     <td><small>{{s.description}}</small></td>
                 </tr>
@@ -63,7 +68,7 @@
                     {% for v in votes %}
                     <tr><td>{{v.display_name}}</td>
                         {% for s in standards %}
-                            <td>{{v.scores[s.id]+1}}</td>
+                            <td>{{v.scores[s.id]}}</td>
                         {% endfor %}
                     </tr>
                     {% endfor %}

@@ -199,7 +199,7 @@ def vote(voter, proposal, scores):
     if set(scores.keys()) != set(x.id for x in get_standards()):
         return None
     for v in scores.values():
-        if not 0 <= v <= 3:
+        if not 1 <= v <= 4:
             return None
 
     q = '''INSERT INTO votes (voter, proposal, scores)

@@ -18,7 +18,7 @@
         <td>
             {% for l in range(4) %}
             <span class="glyphicon 
-                {%if loop.index0 <= v.scores[s.id]%}
+                {%if loop.index <= v.scores[s.id]%}
                 glyphicon-star
                 {% else %}
                 glyphicon-star-empty
