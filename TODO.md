@@ -9,9 +9,10 @@
 - [x] Markdown links should target blank
 - [x] Change voting style for kittendome
 - [x] Tweak voting on thunderdome
-- [ ] Deployment
+- [x] Deployment
 - [ ] Fix names
 - [x] Flag as special, kitten
+- [ ] Sentry on live
 - [ ] Integrate with us.pycon.org
 - [ ] Link to edit URL on us.pycon.org
 - [ ] Thunderdome chat

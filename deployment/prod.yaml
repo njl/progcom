@@ -1,0 +1,68 @@
+--- 
+- hosts: all
+  sudo: yes
+  tasks:
+      - apt: upgrade=dist update_cache=yes
+      - apt: pkg={{item}} state=latest
+        with_items:
+            - nginx
+            - supervisor
+            - git
+            - python-dev
+            - htop
+            - build-essential
+            - python-pip
+            - python-virtualenv
+            - postgresql
+            - daemontools
+            - ufw
+            - libpq-dev
+            - libffi-dev
+            - python-psycopg2
+
+
+    #Basic service
+      - service: name=postgresql state=started
+      - service: name=supervisor state=started
+      - template: src=nginx.conf dest=/etc/nginx/sites-enabled/default
+        notify: restart nginx
+      - lineinfile: dest=/etc/postgresql/9.3/main/pg_hba.conf
+                    regexp="^local.*all.*all.*peer"
+                    line="local   all             all                                     md5"
+        notify: restart postgresql
+
+    #Repo
+      - file: path=/opt/progcom state=directory owner=n group=n
+      - git: repo=git@github.com:njl/progcom.git
+                dest=/opt/progcom accept_hostkey=True force=True
+        sudo: no
+        notify: restart progcom
+
+    #Virtualenv
+      - pip: virtualenv=/opt/progcom-venv
+             requirements=/opt/progcom/requirements.pip
+        notify: restart progcom
+
+    #Envdir
+      - file: path=/opt/progcom-envdir state=directory
+      - synchronize: src=../deploy-config/ dest=/opt/progcom-envdir/ delete=yes
+        notify: restart progcom
+
+    #Supervisor
+      - template: src=web-supervisor.conf dest=/etc/supervisor/conf.d/progcom.conf
+      - supervisorctl: name=progcom state=started
+    
+    #DB
+      - postgresql_db: name=progcom
+        sudo_user: postgres
+      - postgresql_user: name=progcom password=progcom role_attr_flags=NOSUPERUSER
+        sudo_user: postgres
+
+
+  handlers:
+      - name: restart nginx
+        service: name=nginx state=restarted
+      - name: restart postgresql
+        service: name=postgresql state=restarted
+      - name: restart progcom
+        supervisorctl: name=progcom state=restarted
