@@ -105,15 +105,15 @@ def test_voting_basics():
     assert not l.get_votes(123)
 
     assert l.vote(uid, 123, {k:2 for k in standards})
-    assert l.get_votes(123)[0].scores == {str(k):2 for k in standards}
+    assert l.get_votes(123)[0].scores == {k:2 for k in standards}
     assert l.get_proposal(123).vote_count == 1
 
     assert not l.vote(uid, 123, {k:7 for k in standards})
-    assert l.get_votes(123)[0].scores == {str(k):2 for k in standards}
+    assert l.get_votes(123)[0].scores == {k:2 for k in standards}
 
     assert l.vote(uid, 123, {k:0 for k in standards})
     assert len(l.get_votes(123)) == 1
-    assert l.get_votes(123)[0].scores == {str(k):0 for k in standards}
+    assert l.get_votes(123)[0].scores == {k:0 for k in standards}
     assert l.get_proposal(123).vote_count == 1
 
 
@@ -226,21 +226,19 @@ def test_thunderdome():
     assert set([group_one, group_two]) == set(x.id for x in all_groups)
     assert not any(x.voted for x in all_groups)
 
-    votes1 = list(reversed(proposals[5:9]))
-    votes2 = proposals[4:10]
+    votes1 = list(reversed(proposals[5:6]))
+    votes2 = proposals[4:5]
 
-    l.vote_group(group_one, user, votes1, 1)
+    l.vote_group(group_one, user, votes1)
 
     all_groups = {x.id:x.voted for x in l.list_groups(user)}
     assert all_groups[group_one]
     assert not all_groups[group_two]
 
-    assert l.get_thunder_vote(group_one, user).ranked == votes1
-    assert l.get_thunder_vote(group_one, user).accept == 1
+    assert l.get_thunder_vote(group_one, user).accept == votes1
 
-    l.vote_group(group_one, user, votes2, 2)
+    l.vote_group(group_one, user, votes2)
 
-    assert l.get_thunder_vote(group_one, user).ranked == votes2
-    assert l.get_thunder_vote(group_one, user).accept == 2
+    assert l.get_thunder_vote(group_one, user).accept == votes2
 
 
