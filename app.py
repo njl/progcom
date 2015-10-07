@@ -155,31 +155,31 @@ def thunder_splash_page():
 
 @app.route('/thunder/<int:id>/')
 def thunder_view(id):
+    raw_proposals = l.get_group_proposals(id)
     proposals = [{'proposal':x, 'discussion':l.get_discussion(x.id)}
-                    for x in l.get_group_proposals(id)]
+                    for x in raw_proposals]
+    proposal_map = {x.id:x for x in raw_proposals}
     random.shuffle(proposals)
     basics = {x['proposal'].id:x['proposal'].title for x in proposals}
     vote = l.get_thunder_vote(id, request.user.id)
     return render_template('thundergroup.html', group=l.get_group(id),
-                            proposals=proposals, basics=basics,
+                            proposals=proposals, proposal_map=proposal_map,
+                            basics=basics,
                             vote = vote._asdict() if vote else None)
 
 @app.route('/thunder/<int:id>/vote/', methods=['POST'])
 def thunder_vote(id):
-    ranked = json.loads(request.values.get('ranked', '[]'))
-    proposals = {x.id:x.title for x in l.get_group_proposals(id)}
+    accept = request.values.getlist('accept', int)
 
-    if set(proposals.keys()) != set(ranked):
-        flash("You didn't vote on the right proposals!")
-        return redirect('thunder_view', id=id)
-
-    accept = int(request.values['accept'])
-
-    l.vote_group(id, request.user.id, ranked, accept)
-
-    rank_titles = ', '.join('"{}"'.format(proposals[x]) for x in ranked)
-    msg = 'You chose {} talks from group "{}", and ranked them {}.'
-    flash(msg.format(accept, l.get_group(id).name, rank_titles))
+    l.vote_group(id, request.user.id, accept)
+    if not accept:
+        txt = 'You chose no talks from group {}'.format(id)
+    else:
+        txt = 'You chose talk{} {} from group {}'
+        txt = txt.format('' if len(accept) == 1 else 's',
+                    ' and '.join('#'+str(x) for x in accept),
+                    id)
+    flash(txt)
     return redirect(url_for('thunder_splash_page'))
 
 """

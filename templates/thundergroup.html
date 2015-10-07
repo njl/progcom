@@ -48,56 +48,50 @@
         </div>
 
     </div>
-    <script type="underscore/template" id="ordered_row">
-        <tr data-id="<%=id%>" class="ordered">
-            <td><%=title%></td>
-            <td>
 
-            <div class="btn-group btn-group-xs" role="group" aria-label="...">
-              <button type="button" class="btn btn-default thunder-up"><span class="glyphicon glyphicon-arrow-up"></span></button>
-              <button type="button" class="btn btn-default thunder-down"><span class="glyphicon glyphicon-arrow-down"></span></button>
-            </div>
-            </td>
-            </tr>
+    <script type="underscore/template" id="ordered_row">
+        <li class="list-group-item"><%=title%>
+            <input type="hidden" name="accept" value="<%=id%>"></li>
     </script>
+
     <div class="col-md-4">
+            <form action="vote/" method="POST">
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h3 class="panel-title">Your Ordering</h3>
+                <h3 class="panel-title">Talks to Accept</h3>
             </div>
-            <table class="table">
-                <tbody id="ranked">
-                </tbody>
-            </table>
+            <ul class="list-group" id="accept">
+                {% for v in vote.accept%}
+                <li class="list-group-item">
+                    {{proposal_map[v].title}}
+                    <input type="hidden" name="accept" value="{{v}}">
+                </li>
+                {% endfor %}
+            </ul>
             <div class="panel-footer">
-                <form class="form-horizontal" action="vote/" method="POST">
-                    <input type="hidden" name="ranked" id="hidden-ranked" value="[]">
-                  <div class="form-group">
-                      <label class="col-md-8" for="quantity-selector">Number of Talks To Accept</label>
-                      <div class="col-md-4">
-                      <select class="form-control" id="quantity-selector" name="accept">
-                          {% for i in range(3)%}
-                            <option>{{loop.index0}}</option>
-                          {% endfor %}
-                      </select>
-                      </div>
-                  </div>
-                <button type="submit" class="btn btn-success btn-block" id="save" disabled="disabled">Save Vote</button>
-                </form>
+                <button type="submit" class="btn btn-success btn-block" id="save">Save Choices</button>
+                 <span class="help-block">Choose a talk from this group for PyCon; if none seem good enough, you may choose none.
+                    If you think there are two good options, choose you may choose two.</span>
             </div>
         </div>
+            </form>
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h3 class="panel-title">Unranked</h3>
             </div>
-            <table class="table" id="unranked">
+            <ul class="list-group" id="unranked">
                 {% for p in proposals%}
-                <tr data-id="{{p.proposal.id}}" 
-                    id="unranked-prop-{{p.proposal.id}}">
-                    <td>{{p.proposal.title}}</td>
-                </tr>
+                <li data-id="{{p.proposal.id}}" 
+                    class="list-group-item"
+                    id="unranked-prop-{{p.proposal.id}}"
+                    {%if vote and p.proposal.id in vote.accept%}
+                    style="display:none;"
+                    {%endif%}
+                    >
+                        {{p.proposal.title}}
+                </li>
                 {% endfor %}
-            </table>
+            </ul>
         </div>
 
     </div><!--end side column-->

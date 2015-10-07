@@ -266,17 +266,17 @@ def create_group(name, proposals):
     execute(q, id, proposals)
     return id
 
-def vote_group(thundergroup, voter, ranked, accept):
+def vote_group(thundergroup, voter, accept):
     try:
-        q = '''INSERT INTO thundervotes (thundergroup, voter, ranked, accept)
-                VALUES (%s, %s, %s, %s)'''
-        execute(q, thundergroup, voter, ranked, accept)
+        q = '''INSERT INTO thundervotes (thundergroup, voter, accept)
+                VALUES (%s, %s, %s)'''
+        execute(q, thundergroup, voter, accept)
         return
     except IntegrityError as e:
         pass
-    q = '''UPDATE thundervotes SET ranked=%s, accept=%s
+    q = '''UPDATE thundervotes SET accept=%s
             WHERE thundergroup=%s AND voter=%s'''
-    execute(q, [[ranked, accept, thundergroup, voter]])
+    execute(q, [[accept, thundergroup, voter]])
 
 
 def list_groups(userid):

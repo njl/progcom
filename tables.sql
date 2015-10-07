@@ -43,8 +43,7 @@ CREATE TABLE proposals (
 CREATE TABLE thundervotes (
     thundergroup    BIGINT REFERENCES thundergroups,
     voter           BIGINT REFERENCES users,
-    ranked          BIGINT[],
-    accept          INT,
+    accept          BIGINT[],
     UNIQUE(voter, thundergroup)
 
 );
