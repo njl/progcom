@@ -223,13 +223,10 @@ def get_user_vote(userid, proposal):
     return _clean_vote(rv)
 
 def get_votes(proposal):
-    q = '''SELECT * FROM votes
+    q = '''SELECT votes.*, users.display_name
+            FROM votes LEFT JOIN users ON (votes.voter=users.id)
             WHERE proposal=%s'''
-    rv = defaultdict(Counter)
-    for r in fetchall(q, proposal):
-        for k,v in r.scores.items():
-            rv[int(k)][int(v)] += 1
-    return rv
+    return [_clean_vote(v) for v in fetchall(q, proposal)]
 
 def needs_votes(email, uid):
     q = '''SELECT id, vote_count FROM proposals

@@ -199,19 +199,15 @@ def kitten(id):
 
     standards = l.get_standards()
     progress = l.kitten_progress()
-    authors = ', '.join(x.name for x in proposal.authors)
     bookmarked = l.has_bookmark(request.user.id, id)
 
     existing_vote = l.get_user_vote(request.user.id, id)
-    raw_votes = l.get_votes(id)
-    votes = {}
-    for k, vals in raw_votes.items():
-        votes[k] = ','.join(str(vals[i]) for i in range(4))
+    votes = l.get_votes(id)
 
     return render_template('kitten_proposal.html', proposal=proposal,
                             votes=votes, discussion=discussion,
                             standards=standards, progress=progress,
-                            authors=authors, bookmarked=bookmarked,
+                            bookmarked=bookmarked,
                             existing_vote=existing_vote,
                             unread=unread)
 

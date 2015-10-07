@@ -15,13 +15,7 @@
                   <table class="table">
                 {% for s in standards %}
                 <tr>
-                        {% if existing_vote %}
-                        <td>
-                            {% with v = votes[s.id] %}
-                            <span class="sparkbar" values="{{v}}"></span>
-                            {% endwith %}
-                        </td>
-                        {% endif %}
+                    <td>{{s.id}}</td>
                     <td class="voting-stripe" data-standard="{{s.id}}"
                         style="font-size:120%">
                         {% for l in range(4) %}
@@ -40,17 +34,43 @@
                 {% endfor %}
                 </table>
             <div class="panel-footer">
+                {% if existing_vote %}
+                <a href="/" class="btn btn-success btn-lg">Next</a>
+                {% endif %}
                 <button type="Submit" class="btn btn-primary" id="save"
                     {% if not existing_vote %}
                         disabled="disabled"
                     {% endif %}
                     >Save Votes</button>
-                {% if existing_vote %}
-                <a href="/" class="btn btn-primary">Next</a>
-                {% endif %}
             </div>
             </form>
         </div>
+
+        {% if existing_vote %}
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">Votes</h3>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr><th></th>
+                        {% for s in standards %}
+                        <th>{{s.id}}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for v in votes %}
+                    <tr><td>{{v.display_name}}</td>
+                        {% for s in standards %}
+                            <td>{{v.scores[s.id]+1}}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
 
         <div class="panel panel-primary">
             <div class="panel-body">
