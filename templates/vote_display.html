@@ -1,0 +1,9 @@
+{%macro vote_display(vote) %}
+{% if vote == 2 %}
+<span class="glyphicon glyphicon-ok"></span>
+{% elif vote == 1%}
+<span class="glyphicon glyphicon-remove"></span>
+{% else %}
+<span class="glyphicon glyphicon-warning-sign"></span>
+{% endif%}
+{%endmacro%}

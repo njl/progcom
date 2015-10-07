@@ -1,5 +1,6 @@
 {%extends "base.html"%}
 {%import "proposal_render.html" as pr%}
+{%import "vote_display.html" as vd%}
 {%block body %}
 <div class="row">
     <div class="col-md-8">
@@ -15,29 +16,45 @@
                 {% for s in standards %}
                 <tr>
                     <td>{{s.id}}</td>
-                    <td class="voting-stripe" data-standard="{{s.id}}"
-                        style="font-size:120%">
-                        {% for l in range(4) %}
-                        <span class="glyphicon 
-                            {% if existing_vote and 
-                                    loop.index <= existing_vote.scores[s.id]%}
-                            glyphicon-star
-                            {% else %}
-                            glyphicon-star-empty
-                            {% endif %}
-                            "></span>
-                        {% endfor %}
-                    <input name="standard-{{s.id}}" type="hidden"
-                    {% if existing_vote %}
-                               value="{{existing_vote.scores[s.id]}}"
-                    {% else %}
-                               value=""
-                    {% endif %}>
+                    <td>
+                        <div class="btn-group btn-group-xs voting-stripe">
+                            <button type="button" class="btn 
+                            {% if existing_vote
+                                    and existing_vote.scores[s.id] == 2 %}
+                            btn-primary
+                            {%else %}
+                            btn-default
+                            {%endif%}
+                            
+                                " data-val="2"><span class="glyphicon glyphicon-ok" title="Meets Standard"></span></button>
+                            <button type="button" class="btn 
+                            {% if existing_vote
+                                    and existing_vote.scores[s.id] == 0 %}
+                            btn-primary
+                            {%else %}
+                            btn-default
+                            {%endif%}
+                                " data-val="0"><span class="glyphicon glyphicon-remove" title="Does Not Meet Standard"></span></button>
+                            <button type="button" class="btn 
+                            {% if existing_vote
+                                    and existing_vote.scores[s.id] == 1 %}
+                            btn-primary
+                            {%else %}
+                            btn-default
+                            {%endif%}
+                                " data-val="1"><span class="glyphicon glyphicon-warning-sign" title="Concern it Might Not Meet Standard"></span></button>
+                            <input name="standard-{{s.id}}"
+                                {%if existing_vote and existing_vote.scores %}
+                                   val="{{existing_vote.scores[s.id]}}"
+                                {% endif %}
+                            type="hidden">
+                        </div>
                     </td>
                     <td><small>{{s.description}}</small></td>
                 </tr>
                 {% endfor %}
                 </table>
+                {{existing_vote}}
             <div class="panel-body">
                 {% if existing_vote and existing_vote.nominate %}
                 <button type="button" class="btn btn-success btn-block" id="nominate">Nominated</button>
@@ -55,7 +72,7 @@
                     {% if not existing_vote %}
                         disabled="disabled"
                     {% endif %}
-                    >Save Votes</button>
+                    >Save</button>
             </div>
             </form>
         </div>
@@ -77,7 +94,7 @@
                     {% for v in votes %}
                     <tr><td>{{v.display_name}}</td>
                         {% for s in standards %}
-                            <td>{{v.scores[s.id]}}</td>
+                            <td>{{vd.vote_display(v.scores[s.id])}}</td>
                         {% endfor %}
                     </tr>
                     {% endfor %}

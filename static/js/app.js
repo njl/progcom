@@ -21,15 +21,14 @@ function thunder_rem(ev){
     $this.remove();
 }
 
-function star_click(){
+function vote_click(){
     var $this = $(this);
-    $this.prevAll('span').removeClass('glyphicon-star-empty').addClass('glyphicon-star');
-    $this.nextAll('span').removeClass('glyphicon-star').addClass('glyphicon-star-empty');
-    $this.removeClass('glyphicon-star-empty').addClass('glyphicon-star');
-    $this.siblings('input').val($this.siblings('.glyphicon-star').length+1);
+    $this.siblings('input').val($this.data().val);
+    $this.siblings().addClass('btn-default').removeClass('btn-primary');
+    $this.addClass('btn-primary');
     var ready = true;
     $('.voting-stripe').each(function(){
-        if($(this).find('.glyphicon-star').length <= 0){
+        if($(this).find('.btn-primary').length <= 0){
             ready = false;
         }
     });
@@ -62,7 +61,7 @@ $(document).ready(function(){
     $('#proposal-tabs a').click(show_proposal_tabs);
     $('#unranked li').on('click', thunder_add);
     $('#accept').on('click', 'li', thunder_rem);
-    $('.voting-stripe span').on('click', star_click);
+    $('.voting-stripe button').on('click', vote_click);
     $('#proposal-tabs a').first().tab("show");
     $('#nominate').on('click', nominate_click);
 });
