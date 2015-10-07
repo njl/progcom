@@ -38,6 +38,15 @@
                 </tr>
                 {% endfor %}
                 </table>
+            <div class="panel-body">
+                {% if existing_vote and existing_vote.nominate %}
+                <button type="button" class="btn btn-success btn-block" id="nominate">Nominated</button>
+                <input name="nominate" value="1" type="hidden">
+                {% else %}
+                <button type="button" class="btn btn-default btn-block" id="nominate">Nominate</button>
+                <input name="nominate" value="0" type="hidden">
+                {% endif %}
+            </div>
             <div class="panel-footer">
                 {% if existing_vote %}
                 <a href="/" class="btn btn-success btn-lg">Next</a>

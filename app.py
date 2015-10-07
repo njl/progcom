@@ -217,8 +217,9 @@ def vote(id):
     scores = {}
     for s in standards:
         scores[s.id] = int(request.values['standard-{}'.format(s.id)])
+    nominate = request.values.get('nominate', '0') == '1'
     redir = redirect(url_for('kitten', id=id))
-    if l.vote(request.user.id, id, scores):
+    if l.vote(request.user.id, id, scores, nominate):
         proposal = l.get_proposal(id)
         return redir
     return redir

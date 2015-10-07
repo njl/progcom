@@ -10,9 +10,10 @@
 - [x] Change voting style for kittendome
 - [x] Tweak voting on thunderdome
 - [ ] Deployment
+- [ ] Fix names
+- [x] Flag as special, kitten
 - [ ] Integrate with us.pycon.org
 - [ ] Link to edit URL on us.pycon.org
-- [ ] Fix names
 - [ ] Thunderdome chat
 - [ ] Thunderdome hide your groups from yourself
 - [ ] Email reminders/updates to committee members

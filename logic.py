@@ -192,7 +192,7 @@ def add_standard(s):
 def _clean_vote(vote):
     return vote._replace(scores={int(k):v for k,v in vote.scores.items()}) 
 
-def vote(voter, proposal, scores):
+def vote(voter, proposal, scores, nominate=False):
     if not get_user(voter).approved:
         return None
 
@@ -202,16 +202,16 @@ def vote(voter, proposal, scores):
         if not 1 <= v <= 4:
             return None
 
-    q = '''INSERT INTO votes (voter, proposal, scores)
-            VALUES (%s, %s, %s) RETURNING id'''
+    q = '''INSERT INTO votes (voter, proposal, scores, nominate)
+            VALUES (%s, %s, %s, %s) RETURNING id'''
     try:
-        return scalar(q, voter, proposal, json.dumps(scores))
+        return scalar(q, voter, proposal, json.dumps(scores), nominate)
     except IntegrityError as e:
         pass
 
-    q = '''UPDATE votes SET scores=%s, added_on=now()
+    q = '''UPDATE votes SET scores=%s, added_on=now(), nominate=%s
             WHERE voter=%s AND proposal=%s RETURNING id'''
-    return scalar(q, [[json.dumps(scores), voter, proposal]])
+    return scalar(q, [[json.dumps(scores), nominate, voter, proposal]])
 
 def get_user_vote(userid, proposal):
     q = '''SELECT * FROM votes WHERE

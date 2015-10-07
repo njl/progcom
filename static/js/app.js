@@ -36,6 +36,20 @@ function star_click(){
     $('#save').attr('disabled', !ready);
 }
 
+function nominate_click(){
+    var $this=$(this),
+        $inp = $(this).siblings('input');
+    if($inp.val() == 0){
+        $this.text("Nominated")
+        $inp.val(1);
+        $this.addClass("btn-success").removeClass("btn-primary");
+    }else{
+        $this.text("Nominate");
+        $inp.val(0);
+        $this.addClass("btn-default").removeClass("btn-success")
+    }
+}
+
 TEMPLATES = {};
 
 $(document).ready(function(){
@@ -50,4 +64,5 @@ $(document).ready(function(){
     $('#accept').on('click', 'li', thunder_rem);
     $('.voting-stripe span').on('click', star_click);
     $('#proposal-tabs a').first().tab("show");
+    $('#nominate').on('click', nominate_click);
 });
