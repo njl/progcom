@@ -12,6 +12,7 @@
 - [x] Deployment
 - [ ] Fix names
 - [x] Flag as special, kitten
+- [ ] Add nominate to vote displays
 - [ ] Sentry on live
 - [ ] Integrate with us.pycon.org
 - [ ] Link to edit URL on us.pycon.org

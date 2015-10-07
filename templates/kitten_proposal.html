@@ -45,7 +45,7 @@
                                 " data-val="1"><span class="glyphicon glyphicon-warning-sign" title="Concern it Might Not Meet Standard"></span></button>
                             <input name="standard-{{s.id}}"
                                 {%if existing_vote and existing_vote.scores %}
-                                   val="{{existing_vote.scores[s.id]}}"
+                                   value="{{existing_vote.scores[s.id]}}"
                                 {% endif %}
                             type="hidden">
                         </div>
