@@ -15,3 +15,5 @@ gevent
 pytest
 mock
 pytest-cov
+
+gunicorn
