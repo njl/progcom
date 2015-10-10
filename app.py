@@ -8,11 +8,17 @@ from flask import (Flask, render_template, request, session, url_for, redirect,
 from jinja2 import Markup
 import bleach
 import markdown
+from raven.contrib.flask import Sentry
+
 
 import logic as l
 
 app = Flask(__name__)
 app.secret_key = os.environ['FLASK_SECRET_KEY']
+
+if 'SENTRY_DSN' in os.environ:
+    sentry = Sentry(app)
+    print 'Sentry'
 
 THIS_IS_BATCH = 'THIS_IS_BATCH' in os.environ
 if THIS_IS_BATCH:

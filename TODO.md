@@ -12,8 +12,8 @@
 - [x] Deployment
 - [x] Fix names
 - [x] Flag as special, screening stage
-- [ ] Add nominate to vote displays
-- [ ] Sentry on live
+- [x] Add nominate to vote displays
+- [x] Sentry on live
 - [ ] Integrate with us.pycon.org
 - [ ] Link to edit URL on us.pycon.org
 - [ ] batch chat

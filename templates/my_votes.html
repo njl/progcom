@@ -6,9 +6,11 @@
     <tr>
         <th>Talk</th>
         {% for s in standards %}
-            <th>{{s.description|truncate(20)}}</th>
+            <th>{{s.description|truncate(15)}}</th>
         {% endfor %}
+        <th>Nominated</th>
         <th>When</th>
+        <th>Updated</th>
     </tr>
     </thead>
     {% for v in votes %}
@@ -20,8 +22,9 @@
             {{vd.vote_display(v.scores[s.id])}}
         </td>
         {% endfor %}
+        <td>{% if v.nominate %}<span class="glyphicon glyphicon-star"></span>{%endif %}</td>
         <td>{{v.added_on|date}}</td>
-        <td>{% if updated%}Updated Since Your Vote{%endif%}</td>
+        <td>{% if updated%}<span class="glyphicon glyphicon-asterisk"></span>{%endif%}</td>
     {% endwith%}
     {% endfor %}
 </table>

@@ -17,3 +17,4 @@ mock
 pytest-cov
 
 gunicorn
+raven[flask]

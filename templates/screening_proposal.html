@@ -87,6 +87,7 @@
                         {% for s in standards %}
                         <th>{{s.id}}</th>
                         {% endfor %}
+                        <th>N</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -95,6 +96,10 @@
                         {% for s in standards %}
                             <td>{{vd.vote_display(v.scores[s.id])}}</td>
                         {% endfor %}
+                        <td>{% if v.nominate %}
+                            <span class="glyphicon glyphicon-star"></span>
+                            {%endif%}
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
