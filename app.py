@@ -18,7 +18,7 @@ THIS_IS_THUNDERDOME = 'THUNDERDOME' in os.environ
 if THIS_IS_THUNDERDOME:
     print 'THIS IS THUNDERDOME'
 else:
-    print 'This is Kittendome!'
+    print 'This is Screening!'
 
 @app.template_filter('date')
 def date_filter(d):
@@ -49,7 +49,7 @@ def security_check():
             and request.user.email not in _ADMIN_EMAILS):
         abort(403)
 
-    if path.startswith('/kitten') and THIS_IS_THUNDERDOME:
+    if path.startswith('/screening') and THIS_IS_THUNDERDOME:
         abort(403)
 
     if path.startswith('/thunder') and not THIS_IS_THUNDERDOME:
@@ -183,10 +183,10 @@ def thunder_vote(id):
     return redirect(url_for('thunder_splash_page'))
 
 """
-Kittendome Actions
+Screening Actions
 """
-@app.route('/kitten/<int:id>/')
-def kitten(id):
+@app.route('/screening/<int:id>/')
+def screening(id):
     proposal = l.get_proposal(id)
     if not proposal or proposal.withdrawn:
         abort(404)
@@ -198,66 +198,66 @@ def kitten(id):
     discussion = l.get_discussion(id)
 
     standards = l.get_standards()
-    progress = l.kitten_progress()
+    progress = l.screening_progress()
     bookmarked = l.has_bookmark(request.user.id, id)
 
     existing_vote = l.get_user_vote(request.user.id, id)
     votes = l.get_votes(id)
 
-    return render_template('kitten_proposal.html', proposal=proposal,
+    return render_template('screening_proposal.html', proposal=proposal,
                             votes=votes, discussion=discussion,
                             standards=standards, progress=progress,
                             bookmarked=bookmarked,
                             existing_vote=existing_vote,
                             unread=unread)
 
-@app.route('/kitten/<int:id>/vote/', methods=['POST'])
+@app.route('/screening/<int:id>/vote/', methods=['POST'])
 def vote(id):
     standards = l.get_standards()
     scores = {}
     for s in standards:
         scores[s.id] = int(request.values['standard-{}'.format(s.id)])
     nominate = request.values.get('nominate', '0') == '1'
-    redir = redirect(url_for('kitten', id=id))
+    redir = redirect(url_for('screening', id=id))
     if l.vote(request.user.id, id, scores, nominate):
         proposal = l.get_proposal(id)
         return redir
     return redir
 
-@app.route('/kitten/<int:id>/comment/', methods=['POST'])
+@app.route('/screening/<int:id>/comment/', methods=['POST'])
 def comment(id):
     comment = request.values.get('comment').strip()
-    redir = redirect(url_for('kitten', id=id))
+    redir = redirect(url_for('screening', id=id))
     if not comment:
         flash("Empty comment")
         return redir
     l.add_to_discussion(request.user.id, id, comment, feedback=False)
     return redir
 
-@app.route('/kitten/<int:id>/feedback/', methods=['POST'])
+@app.route('/screening/<int:id>/feedback/', methods=['POST'])
 def feedback(id):
     comment = request.values.get('feedback').strip()
-    redir = redirect(url_for('kitten', id=id))
+    redir = redirect(url_for('screening', id=id))
     if not comment:
         flash('Empty comment')
         return redir
     l.add_to_discussion(request.user.id, id, comment, feedback=True)
     return redir
 
-@app.route('/kitten/<int:id>/bookmark/add/', methods=['POST'])
+@app.route('/screening/<int:id>/bookmark/add/', methods=['POST'])
 def add_bookmark(id):
     l.add_bookmark(request.user.id, id)
-    return redirect(url_for('kitten', id=id))
+    return redirect(url_for('screening', id=id))
 
-@app.route('/kitten/<int:id>/bookmark/remove/', methods=['POST'])
+@app.route('/screening/<int:id>/bookmark/remove/', methods=['POST'])
 def remove_bookmark(id):
     l.remove_bookmark(request.user.id, id)
-    return redirect(url_for('kitten', id=id))
+    return redirect(url_for('screening', id=id))
 
-@app.route('/kitten/<int:id>/mark_read/', methods=['POST'])
+@app.route('/screening/<int:id>/mark_read/', methods=['POST'])
 def mark_read(id):
     l.mark_read(request.user.id, id)
-    return redirect(url_for('kitten', id=id))
+    return redirect(url_for('screening', id=id))
 
 """
 Author Feedback
@@ -298,7 +298,7 @@ def pick():
     if not id:
         flash("You have voted on every proposal!")
         return redirect(url_for('show_votes'))
-    return redirect(url_for('kitten', id=id))
+    return redirect(url_for('screening', id=id))
 
 if __name__ == '__main__':
     app.run(port=4000, debug=True)

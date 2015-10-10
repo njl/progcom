@@ -7,11 +7,11 @@
 - [x] Thunderdome voting UI
 - [x] Handle withdrawn talks
 - [x] Markdown links should target blank
-- [x] Change voting style for kittendome
+- [x] Change voting style for screening 
 - [x] Tweak voting on thunderdome
 - [x] Deployment
 - [ ] Fix names
-- [x] Flag as special, kitten
+- [x] Flag as special, screening stage
 - [ ] Add nominate to vote displays
 - [ ] Sentry on live
 - [ ] Integrate with us.pycon.org

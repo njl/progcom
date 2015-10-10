@@ -179,7 +179,7 @@ def get_bookmarks(uid):
 
 
 """
-Kittendome Voting
+Screening Voting
 """
 
 def get_standards():
@@ -241,7 +241,7 @@ def needs_votes(email, uid):
     results = [x for x in results if x.vote_count == min_vote]
     return random.choice(results).id
 
-def kitten_progress():
+def screening_progress():
     q = '''SELECT vote_count, COUNT(vote_count) as quantity
             FROM proposals GROUP BY vote_count'''
     return fetchall(q)

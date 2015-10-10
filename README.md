@@ -50,7 +50,7 @@ To turn on Thunderdome, `echo 1 > dev-config/THUNDERDOME`.
 
 Understanding The PyCon Talk Review Process
 ------------
-The process runs in two rounds; the first is called "kittendome", and is
+The process runs in two rounds; the first is called "screening", and is
 basically the process of winnowing out talks. Talks which aren't relevant for
 PyCon, have poorly prepared proposals, or otherwise won't make the cut, get
 eliminated from consideration early. Talks aren't compared to one another; a

@@ -14,7 +14,7 @@
     {% for v in votes %}
     {% with updated = v.added_on < v.updated %}
     <tr{%if updated%} class="warning"{%endif%}>
-        <td><a href="{{url_for("kitten", id=v.proposal)}}">{{v.title}} (#{{v.proposal}})</a></td>
+        <td><a href="{{url_for("screening", id=v.proposal)}}">{{v.title}} (#{{v.proposal}})</a></td>
         {% for s in standards %}
         <td>
             {{vd.vote_display(v.scores[s.id])}}
