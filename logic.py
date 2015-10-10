@@ -339,6 +339,7 @@ def add_to_discussion(userid, proposal, body, feedback=False, name=None):
         email = _JINJA.get_template('feedback_notice.txt')
         for to, key in generate_author_keys(proposal).items():
             url = 'http://{}/feedback/{}'.format(_WEB_HOST, key)
+            edit_url = 'https://us.pycon.org/2016/proposals/{}/'.format(proposal)
             email = email.render(proposal=full_proposal, body=body, 
                                 url=url, edit_url='TODO') #TODO
             msg = {'text': email,

@@ -15,7 +15,7 @@
 - [x] Add nominate to vote displays
 - [x] Sentry on live
 - [ ] Integrate with us.pycon.org
-- [ ] Link to edit URL on us.pycon.org
+- [x] Link to edit URL on us.pycon.org
 - [ ] batch chat
 - [ ] batch hide your groups from yourself
 - [ ] Email reminders/updates to committee members
