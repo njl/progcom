@@ -1,28 +1,28 @@
 - [x] Unread
 - [x] Feedback from proposal authors
 - [x] Votes should reload
-- [x] Thunderdome Logic
+- [x] batch Logic
 - [x] Disallow viewing own proposal
 - [x] Display talk data as markdown
-- [x] Thunderdome voting UI
+- [x] batch voting UI
 - [x] Handle withdrawn talks
 - [x] Markdown links should target blank
 - [x] Change voting style for screening 
-- [x] Tweak voting on thunderdome
+- [x] Tweak voting on batch
 - [x] Deployment
-- [ ] Fix names
+- [x] Fix names
 - [x] Flag as special, screening stage
 - [ ] Add nominate to vote displays
 - [ ] Sentry on live
 - [ ] Integrate with us.pycon.org
 - [ ] Link to edit URL on us.pycon.org
-- [ ] Thunderdome chat
-- [ ] Thunderdome hide your groups from yourself
+- [ ] batch chat
+- [ ] batch hide your groups from yourself
 - [ ] Email reminders/updates to committee members
 - [ ] Link login and new users stuff to mailing list
 - [ ] Turn emailing back on
-- [ ] Thunderdome analysis export
-- [ ] Kittendome analysis export
+- [ ] batch analysis export
+- [ ] Screening analysis export
 - [ ] ~~Remove random chat from talks~~
-- [ ] ~~Thunderdome group tweaking UI~~
+- [ ] ~~batch group tweaking UI~~
 

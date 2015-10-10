@@ -121,7 +121,7 @@ def test_needs_votes():
     proposals = []
     users = {}
     standards = [l.add_standard("About Pythong"), l.add_standard("Awesome")]
-    sample_vote = {k:3 for k in standards}
+    sample_vote = {k:2 for k in standards}
     for n in range(1,10):
         prop = data.copy()
         prop['id'] = n*2
@@ -203,7 +203,7 @@ def test_discussion():
     assert l.get_discussion(proposal)[-1].body == 'LOREM IPSUM'
     assert l.get_discussion(proposal)[0].body == 'Lorem ipsum'
 
-def test_thunderdome():
+def test_batch():
 
     user = l.add_user('example@example.com', 'Voter', '123')
     l.approve_user(user)
@@ -235,10 +235,10 @@ def test_thunderdome():
     assert all_groups[group_one]
     assert not all_groups[group_two]
 
-    assert l.get_thunder_vote(group_one, user).accept == votes1
+    assert l.get_batch_vote(group_one, user).accept == votes1
 
     l.vote_group(group_one, user, votes2)
 
-    assert l.get_thunder_vote(group_one, user).accept == votes2
+    assert l.get_batch_vote(group_one, user).accept == votes2
 
 

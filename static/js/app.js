@@ -3,7 +3,7 @@ function show_proposal_tabs(ev){
     $(this).tab('show');
 }
 
-function thunder_add(ev){
+function batch_add(ev){
     var $accept = $('#accept');
     if ($accept.find('li').length >= 2){
         return;
@@ -14,7 +14,7 @@ function thunder_add(ev){
     $accept.append(TEMPLATES.ordered_row({id:id, title:TALKS[id]}));
 }
 
-function thunder_rem(ev){
+function batch_rem(ev){
     var $this=$(this),
         id = $this.find('input').val();
     $('#unranked-prop-'+id).show();
@@ -57,10 +57,10 @@ $(document).ready(function(){
         TEMPLATES[$this.attr("id")] = _.template($this.text());
     });
 
-    //Thunderdome
+    //Batch
     $('#proposal-tabs a').click(show_proposal_tabs);
-    $('#unranked li').on('click', thunder_add);
-    $('#accept').on('click', 'li', thunder_rem);
+    $('#unranked li').on('click', batch_add);
+    $('#accept').on('click', 'li', batch_rem);
     $('.voting-stripe button').on('click', vote_click);
     $('#proposal-tabs a').first().tab("show");
     $('#nominate').on('click', nominate_click);

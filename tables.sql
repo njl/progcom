@@ -9,7 +9,7 @@ CREATE TABLE users (
 CREATE UNIQUE INDEX idx_users_email
     ON users (lower(email));
 
-CREATE TABLE thundergroups (
+CREATE TABLE batchgroups (
     id      BIGSERIAL PRIMARY KEY,
     name    VARCHAR(254)
 );
@@ -21,7 +21,7 @@ CREATE TABLE proposals (
     added_on                TIMESTAMP WITH TIME ZONE DEFAULT now(),
     vote_count              INT DEFAULT 0,     --Total # of votes
     voters                  BIGINT[] DEFAULT '{}',
-    thundergroup            BIGINT REFERENCES thundergroups DEFAULT NULL,
+    batchgroup              BIGINT REFERENCES batchgroups DEFAULT NULL,
 
     withdrawn               BOOLEAN DEFAULT FALSE,
 
@@ -40,11 +40,11 @@ CREATE TABLE proposals (
     additional_requirements TEXT
 );
 
-CREATE TABLE thundervotes (
-    thundergroup    BIGINT REFERENCES thundergroups,
+CREATE TABLE batchvotes (
+    batchgroup      BIGINT REFERENCES batchgroups,
     voter           BIGINT REFERENCES users,
     accept          BIGINT[],
-    UNIQUE(voter, thundergroup)
+    UNIQUE(voter, batchgroup)
 
 );
 

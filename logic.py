@@ -254,46 +254,46 @@ def get_my_votes(uid):
     return [_clean_vote(v) for v in fetchall(q, uid)]
 
 """
-Thunderdome
+Batch
 """
 def create_group(name, proposals):
-    q = 'INSERT INTO thundergroups (name) VALUES (%s) RETURNING id'
+    q = 'INSERT INTO batchgroups (name) VALUES (%s) RETURNING id'
     id = scalar(q, name)
-    q = 'UPDATE proposals SET thundergroup=%s WHERE id = ANY(%s)'
+    q = 'UPDATE proposals SET batchgroup=%s WHERE id = ANY(%s)'
     execute(q, id, proposals)
     return id
 
-def vote_group(thundergroup, voter, accept):
+def vote_group(batchgroup, voter, accept):
     try:
-        q = '''INSERT INTO thundervotes (thundergroup, voter, accept)
+        q = '''INSERT INTO batchvotes (batchgroup, voter, accept)
                 VALUES (%s, %s, %s)'''
-        execute(q, thundergroup, voter, accept)
+        execute(q, batchgroup, voter, accept)
         return
     except IntegrityError as e:
         pass
-    q = '''UPDATE thundervotes SET accept=%s
-            WHERE thundergroup=%s AND voter=%s'''
-    execute(q, [[accept, thundergroup, voter]])
+    q = '''UPDATE batchvotes SET accept=%s
+            WHERE batchgroup=%s AND voter=%s'''
+    execute(q, [[accept, batchgroup, voter]])
 
 
 def list_groups(userid):
-    q = '''SELECT tg.*, tv.thundergroup IS NOT NULL AS voted
-            FROM thundergroups as tg
-            LEFT JOIN thundervotes as tv 
-            ON tg.id=tv.thundergroup AND tv.voter = %s'''
+    q = '''SELECT tg.*, tv.batchgroup IS NOT NULL AS voted
+            FROM batchgroups as tg
+            LEFT JOIN batchvotes as tv 
+            ON tg.id=tv.batchgroup AND tv.voter = %s'''
     return fetchall(q, userid)
 
-def get_group(thundergroup):
-    return fetchone('SELECT * FROM thundergroups WHERE id=%s', thundergroup)
+def get_group(batchgroup):
+    return fetchone('SELECT * FROM batchgroups WHERE id=%s', batchgroup)
 
-def get_group_proposals(thundergroup):
-    q = 'SELECT * FROM proposals WHERE thundergroup=%s'
-    rv = fetchall(q, thundergroup)
+def get_group_proposals(batchgroup):
+    q = 'SELECT * FROM proposals WHERE batchgroup=%s'
+    rv = fetchall(q, batchgroup)
     return [_clean_proposal(x._asdict()) for x in rv]
 
-def get_thunder_vote(thundergroup, voter):
-    q = 'SELECT * FROM thundervotes WHERE thundergroup=%s AND voter=%s'
-    return fetchone(q, thundergroup, voter)
+def get_batch_vote(batchgroup, voter):
+    q = 'SELECT * FROM batchvotes WHERE batchgroup=%s AND voter=%s'
+    return fetchone(q, batchgroup, voter)
 
 """
 Discussion

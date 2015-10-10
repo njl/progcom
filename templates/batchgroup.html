@@ -15,7 +15,7 @@
             <div role="tabpanel" class="tab-pane" id="proposal-{{p.proposal.id}}">
                 {{pr.proposal_render(p.proposal)}}
                 <hr>
-                <h2>Kittendome Discussion</h2>
+                <h2>Screening Discussion</h2>
                 {% for msg in p.discussion%}
                     <div class="panel panel-default">
                         <div class="panel-heading">
@@ -40,7 +40,7 @@
                             {% endif %}
                         </div>
                 {% else %}
-                    <p>No dicussion in Kittendom</p>
+                    <p>No dicussion in Screening</p>
                 {% endfor %}
 
             </div>

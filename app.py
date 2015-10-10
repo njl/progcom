@@ -14,9 +14,9 @@ import logic as l
 app = Flask(__name__)
 app.secret_key = os.environ['FLASK_SECRET_KEY']
 
-THIS_IS_THUNDERDOME = 'THUNDERDOME' in os.environ
-if THIS_IS_THUNDERDOME:
-    print 'THIS IS THUNDERDOME'
+THIS_IS_BATCH = 'THIS_IS_BATCH' in os.environ
+if THIS_IS_BATCH:
+    print 'THIS IS BATCH'
 else:
     print 'This is Screening!'
 
@@ -49,10 +49,10 @@ def security_check():
             and request.user.email not in _ADMIN_EMAILS):
         abort(403)
 
-    if path.startswith('/screening') and THIS_IS_THUNDERDOME:
+    if path.startswith('/screening') and THIS_IS_BATCH:
         abort(403)
 
-    if path.startswith('/thunder') and not THIS_IS_THUNDERDOME:
+    if path.startswith('/batch') and not THIS_IS_BATCH:
         abort(403)
 
     if request.user:
@@ -146,29 +146,29 @@ def show_unread():
     return render_template('unread.html', unread=l.get_unread(request.user.id)) 
 
 """
-Thunderdome Actions
+Batch Actions
 """
-@app.route('/thunder/')
-def thunder_splash_page():
-    return render_template('thunderdome.html', 
+@app.route('/batch/')
+def batch_splash_page():
+    return render_template('batch.html', 
                             groups=l.list_groups(request.user.id))
 
-@app.route('/thunder/<int:id>/')
-def thunder_view(id):
+@app.route('/batch/<int:id>/')
+def batch_view(id):
     raw_proposals = l.get_group_proposals(id)
     proposals = [{'proposal':x, 'discussion':l.get_discussion(x.id)}
                     for x in raw_proposals]
     proposal_map = {x.id:x for x in raw_proposals}
     random.shuffle(proposals)
     basics = {x['proposal'].id:x['proposal'].title for x in proposals}
-    vote = l.get_thunder_vote(id, request.user.id)
-    return render_template('thundergroup.html', group=l.get_group(id),
+    vote = l.get_batch_vote(id, request.user.id)
+    return render_template('batch.html', group=l.get_group(id),
                             proposals=proposals, proposal_map=proposal_map,
                             basics=basics,
                             vote = vote._asdict() if vote else None)
 
-@app.route('/thunder/<int:id>/vote/', methods=['POST'])
-def thunder_vote(id):
+@app.route('/batch/<int:id>/vote/', methods=['POST'])
+def batch_vote(id):
     accept = request.values.getlist('accept', int)
 
     l.vote_group(id, request.user.id, accept)
@@ -180,7 +180,7 @@ def thunder_vote(id):
                     ' and '.join('#'+str(x) for x in accept),
                     id)
     flash(txt)
-    return redirect(url_for('thunder_splash_page'))
+    return redirect(url_for('batch_splash_page'))
 
 """
 Screening Actions
@@ -291,8 +291,8 @@ Default Action
 """
 @app.route('/')
 def pick():
-    if THIS_IS_THUNDERDOME:
-        return redirect(url_for('thunder_splash_page'))
+    if THIS_IS_BATCH:
+        return redirect(url_for('batch_splash_page'))
 
     id = l.needs_votes(request.user.email, request.user.id)
     if not id:

@@ -46,17 +46,17 @@ script `envdir dev-config ./fill_db_with_fakes.py`. You can then log in with
 an email from the sequence `user{0-24}@example.com`, and a password of `abc123`.
 `user0@example.com` is an administrator.
 
-To turn on Thunderdome, `echo 1 > dev-config/THUNDERDOME`.
+To turn on Batch, `echo 1 > dev-config/THIS_IS_BATCH`.
 
 Understanding The PyCon Talk Review Process
 ------------
 The process runs in two rounds; the first is called "screening", and is
-basically the process of winnowing out talks. Talks which aren't relevant for
+basically about winnowing out talks. Talks which aren't relevant for
 PyCon, have poorly prepared proposals, or otherwise won't make the cut, get
 eliminated from consideration early. Talks aren't compared to one another; a
 low-ish bar is set, and talks that don't make it over the bar are removed.
 
-The second part of the process is "thunderdome". In thunderdome, talks are
+The second part of the process is "batch". In batch, talks are
 moved into groups, and those groups are then reviewed one at a time, with
 a winner or two picked from every group. Some groups feel weak enough that no
 winners are picked.
