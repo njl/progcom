@@ -122,8 +122,13 @@ def add_proposal(data):
 
     keys = ('id', 'author_emails', 'author_names', 'title',
             'category', 'duration', 'description', 'audience',
-            'python_level', 'objectives', 'abstract', 'outline',
-            'additional_notes', 'additional_requirements')
+            'audience_level', 'objective', 'abstract', 'outline',
+            'notes', 'additional_requirements', 'recording_release')
+
+    """
+    print 'Missing:', set(keys) - set(data.keys())
+    print 'Extra:', set(data.keys()) - set(keys)
+    """
 
 
     q = 'SELECT {} FROM proposals WHERE id=%s'.format(', '.join(keys))

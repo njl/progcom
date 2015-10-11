@@ -2,7 +2,7 @@
         <h1>{{proposal.title}}</h1>
         <h4>Category: {{proposal.category}}</h4>
         <h4>Duration: {{proposal.duration}}</h4>
-        <h4>Python Level: {{proposal.python_level}}</h4>
+        <h4>Audience Level: {{proposal.audience_level}}</h4>
         {% if not anonymize %}
         <h4>Proposed By: 
                 {{proposal.authors|map(attribute='name')|join(", ")}}</h4>
@@ -17,9 +17,9 @@
         <p>
         {{proposal.description|markdown}}
         </p>
-        <h3>Objectives</h3>
+        <h3>Objective</h3>
         <p>
-        {{proposal.objectives|markdown}}
+        {{proposal.objective|markdown}}
         </p>
         <h3>Detailed Abstract</h3>
         <p>
@@ -32,7 +32,7 @@
         {% if not anonymize %}
         <h3>Additional Notes</h3>
         <p>
-        {{proposal.additional_notes|markdown}}
+        {{proposal.notes|markdown}}
         </p>
         {% endif %}
         <h3>Additional Requirements</h3>

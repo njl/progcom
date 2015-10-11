@@ -32,12 +32,13 @@ CREATE TABLE proposals (
     duration                VARCHAR(63),
     description             TEXT,
     audience                TEXT,
-    python_level            VARCHAR(63),
-    objectives              TEXT,
+    audience_level          VARCHAR(63),
+    objective               TEXT,
     abstract                TEXT,
     outline                 TEXT,
-    additional_notes        TEXT,
-    additional_requirements TEXT
+    notes                   TEXT,
+    additional_requirements TEXT,
+    recording_release       BOOLEAN
 );
 
 CREATE TABLE batchvotes (

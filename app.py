@@ -49,6 +49,9 @@ _ADMIN_EMAILS = set(json.loads(os.environ['ADMIN_EMAILS']))
 @app.before_request
 def security_check():
     request.user = l.get_user(session.get('userid'))
+    if request.user and not request.user.approved:
+        session.clear()
+        return redirect(url_for('login'))
    
     path = request.path
     if (request.user and path.startswith('/admin') 
