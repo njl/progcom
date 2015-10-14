@@ -307,8 +307,20 @@ Batch Discussion (this is just easier)
 def add_batch_message(frm, batch, body):
     q = '''INSERT INTO batchmessages (frm, batch, body)
             VALUES (%s, %s, %s) RETURNING id'''
-    #TODO: Add Unread
-    return fetchone(q, frm, batch, body)
+    id = fetchone(q, frm, batch, body)
+    q = 'SELECT voter FROM batchvotes WHERE batchgroup=%s'
+    users = set(x.voter for x in fetchall(q, batch))
+
+    if users:
+        q = 'INSERT INTO batchunread (batch, voter) VALUES (%s, %s)'
+        execute(q, [(batch, u) for u in users])
+    return id
+
+def get_batch_messages(batch):
+    q = '''SELECT batchmessages.*, users.display_name 
+            FROM batchmessages LEFT JOIN users ON (users.id=batchmessages.frm)
+            WHERE batchmessages.batch=%s ORDER BY batchmessages.created ASC'''
+    return fetchall(q, batch)
 
 """
 Discussion

@@ -17,8 +17,9 @@
 - [x] Link to edit URL on us.pycon.org
 - [x] Link login and new users stuff to mailing list
 - [x] Anonymize replies on filter
+- [x] batch chat
 - [ ] Integrate with us.pycon.org
-- [ ] batch chat
+- [ ] unread tools on batch chat
 - [ ] batch hide your groups from yourself
 - [ ] Email reminders/updates to committee members
 - [ ] Turn emailing back on

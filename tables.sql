@@ -117,5 +117,5 @@ CREATE TABLE batchmessages (
 CREATE TABLE batchunread (
     batch   BIGINT REFERENCES batchgroups,
     voter       BIGINT REFERENCES users,
-    PRIMARY KEY (proposal, voter)
+    PRIMARY KEY (batch, voter)
 );

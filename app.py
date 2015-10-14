@@ -21,7 +21,7 @@ if 'SENTRY_DSN' in os.environ:
     print 'Sentry'
 
 THIS_IS_BATCH = 'THIS_IS_BATCH' in os.environ
-flask.config.THIS_IS_BATCH = THIS_IS_BATCH
+app.config.THIS_IS_BATCH = THIS_IS_BATCH
 
 if THIS_IS_BATCH:
     print 'THIS IS BATCH'
@@ -173,9 +173,10 @@ def batch_view(id):
     random.shuffle(proposals)
     basics = {x['proposal'].id:x['proposal'].title for x in proposals}
     vote = l.get_batch_vote(id, request.user.id)
-    return render_template('batch.html', group=l.get_group(id),
+    msgs = l.get_batch_messages(id)
+    return render_template('batchgroup.html', group=l.get_group(id),
                             proposals=proposals, proposal_map=proposal_map,
-                            basics=basics,
+                            basics=basics, msgs=msgs,
                             vote = vote._asdict() if vote else None)
 
 @app.route('/batch/<int:id>/vote/', methods=['POST'])
@@ -192,6 +193,11 @@ def batch_vote(id):
                     id)
     flash(txt)
     return redirect(url_for('batch_splash_page'))
+
+@app.route('/batch/<int:id>/comment/', methods=['POST'])
+def batch_discussion(id):
+    l.add_batch_message(request.user.id, id, request.values.get('comment'))
+    return redirect(url_for('batch_view', id=id))
 
 """
 Screening Actions
