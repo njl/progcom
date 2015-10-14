@@ -21,6 +21,8 @@ if 'SENTRY_DSN' in os.environ:
     print 'Sentry'
 
 THIS_IS_BATCH = 'THIS_IS_BATCH' in os.environ
+flask.config.THIS_IS_BATCH = THIS_IS_BATCH
+
 if THIS_IS_BATCH:
     print 'THIS IS BATCH'
 else:

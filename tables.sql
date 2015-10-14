@@ -103,4 +103,19 @@ CREATE TABLE unread (
     proposal    BIGINT REFERENCES proposals,
     voter       BIGINT REFERENCES users,
     PRIMARY KEY (proposal, voter)
-)
+);
+
+CREATE TABLE batchmessages (
+    id          BIGSERIAL PRIMARY KEY,
+
+    frm         BIGINT REFERENCES users,
+    batch       BIGINT REFERENCES batchgroups,
+    body        TEXT,
+    created     TIMESTAMP WITH TIME ZONE DEFAULT now()
+);
+
+CREATE TABLE batchunread (
+    batch   BIGINT REFERENCES batchgroups,
+    voter       BIGINT REFERENCES users,
+    PRIMARY KEY (proposal, voter)
+);

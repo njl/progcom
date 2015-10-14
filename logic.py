@@ -301,6 +301,16 @@ def get_batch_vote(batchgroup, voter):
     return fetchone(q, batchgroup, voter)
 
 """
+Batch Discussion (this is just easier)
+"""
+
+def add_batch_message(frm, batch, body):
+    q = '''INSERT INTO batchmessages (frm, batch, body)
+            VALUES (%s, %s, %s) RETURNING id'''
+    #TODO: Add Unread
+    return fetchone(q, frm, batch, body)
+
+"""
 Discussion
 """
 _USER_FB_ITSD = itsdangerous.URLSafeSerializer(os.environ['ITSD_KEY'])
