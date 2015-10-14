@@ -15,12 +15,12 @@
 - [x] Add nominate to vote displays
 - [x] Sentry on live
 - [x] Link to edit URL on us.pycon.org
+- [x] Link login and new users stuff to mailing list
 - [ ] Integrate with us.pycon.org
 - [ ] Anonymize replies on filter
 - [ ] batch chat
 - [ ] batch hide your groups from yourself
 - [ ] Email reminders/updates to committee members
-- [ ] Link login and new users stuff to mailing list
 - [ ] Turn emailing back on
 - [ ] batch analysis export
 - [ ] Screening analysis export
