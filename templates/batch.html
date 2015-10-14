@@ -19,6 +19,11 @@
                 You have not voted on this group.
             {% endif %}
         </td>
+        <td>
+            {% if g.id in unread %}
+            <span class="glyphicon glyphicon-envelope"></span>
+            {% endif %}
+        </td>
     </tr>
     {% endfor %}
 </table>

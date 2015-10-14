@@ -161,7 +161,7 @@ Batch Actions
 """
 @app.route('/batch/')
 def batch_splash_page():
-    return render_template('batch.html', 
+    return render_template('batch.html', unread=l.get_unread_batches(request.user.id),
                             groups=l.list_groups(request.user.id))
 
 @app.route('/batch/<int:id>/')
@@ -174,6 +174,7 @@ def batch_view(id):
     basics = {x['proposal'].id:x['proposal'].title for x in proposals}
     vote = l.get_batch_vote(id, request.user.id)
     msgs = l.get_batch_messages(id)
+    l.mark_batch_read(id, request.user.id)
     return render_template('batchgroup.html', group=l.get_group(id),
                             proposals=proposals, proposal_map=proposal_map,
                             basics=basics, msgs=msgs,

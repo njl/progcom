@@ -18,8 +18,9 @@
 - [x] Link login and new users stuff to mailing list
 - [x] Anonymize replies on filter
 - [x] batch chat
+- [x] unread tools on batch chat
+- [ ] Clean up the menu bar in batch
 - [ ] Integrate with us.pycon.org
-- [ ] unread tools on batch chat
 - [ ] batch hide your groups from yourself
 - [ ] Email reminders/updates to committee members
 - [ ] Turn emailing back on

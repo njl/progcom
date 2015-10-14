@@ -322,6 +322,14 @@ def get_batch_messages(batch):
             WHERE batchmessages.batch=%s ORDER BY batchmessages.created ASC'''
     return fetchall(q, batch)
 
+def get_unread_batches(userid):
+    q = 'SELECT batch from batchunread where voter=%s'
+    return set(x.batch for x in fetchall(q, userid))
+
+def mark_batch_read(batch, user):
+    q = 'DELETE FROM batchunread WHERE batch=%s AND voter=%s'
+    execute(q, batch, user)
+
 """
 Discussion
 """
