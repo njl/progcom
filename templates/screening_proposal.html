@@ -136,7 +136,7 @@
             {% for d in discussion %}
             <tr {%if d.feedback%}class="danger"{%endif%} 
                         {% if d.name%}class="success"{%endif%}>
-                <td>{%if d.name%}{{d.name}}{%else%}{{d.display_name}}{%endif%}</td>
+                <td>{%if d.name%}Proposal Author{%else%}{{d.display_name}}{%endif%}</td>
                 <td>{{d.created|date}}</td>
                 <td>{%if d.feedback%}<strong>To Author</strong>{%endif%}
                     {%if d.name%}<strong>From Author</strong>{%endif%}

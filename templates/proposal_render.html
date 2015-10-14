@@ -6,6 +6,8 @@
         {% if not anonymize %}
         <h4>Proposed By: 
                 {{proposal.authors|map(attribute='name')|join(", ")}}</h4>
+        {%else %}
+        <h4>Author Count: {{proposal.authors|length}}</h4>
         {% endif %}
         <h4>Last Updated: {{proposal.updated|date}}</h4>
         <h4>Created: {{proposal.added_on|date}}</h4>

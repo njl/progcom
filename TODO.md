@@ -16,14 +16,14 @@
 - [x] Sentry on live
 - [x] Link to edit URL on us.pycon.org
 - [x] Link login and new users stuff to mailing list
+- [x] Anonymize replies on filter
 - [ ] Integrate with us.pycon.org
-- [ ] Anonymize replies on filter
 - [ ] batch chat
 - [ ] batch hide your groups from yourself
 - [ ] Email reminders/updates to committee members
 - [ ] Turn emailing back on
-- [ ] batch analysis export
-- [ ] Screening analysis export
+- [ ] Analysis export
+- [ ] Backups
 - [ ] ~~Remove random chat from talks~~
 - [ ] ~~batch group tweaking UI~~
 
