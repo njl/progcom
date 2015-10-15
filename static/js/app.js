@@ -24,15 +24,9 @@ function batch_rem(ev){
 function vote_click(){
     var $this = $(this);
     $this.siblings('input').val($this.data().val);
-    $this.siblings().addClass('btn-default').removeClass('btn-primary');
-    $this.addClass('btn-primary');
-    var ready = true;
-    $('.voting-stripe').each(function(){
-        if($(this).find('.btn-primary').length <= 0){
-            ready = false;
-        }
-    });
-    $('#save').attr('disabled', !ready);
+    $this.siblings().addClass('btn-default').removeClass('btn-success btn-warning btn-danger');
+    $this.addClass({'0':'btn-danger', '1':'btn-warning', '2': 'btn-success'}[$this.data().val])
+    $('#save').attr('disabled', $('#vote-form input[value=-1]').length > 0);
 }
 
 function nominate_click(){

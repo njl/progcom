@@ -11,7 +11,7 @@
             <div class="panel-heading">
                 <h3 class="panel-title">Voting</h3>
             </div>
-                <form method="POST" action="vote/">
+                <form method="POST" action="vote/" id="vote-form">
                   <table class="table">
                 {% for s in standards %}
                 <tr>
@@ -21,7 +21,7 @@
                             <button type="button" class="btn 
                             {% if existing_vote
                                     and existing_vote.scores[s.id] == 2 %}
-                            btn-primary
+                            btn-success
                             {%else %}
                             btn-default
                             {%endif%}
@@ -29,23 +29,25 @@
                                 " data-val="2"><span class="glyphicon glyphicon-ok" title="Meets Standard"></span></button>
                             <button type="button" class="btn 
                             {% if existing_vote
-                                    and existing_vote.scores[s.id] == 0 %}
-                            btn-primary
-                            {%else %}
-                            btn-default
-                            {%endif%}
-                                " data-val="0"><span class="glyphicon glyphicon-remove" title="Does Not Meet Standard"></span></button>
-                            <button type="button" class="btn 
-                            {% if existing_vote
                                     and existing_vote.scores[s.id] == 1 %}
-                            btn-primary
+                            btn-warning
                             {%else %}
                             btn-default
                             {%endif%}
                                 " data-val="1"><span class="glyphicon glyphicon-warning-sign" title="Concern it Might Not Meet Standard"></span></button>
+                            <button type="button" class="btn 
+                            {% if existing_vote
+                                    and existing_vote.scores[s.id] == 0 %}
+                            btn-danger
+                            {%else %}
+                            btn-default
+                            {%endif%}
+                                " data-val="0"><span class="glyphicon glyphicon-remove" title="Does Not Meet Standard"></span></button>
                             <input name="standard-{{s.id}}"
                                 {%if existing_vote and existing_vote.scores %}
                                    value="{{existing_vote.scores[s.id]}}"
+                                {% else %}
+                                   value="-1"
                                 {% endif %}
                             type="hidden">
                         </div>
@@ -55,6 +57,10 @@
                 {% endfor %}
                 </table>
             <div class="panel-body">
+                <p class="help-block">
+                If you feel this talk didn't meet the objective standards but would still
+                be a strong addition to PyCon, you can nominate it for special consideration.
+                </p>
                 {% if existing_vote and existing_vote.nominate %}
                 <button type="button" class="btn btn-success btn-block" id="nominate">Nominated</button>
                 <input name="nominate" value="1" type="hidden">
@@ -74,6 +80,15 @@
                     >Save</button>
             </div>
             </form>
+        </div>
+
+        <div class="panel panel-primary">
+            <div class="panel-body">
+                <p>Out of respect for potential speakers and your fellow committee
+                members, please treat all of this information as confidential.
+                The contents of proposals, votes, and discussions should not be
+                shared outside the program committee.</p>
+            </div>
         </div>
 
         {% if existing_vote %}

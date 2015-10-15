@@ -156,6 +156,10 @@ def add_proposal(data):
     execute(q, **data)
     return data['id']
 
+def get_proposal_count():
+    q = 'SELECT COUNT(*) FROM proposals WHERE NOT withdrawn'
+    return scalar(q)
+
 """
 Bookmarks
 """

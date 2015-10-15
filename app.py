@@ -145,7 +145,9 @@ User State
 """
 @app.route('/votes/')
 def show_votes():
-    return render_template('my_votes.html', votes=l.get_my_votes(request.user.id),
+    votes = l.get_my_votes(request.user.id)
+    percent = 100.0*len(votes)/l.get_proposal_count()
+    return render_template('my_votes.html', votes=votes, percent=percent,
                             standards = l.get_standards())
 
 @app.route('/bookmarks/')
