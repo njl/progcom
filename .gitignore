@@ -1,3 +1,4 @@
 private-config/
 deploy-config/
 dev-config/THIS_IS_BATCH
+*.pyc
