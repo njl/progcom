@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <title>PyCon Program Committee Talk Proposal Review</title>
         <link rel="stylesheet" href="/static/css/bootstrap.min.css">
         <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="/static/css/style.css">
 
 
         <link rel="apple-touch-icon" sizes="57x57" href="/static/favicons/apple-touch-icon-57x57.png">
@@ -55,6 +57,9 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="{{url_for("logout")}}">Log Out</a></li>
                 </ul>
+                {%if request.user.unread %}
+                    <a class="btn btn-warning navbar-btn pull-right" href="{{url_for("show_unread")}}" title="Unread discussions"><span class="glyphicon glyphicon-envelope"></span></a>
+                {% endif %}
             </div>
             {% endif %}
         </div>
