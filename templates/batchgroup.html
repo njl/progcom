@@ -50,7 +50,7 @@
     </div>
 
     <script type="underscore/template" id="ordered_row">
-        <li class="list-group-item"><%=title%>
+        <li class="list-group-item"><span class="glyphicon glyphicon-star"></span> <%=title%>
             <input type="hidden" name="accept" value="<%=id%>"></li>
     </script>
 
@@ -58,43 +58,43 @@
             <form action="vote/" method="POST">
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h3 class="panel-title">Talks to Accept</h3>
+                <h3 class="panel-title">Select Talks</h3>
             </div>
-            <ul class="list-group" id="accept">
-                {% for v in vote.accept%}
-                <li class="list-group-item">
-                    {{proposal_map[v].title}}
-                    <input type="hidden" name="accept" value="{{v}}">
-                </li>
-                {% endfor %}
-            </ul>
+            <div class="panel-body">
+                <h4>Selected Proposals</h4>
+                <ul class="list-group" id="accept">
+                    {% for v in vote.accept%}
+                        <li class="list-group-item">
+                            <span class="glyphicon glyphicon-star"></span> {{proposal_map[v].title}}
+                            <input type="hidden" name="accept" value="{{v}}">
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div id="notalks" class="alert alert-warning" {% if vote.accept %}style="display: none;"{% endif %}>No talks selected.</div>
+                <h4>Remaining Proposals</h4>
+                <ul class="list-group" id="unranked">
+                    {% for p in proposals%}
+                    <li data-id="{{p.proposal.id}}"
+                        class="list-group-item"
+                        id="unranked-prop-{{p.proposal.id}}"
+                        {%if vote and p.proposal.id in vote.accept%}
+                        style="display:none;"
+                        {%endif%}
+                        >
+                            {{p.proposal.title}}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
             <div class="panel-footer">
-                <button type="submit" class="btn btn-success btn-block" id="save">Save Choices</button>
-                 <span class="help-block">Choose a talk from this group for PyCon; if none seem good enough, you may choose none.
-                    If you think there are two good options, choose you may choose two.</span>
+                <button type="submit" class="btn btn-primary btn-block" id="save">Save Choices</button>
+                 <span class="help-block">Choose a talk from this group for PyCon. If none seem good enough, you may choose none;
+                     if you think there are two excellent, non-overlapping options, you may choose 2.</span>
             </div>
         </div>
             </form>
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title">Unranked</h3>
-            </div>
-            <ul class="list-group" id="unranked">
-                {% for p in proposals%}
-                <li data-id="{{p.proposal.id}}" 
-                    class="list-group-item"
-                    id="unranked-prop-{{p.proposal.id}}"
-                    {%if vote and p.proposal.id in vote.accept%}
-                    style="display:none;"
-                    {%endif%}
-                    >
-                        {{p.proposal.title}}
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
 
-        <div class="panel panel-primary">
+        <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">Messages</h3>
             </div>
@@ -125,4 +125,3 @@ var VOTE = {{vote|tojson}};
 </script>
 
 {%endblock body%}
-

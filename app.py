@@ -30,7 +30,7 @@ else:
 
 @app.template_filter('date')
 def date_filter(d):
-    return d.strftime('%b-%-d %I:%M')
+    return d.strftime('%B %-d, %-I:%M %p')
 
 
 def set_nofollow(attrs, new=False):
@@ -224,12 +224,16 @@ def screening(id):
     existing_vote = l.get_user_vote(request.user.id, id)
     votes = l.get_votes(id)
 
+    my_votes = l.get_my_votes(request.user.id)
+    percent = 100.0*len(my_votes)/l.get_proposal_count()
+
     return render_template('screening_proposal.html', proposal=proposal,
                             votes=votes, discussion=discussion,
                             standards=standards, progress=progress,
                             bookmarked=bookmarked,
                             existing_vote=existing_vote,
-                            unread=unread)
+                            unread=unread,
+                            percent=percent)
 
 @app.route('/screening/<int:id>/vote/', methods=['POST'])
 def vote(id):

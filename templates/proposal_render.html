@@ -1,16 +1,35 @@
-{%macro proposal_render(proposal, anonymize=False) %}
+{%macro proposal_render(proposal, bookmarked=False, anonymize=False) %}
         <h1>{{proposal.title}}</h1>
-        <h4>Category: {{proposal.category}}</h4>
-        <h4>Duration: {{proposal.duration}}</h4>
-        <h4>Audience Level: {{proposal.audience_level}}</h4>
-        {% if not anonymize %}
-        <h4>Proposed By: 
-                {{proposal.authors|map(attribute='name')|join(", ")}}</h4>
-        {%else %}
-        <h4>Author Count: {{proposal.authors|length}}</h4>
-        {% endif %}
-        <h4>Last Updated: {{proposal.updated|date}}</h4>
-        <h4>Created: {{proposal.added_on|date}}</h4>
+        <table class="table">
+          <tbody>
+              <tr><th>Category</th>
+              <td>{{proposal.category}}</td></tr>
+              <tr><th>Duration</th>
+              <td>{{proposal.duration}}</td></tr>
+              <tr><th>Audience Level</th>
+              <td>{{proposal.audience_level}}</td></tr>
+              {% if not anonymize %}
+                  <tr><th>Proposer(s)</th>
+                  <td>{{proposal.authors|map(attribute='name')|join(", ")}}</td></tr>
+              {% endif %}
+              <tr><th># Speakers</th>
+              <td>{{proposal.authors|length}}</td></tr>
+              <tr><th>Created</th>
+              <td>{{proposal.added_on|date}}</td></tr>
+              <tr><th>Last Updated</th>
+              <td>{{proposal.updated|date}}</td></tr>
+          </tbody>
+        </table>
+        {% if bookmarked %}
+            <form method="POST" action="bookmark/remove/">
+                <button type="submit" class="btn btn-info"><span class="glyphicon glyphicon-bookmark"></span> Proposal Bookmarked</button>
+            </form>
+        {% else %}
+            <form method="POST" action="bookmark/add/">
+                <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-bookmark"></span> Bookmark</button>
+            </form>
+        {% endif%}
+
         <h3>Audience</h3>
         <p>
         {{proposal.audience}}

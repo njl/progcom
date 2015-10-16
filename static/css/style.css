@@ -1,0 +1,18 @@
+.panel table {
+    margin-bottom: 0;
+}
+
+
+#accept li, #unranked li {
+    cursor: pointer;
+}
+#unranked li:hover {
+    background-color: #f6f6f6;
+}
+
+#accept li {
+    background-color: #f0fff0;
+}
+#accept li:hover {
+    background-color: #e0ffe0;
+}

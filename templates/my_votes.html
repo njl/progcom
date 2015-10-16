@@ -1,14 +1,10 @@
-{%extends "base.html"%}
-{%import "vote_display.html" as vd%}
-{%block body %}
+{% extends "base.html"%}
+{% import "vote_display.html" as vd %}
+{% import "progress_render.html" as prog%}
+{% block body %}
 
-<h4>Your Vote Coverage</h4>
-<div class="progress">
-    <div class="progress-bar" style="width: {{"%0.2f"|format(percent)}}%;">
-        {{"%0.2f"|format(percent)}}%
-    </div>
-</div>
-
+<h4>My Votes</h4>
+{{ prog.progress_render(percent)}}
 <table class="table table-striped table-condensed">
     <thead>
     <tr>

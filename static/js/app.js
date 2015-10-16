@@ -11,14 +11,19 @@ function batch_add(ev){
     var $this = $(this);
     var id = $this.data().id;
     $this.hide();
+    $('#notalks').hide();
     $accept.append(TEMPLATES.ordered_row({id:id, title:TALKS[id]}));
 }
 
 function batch_rem(ev){
-    var $this=$(this),
+    var $accept = $('#accept'),
+        $this=$(this),
         id = $this.find('input').val();
     $('#unranked-prop-'+id).show();
     $this.remove();
+    if ($accept.find('li').length <= 0){
+        $('#notalks').show();
+    }
 }
 
 function nominate_status(){
@@ -48,9 +53,9 @@ function nominate_click(){
     var $this=$(this),
         $inp = $(this).siblings('input');
     if($inp.val() == 0){
-        $this.text("Nominated for Special Consideration")
+        $this.text("Nominated for Special Consideration!")
         $inp.val(1);
-        $this.addClass("btn-success").removeClass("btn-primary");
+        $this.addClass("btn-success").removeClass("btn-default");
     }else{
         $this.text("Nominate for Special Consideration");
         $inp.val(0);
