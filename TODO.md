@@ -19,7 +19,7 @@
 - [x] Anonymize replies on filter
 - [x] batch chat
 - [x] unread tools on batch chat
-- [ ] Clean up the menu bar in batch
+- [x] Clean up the menu bar in batch
 - [ ] Integrate with us.pycon.org
 - [ ] batch hide your groups from yourself
 - [ ] Email reminders/updates to committee members
