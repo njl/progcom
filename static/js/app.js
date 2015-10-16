@@ -48,7 +48,7 @@ function nominate_click(){
     var $this=$(this),
         $inp = $(this).siblings('input');
     if($inp.val() == 0){
-        $this.text("Nominated for Special Consideration")
+        $this.text("Nominated for Special Consideration!")
         $inp.val(1);
         $this.addClass("btn-success").removeClass("btn-default");
     }else{

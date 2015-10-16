@@ -30,7 +30,7 @@ else:
 
 @app.template_filter('date')
 def date_filter(d):
-    return d.strftime('%b-%-d %I:%M')
+    return d.strftime('%B %-d, %-I:%M %p')
 
 
 def set_nofollow(attrs, new=False):

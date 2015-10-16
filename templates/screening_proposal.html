@@ -4,7 +4,7 @@
 {%block body %}
 <div class="row">
     <div class="col-md-8">
-        {{ pr.proposal_render(proposal, anonymize=True)}}
+        {{ pr.proposal_render(proposal, bookmarked, anonymize=True)}}
     </div>
     <div class="col-md-4">
         <div class="panel panel-primary">
@@ -56,18 +56,18 @@
                 {% endfor %}
                 </table>
                 <div class="panel-body">
+                    {% if existing_vote and existing_vote.nominate %}
+                    <button type="button" class="btn btn-block btn-success" id="nominate"><span class="glyphicon glyphicon-star"></span> Nominated for Special Consideration</button>
+                    <input name="nominate" value="1" type="hidden">
+                    {% else %}
+                    <button type="button" class="btn btn-block btn-default" id="nominate">Nominate for Special Consideration</button>
+                    <input name="nominate" value="0" type="hidden">
+                    {% endif %}
                     <p class="help-block">
                     If you feel this talk didn't meet the objective standards but would
                     still be a strong addition to PyCon, you can nominate it for special
                     consideration.
                     </p>
-                    {% if existing_vote and existing_vote.nominate %}
-                    <button type="button" class="btn btn-success btn-block" id="nominate">Nominated for Special Consideration</button>
-                    <input name="nominate" value="1" type="hidden">
-                    {% else %}
-                    <button type="button" class="btn btn-default btn-block" id="nominate">Nominate for Special Consideration</button>
-                    <input name="nominate" value="0" type="hidden">
-                    {% endif %}
                 </div>
                 <div class="panel-footer">
                     {% if existing_vote %}
@@ -82,18 +82,6 @@
                 </div>
             </form>
         </div>
-
-        <p>
-            {% if bookmarked %}
-                <form method="POST" action="bookmark/remove/">
-                    <button type="submit" class="btn btn-block btn-info"><span class="glyphicon glyphicon-bookmark"></span> Proposal Bookmarked</button>
-                </form>
-            {% else %}
-                <form method="POST" action="bookmark/add/">
-                    <button type="submit" class="btn btn-block btn-default"><span class="glyphicon glyphicon-bookmark"></span> Bookmark Proposal</button>
-                </form>
-            {% endif%}
-        </p>
 
         <div class="alert alert-warning">
             <p>Out of respect for potential speakers and your fellow committee
@@ -200,10 +188,10 @@
             </div>
         </div>
         <div class="panel panel-default">
-            <div class="panel-heading">Overall Progress</div>
+            <div class="panel-heading">Program Committee Progress</div>
                 <table class="table table-condensed table-hover">
                     <tr><th>Votes</th><th>Proposals</th></tr>
-                    {% for p in progress%}
+                    {% for p in progress|sort(attribute='vote_count')%}
                     <tr><td>{{p.vote_count}}</td><td>{{p.quantity}}</td></tr>
                     {%endfor%}
                 </table>
