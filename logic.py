@@ -286,11 +286,13 @@ def vote_group(batchgroup, voter, accept):
 
 
 def list_groups(userid):
+    user = get_user(userid)
     q = '''SELECT tg.*, tv.batchgroup IS NOT NULL AS voted
             FROM batchgroups as tg
             LEFT JOIN batchvotes as tv 
-            ON tg.id=tv.batchgroup AND tv.voter = %s'''
-    return fetchall(q, userid)
+            ON tg.id=tv.batchgroup AND tv.voter = %s
+            WHERE NOT (%s = ANY(author_emails))'''
+    return fetchall(q, userid, user.email)
 
 def get_group(batchgroup):
     return fetchone('SELECT * FROM batchgroups WHERE id=%s', batchgroup)

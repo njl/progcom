@@ -20,8 +20,8 @@
 - [x] batch chat
 - [x] unread tools on batch chat
 - [x] Clean up the menu bar in batch
+- [x] batch hide your groups from yourself
 - [ ] Integrate with us.pycon.org
-- [ ] batch hide your groups from yourself
 - [ ] Email reminders/updates to committee members
 - [ ] Turn emailing back on
 - [ ] Analysis export

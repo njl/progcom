@@ -10,10 +10,10 @@ CREATE UNIQUE INDEX idx_users_email
     ON users (lower(email));
 
 CREATE TABLE batchgroups (
-    id      BIGSERIAL PRIMARY KEY,
-    name    VARCHAR(254)
+    id              BIGSERIAL PRIMARY KEY,
+    name            VARCHAR(254),
+    author_emails   VARCHAR(254)[]
 );
-
 
 CREATE TABLE proposals (
     id                      BIGINT PRIMARY KEY,
@@ -40,6 +40,25 @@ CREATE TABLE proposals (
     additional_requirements TEXT,
     recording_release       BOOLEAN
 );
+
+DROP AGGREGATE IF EXISTS email_aggregate(VARCHAR(254)[]);
+CREATE AGGREGATE email_aggregate (basetype = VARCHAR(254)[],
+                                    sfunc = array_cat,
+                                    stype = VARCHAR(254)[], initcond = '{}');
+
+CREATE OR REPLACE FUNCTION batch_change() RETURNS trigger AS
+$$
+BEGIN 
+    UPDATE batchgroups SET
+    author_emails=(SELECT email_aggregate(author_emails)
+                    FROM proposals WHERE batchgroup = NEW.batchgroup)
+    WHERE id = NEW.batchgroup;
+    RETURN NEW;
+END;
+$$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER batch_change_trigger AFTER INSERT OR UPDATE
+    ON proposals FOR EACH ROW EXECUTE PROCEDURE batch_change();
 
 CREATE TABLE batchvotes (
     batchgroup      BIGINT REFERENCES batchgroups,

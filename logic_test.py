@@ -208,10 +208,15 @@ def test_batch():
     user = l.add_user('example@example.com', 'Voter', '123')
     l.approve_user(user)
 
+    submitter = l.add_user('bob@example.com', 'Submitted', '123')
+    l.approve_user(submitter)
+
     proposals = []
     for n in range(1,50):
         prop = data.copy()
         prop['id'] = n
+        if n == 6:
+            prop['authors'] = [{'name':'Blah', 'email':'bob@example.com'}]
         proposals.append(l.add_proposal(prop))
 
     group_one = l.create_group('Group One', proposals[4:10])
@@ -241,4 +246,4 @@ def test_batch():
 
     assert l.get_batch_vote(group_one, user).accept == votes2
 
-
+    assert len(l.list_groups(submitter)) == 1

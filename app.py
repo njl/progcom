@@ -168,6 +168,9 @@ def batch_splash_page():
 
 @app.route('/batch/<int:id>/')
 def batch_view(id):
+    group = l.get_group(id)
+    if request.user.email in group.author_emails:
+        abort(404)
     raw_proposals = l.get_group_proposals(id)
     proposals = [{'proposal':x, 'discussion':l.get_discussion(x.id)}
                     for x in raw_proposals]
@@ -177,13 +180,17 @@ def batch_view(id):
     vote = l.get_batch_vote(id, request.user.id)
     msgs = l.get_batch_messages(id)
     l.mark_batch_read(id, request.user.id)
-    return render_template('batchgroup.html', group=l.get_group(id),
+    return render_template('batchgroup.html', group=group,
                             proposals=proposals, proposal_map=proposal_map,
                             basics=basics, msgs=msgs,
                             vote = vote._asdict() if vote else None)
 
 @app.route('/batch/<int:id>/vote/', methods=['POST'])
 def batch_vote(id):
+    group = l.get_group(id)
+    if request.user.email in group.author_emails:
+        abort(404)
+
     accept = request.values.getlist('accept', int)
 
     l.vote_group(id, request.user.id, accept)
@@ -199,6 +206,9 @@ def batch_vote(id):
 
 @app.route('/batch/<int:id>/comment/', methods=['POST'])
 def batch_discussion(id):
+    group = l.get_group(id)
+    if request.user.email in group.author_emails:
+        abort(404)
     l.add_batch_message(request.user.id, id, request.values.get('comment'))
     return redirect(url_for('batch_view', id=id))
 
