@@ -72,10 +72,10 @@ def test_user_basics():
 data = {'id': 123, 'title': 'Title Here', 'category': 'Python',
         'duration': '30', 'description':'the description goes here.',
         'audience': 'People who want to learn about python',
-        'python_level': 'Intermediate', 'objectives': 'Talk about Python',
+        'audience_level': 'Intermediate', 'objective': 'Talk about Python',
         'abstract':'This is an abstract\n#This is a headline\nThis is not.', 
         'outline':"First I'll talk about one thing, then another",
-        'additional_notes': 'Additional stuff',
+        'notes': 'Additional stuff', 'recording_release': True,
         'additional_requirements':'I need a fishtank',
         'authors': [{'name':'Person Personson','email':'person@example.com'}]}
 
