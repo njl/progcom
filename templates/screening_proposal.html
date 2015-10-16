@@ -1,7 +1,13 @@
 {%extends "base.html"%}
 {%import "proposal_render.html" as pr%}
+{%import "progress_render.html" as prog%}
 {%import "vote_display.html" as vd%}
 {%block body %}
+<div class="row">
+    <div class="col-md-12">
+        {{ prog.progress_render(percent)}}
+    </div>
+</div>
 <div class="row">
     <div class="col-md-8">
         {{ pr.proposal_render(proposal, bookmarked, anonymize=True)}}
