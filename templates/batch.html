@@ -1,6 +1,7 @@
 {%extends "base.html"%}
 {%block body %}
-<table class="table table-hover table-bordered">
+<h4>Batch Review Groups</h4>
+<table class="table table-hover">
     {% for g in groups %}
     <tr
     {%if g.voted%}
