@@ -382,7 +382,7 @@ def add_to_discussion(userid, proposal, body, feedback=False, name=None):
             url = 'http://{}/feedback/{}'.format(_WEB_HOST, key)
             edit_url = 'https://us.pycon.org/2016/proposals/{}/'.format(proposal)
             email = email.render(proposal=full_proposal, body=body, 
-                                url=url, edit_url='TODO') #TODO
+                                url=url, edit_url=edit_url) #TODO
             msg = {'text': email,
                     'subject': 'Feedback on Your PyCon Talk Proposal',
                     'from_email': _EMAIL_FROM,
