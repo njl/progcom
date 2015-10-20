@@ -2,6 +2,7 @@ from collections import namedtuple, defaultdict, Counter
 import os 
 import random
 import json
+import logging
 
 import itsdangerous
 import mandrill
@@ -10,6 +11,18 @@ import bcrypt
 from sqlalchemy import create_engine
 from sqlalchemy.exc import IntegrityError
 from jinja2 import Environment, FileSystemLoader
+
+"""
+Log It
+"""
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+logging.basicConfig()
+
+def l(key, **data):
+    data['key'] = key
+    logger.info(json.dumps(data))
+    
 
 """
 Some DB wrapper stuff
@@ -60,23 +73,30 @@ def _mangle_pw(pw, salt=None):
 def add_user(email, display_name, pw):
     q = '''INSERT INTO users (email, display_name, pw)
                 VALUES (%s, %s, %s) RETURNING id'''
-    return scalar(q, email, display_name, _mangle_pw(pw))
+    id = scalar(q, email, display_name, _mangle_pw(pw))
+    l('add_user', email=email, display_name=display_name, uid=id)
+    return id 
 
 def approve_user(id):
     q = 'UPDATE users SET approved_on=now() WHERE id=%s'
+    l('approve_user', uid=id)
     return execute(q, id)
 
 def check_pw(email_address, pw):
     q = 'SELECT id, pw from users WHERE lower(email) = lower(%s)'
     result = fetchone(q, email_address)
     if not result:
+        l('check_pw_bad_email', email=email_address)
         return None
     if _mangle_pw(pw, result.pw) == result.pw:
+        l('check_pw_ok', email=email_address)
         return result.id
+    l('check_pw_bad', email=email_address)
     return None
 
 def change_pw(id, pw):
     q = 'UPDATE users SET pw=%s WHERE id=%s RETURNING id'
+    l('change_pw', uid=id)
     return bool(scalar(q, _mangle_pw(pw), id))
 
 def get_user(id):
@@ -165,6 +185,7 @@ Bookmarks
 """
 
 def add_bookmark(uid, proposal):
+    l('bookmark', uid=uid, id=proposal)
     q = 'INSERT INTO bookmarks (voter, proposal) VALUES (%s, %s)'
     try:
         execute(q, uid, proposal)
@@ -172,6 +193,7 @@ def add_bookmark(uid, proposal):
         pass
 
 def remove_bookmark(uid, proposal):
+    l('remove_bookmark', uid=uid, id=proposal)
     q = 'DELETE FROM bookmarks WHERE voter=%s AND proposal=%s'
     execute(q, uid, proposal)
 
@@ -195,6 +217,7 @@ def get_standards():
     return fetchall('SELECT * FROM standards ORDER BY id')
 
 def add_standard(s):
+    l('add_standard', s=s)
     q = 'INSERT INTO standards (description) VALUES (%s) RETURNING id'
     return scalar(q, s)
 
@@ -202,6 +225,7 @@ def _clean_vote(vote):
     return vote._replace(scores={int(k):v for k,v in vote.scores.items()}) 
 
 def vote(voter, proposal, scores, nominate=False):
+    l('vote', uid=voter, id=proposal, scores=scores, nominate=nominate)
     if not get_user(voter).approved:
         return None
 
@@ -218,7 +242,7 @@ def vote(voter, proposal, scores, nominate=False):
     except IntegrityError as e:
         pass
 
-    q = '''UPDATE votes SET scores=%s, added_on=now(), nominate=%s
+    q = '''UPDATE votes SET scores=%s, updated_on=now(), nominate=%s
             WHERE voter=%s AND proposal=%s RETURNING id'''
     return scalar(q, [[json.dumps(scores), nominate, voter, proposal]])
 
@@ -248,7 +272,9 @@ def needs_votes(email, uid):
         return None
     min_vote = results[0].vote_count
     results = [x for x in results if x.vote_count == min_vote]
-    return random.choice(results).id
+    rv = random.choice(results).id
+    l('needs_votes', uid=uid, id=rv)
+    return rv
 
 def screening_progress():
     q = '''SELECT vote_count, COUNT(vote_count) as quantity
@@ -270,9 +296,11 @@ def create_group(name, proposals):
     id = scalar(q, name)
     q = 'UPDATE proposals SET batchgroup=%s WHERE id = ANY(%s)'
     execute(q, id, proposals)
+    l('create_group', name=name, proposals=proposals, gid=id)
     return id
 
 def vote_group(batchgroup, voter, accept):
+    l('vote_group', gid=batchgroup, uid=voter, accept=accept)
     try:
         q = '''INSERT INTO batchvotes (batchgroup, voter, accept)
                 VALUES (%s, %s, %s)'''
@@ -280,7 +308,7 @@ def vote_group(batchgroup, voter, accept):
         return
     except IntegrityError as e:
         pass
-    q = '''UPDATE batchvotes SET accept=%s
+    q = '''UPDATE batchvotes SET accept=%s, updated_on=now()
             WHERE batchgroup=%s AND voter=%s'''
     execute(q, [[accept, batchgroup, voter]])
 
@@ -311,6 +339,7 @@ Batch Discussion (this is just easier)
 """
 
 def add_batch_message(frm, batch, body):
+    l('add_batch_message', uid=frm, gid=batch, body=body)
     q = '''INSERT INTO batchmessages (frm, batch, body)
             VALUES (%s, %s, %s) RETURNING id'''
     id = fetchone(q, frm, batch, body)
@@ -333,6 +362,7 @@ def get_unread_batches(userid):
     return set(x.batch for x in fetchall(q, userid))
 
 def mark_batch_read(batch, user):
+    l('mark_batch_read', gid=batch, uid=user)
     q = 'DELETE FROM batchunread WHERE batch=%s AND voter=%s'
     execute(q, batch, user)
 
@@ -354,6 +384,7 @@ def get_discussion(proposal):
     return fetchall(q, proposal)
 
 def add_to_discussion(userid, proposal, body, feedback=False, name=None):
+    l('add_to_discussion', uid=userid, id=proposal, body=body, feedback=feedback, name=name)
     q = 'SELECT voter FROM votes WHERE proposal=%s'
     users = set(x.voter for x in fetchall(q, proposal))
     q = 'SELECT frm FROM discussion WHERE proposal=%s AND frm IS NOT NULL'
@@ -381,21 +412,20 @@ def add_to_discussion(userid, proposal, body, feedback=False, name=None):
         for to, key in generate_author_keys(proposal).items():
             url = 'http://{}/feedback/{}'.format(_WEB_HOST, key)
             edit_url = 'https://us.pycon.org/2016/proposals/{}/'.format(proposal)
-            email = email.render(proposal=full_proposal, body=body, 
-                                url=url, edit_url=edit_url) #TODO
-            msg = {'text': email,
+            rendered = email.render(proposal=full_proposal, body=body, 
+                                url=url, edit_url=edit_url) 
+            msg = {'text': rendered,
                     'subject': 'Feedback on Your PyCon Talk Proposal',
                     'from_email': _EMAIL_FROM,
                     'from_name': 'PyCon Program Committee',
-                    'to': [{'email':email}],
+                    'to': [{'email':to}],
                     'auto_html':False,}
-            print msg
-            print msg['text']
-            #TODO: Turn emailing back on
-            #_MANDRILL.messages.send(msg)
+            l('filter_email_sent', api_result=_MANDRILL.messages.send(msg),
+                    to=to)
 
 
 def mark_read(userid, proposal):
+    l('mark_read', uid=userid, id=proposal)
     q = 'DELETE FROM unread WHERE voter=%s AND proposal=%s'
     execute(q, userid, proposal)
 

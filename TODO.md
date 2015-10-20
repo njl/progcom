@@ -21,9 +21,9 @@
 - [x] unread tools on batch chat
 - [x] Clean up the menu bar in batch
 - [x] batch hide your groups from yourself
+- [x] Turn emailing back on
 - [ ] Integrate with us.pycon.org
 - [ ] Email reminders/updates to committee members
-- [ ] Turn emailing back on
 - [ ] Analysis export
 - [ ] Backups
 - [ ] ~~Remove random chat from talks~~

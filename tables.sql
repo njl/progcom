@@ -64,6 +64,8 @@ CREATE TABLE batchvotes (
     batchgroup      BIGINT REFERENCES batchgroups,
     voter           BIGINT REFERENCES users,
     accept          BIGINT[],
+    created_on      TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    updated_on      TIMESTAMP WITH TIME ZONE DEFAULT now(),
     UNIQUE(voter, batchgroup)
 
 );
@@ -89,6 +91,7 @@ CREATE TABLE votes (
 
     nominate    BOOLEAN DEFAULT FALSE,
 
+    updated_on  TIMESTAMP WITH TIME ZONE DEFAULT now(),
     added_on    TIMESTAMP WITH TIME ZONE DEFAULT now(),
     UNIQUE (voter, proposal)
 );
