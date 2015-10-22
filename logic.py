@@ -3,6 +3,7 @@ import os
 import random
 import json
 import logging
+import datetime
 
 import itsdangerous
 import mandrill
@@ -21,6 +22,7 @@ logging.basicConfig()
 
 def l(key, **data):
     data['key'] = key
+    data['when'] = datetime.datetime.now().isoformat()+'Z'
     logger.info(json.dumps(data))
     
 

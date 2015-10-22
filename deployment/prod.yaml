@@ -60,7 +60,8 @@
         sudo_user: postgres
 
     #Backup (Installed tarsnap by hand with `./configure #--prefix=/opt/tarsnap`)
-      - file: path=/opt/progcom-backup state=directory
+      - file: path=/opt/progcom-backup/db state=directory
+      - file: path=/opt/progcom-backup/logs state=directory
       - file: path=/opt/progcom-backup-cache state=directory
       - template: src=backup-cron dest=/etc/cron.daily/progcom-backups
                     mode=0744
