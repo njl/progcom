@@ -22,9 +22,10 @@
 - [x] Clean up the menu bar in batch
 - [x] batch hide your groups from yourself
 - [x] Turn emailing back on
-- [ ] Backups
-- [ ] Integrate with us.pycon.org
+- [x] Backups
+- [x] Integrate with us.pycon.org
 - [ ] Email reminders/updates to committee members
+- [ ] Handle withdrawn talks
 - [ ] ~~Analysis export~~ (Just SQL query it)
 - [ ] ~~Remove random chat from talks~~ (Leave chat on talks)
 - [ ] ~~batch group tweaking UI~~ (Do it before import)

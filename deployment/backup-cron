@@ -1,0 +1,5 @@
+#!/bin/sh
+
+sudo -u postgres /usr/bin/pg_dump progcom > /opt/progcom-backup/progcom-db-`date -Ihours`
+
+/opt/tarsnap/bin/tarsnap -c --keyfile /root/tarsnap.key --cachedir /opt/progcom-backup-cache -f progcom-db-`date +%Y-%m-%d_%H-%M-%S` /opt/progcom-backup && curl https://nosnch.in/0540fdd2ae &> /dev/null

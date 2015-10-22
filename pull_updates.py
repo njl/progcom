@@ -43,11 +43,8 @@ def fetch_talk(id):
     rv = api_call('/2016/pycon_api/proposals/{}/'.format(id))['data']
     rv['authors'] = rv['speakers']
     del rv['speakers']
-    print rv['authors']
     rv.update(rv['details'])
     del rv['details']
-    rv['category'] = 'PLACEHOLDER'#TODO
-    rv['additional_requirements'] = 'PLACEHOLDER'#TODO
     return rv
 
 def main():
