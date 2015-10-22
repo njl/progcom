@@ -1,9 +1,3 @@
-CURRENTLY A MOVING TARGET
---------------
-
-This is currently in a pretty unstable state, as I'm just fleshing
-out features. Let me know if you want to help out!
-
 PyCon Program Committee Web App
 -------------------------------
 
@@ -12,17 +6,13 @@ PyCon talk submissions. The program committee's job is extensive and daunting,
 and I'm trying to knock together a simple web app to allow the work to proceed
 as efficiently and effectively as I can. Requiring large groupings of
 busy professionals to come together at the same time to chat on IRC is hard,
-and doesn't feel very scalable. This is my first step towards understanding how
+and doesn't feel very scalable. This is my first step toward understanding how
 to scale the whole thing.
 
 
 
 Configuring the Applications
 ------------------------
-As currently configured, the application connects to a local postgresql
-database, with username, password, and database name 'test'. The unit tests
-will create the tables for you, or I presume you can do something like
-`psql test < tables.sql`.
 
 The application picks up configuration from environment variables. I like to
 use the envdir tool, but you can set them however you like. A complete set of
@@ -32,6 +22,28 @@ those.
 
 You can install envdir via `brew install daemontools` on OS X, and `apt-get
 install daemontools` on Ubuntu and Debian.
+
+As configured by the values in `dev-config`, the application connects to a local
+postgresql database, with username, password, and database name 'test'.
+
+Configuring the Database
+---------------------
+
+The application uses a Postgresql database. If you're not familiar with setting
+up Postgresql, I've included `setup_db.sql` for you. Getting to the point where
+you're able to execute those commands is going to depend on your system. If
+you're on a Ubuntu-like system, and you've installed postgresql via something
+like `apt-get install postgresql`, you can probably run the `psql` command via
+something like `sudo -U postgres psql`. On OSX, if you've installed postgresql
+via brew, with something like `brew install postgresql`, you can probably just
+type `psql`.
+
+You can create the test database and test user via 
+`psql template1 < setup_db.sql`.
+
+The unit tests will create the tables for you, or you can do something like
+`psql -U test test < tables.sql` to create empty tables from scratch.
+
 
 
 
@@ -46,7 +58,16 @@ script `envdir dev-config ./fill_db_with_fakes.py`. You can then log in with
 an email from the sequence `user{0-24}@example.com`, and a password of `abc123`.
 `user0@example.com` is an administrator.
 
-To turn on Batch, `echo 1 > dev-config/THIS_IS_BATCH`.
+
+
+Deployment
+----------
+
+You'll need deploy-config in your root directory, which should have all the
+appropriate secrets. From the deployment directory, you can run
+`ansible-playbook -i hosts prod.yaml`.
+
+
 
 Understanding The PyCon Talk Review Process
 ------------
@@ -60,3 +81,5 @@ The second part of the process is "batch". In batch, talks are
 moved into groups, and those groups are then reviewed one at a time, with
 a winner or two picked from every group. Some groups feel weak enough that no
 winners are picked.
+
+To turn on Batch, `echo 1 > dev-config/THIS_IS_BATCH`.
