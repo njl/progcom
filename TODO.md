@@ -26,6 +26,7 @@
 - [x] Integrate with us.pycon.org
 - [ ] Email reminders/updates to committee members
 - [ ] Handle withdrawn talks
+- [ ] cron us.pycon.org pull
 - [ ] ~~Analysis export~~ (Just SQL query it)
 - [ ] ~~Remove random chat from talks~~ (Leave chat on talks)
 - [ ] ~~batch group tweaking UI~~ (Do it before import)
