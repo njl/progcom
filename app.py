@@ -168,6 +168,7 @@ def batch_splash_page():
 
 @app.route('/batch/<int:id>/')
 def batch_view(id):
+    l.l('batch_view', uid=request.user.id, gid=id)
     group = l.get_group(id)
     if request.user.email in group.author_emails:
         abort(404)
@@ -217,6 +218,7 @@ Screening Actions
 """
 @app.route('/screening/<int:id>/')
 def screening(id):
+    l.l('screening_view', uid=request.user.id, id=id)
     proposal = l.get_proposal(id)
     if not proposal or proposal.withdrawn:
         abort(404)
