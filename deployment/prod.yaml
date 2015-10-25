@@ -53,12 +53,6 @@
     #Supervisor
       - template: src=web-supervisor.conf dest=/etc/supervisor/conf.d/progcom.conf
       - supervisorctl: name=progcom state=started
-    
-    #DB
-      - postgresql_db: name=progcom
-        sudo_user: postgres
-      - postgresql_user: name=progcom password=progcom role_attr_flags=NOSUPERUSER
-        sudo_user: postgres
 
     #Backup (Installed tarsnap by hand with `./configure #--prefix=/opt/tarsnap`)
       - file: path=/opt/progcom-backup/db state=directory
