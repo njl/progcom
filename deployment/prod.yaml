@@ -20,6 +20,7 @@
             - libffi-dev
             - python-psycopg2
             - e2fslibs-dev
+            - anacron
 
 
     #Basic service
