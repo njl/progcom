@@ -25,9 +25,9 @@
 - [x] Backups
 - [x] Integrate with us.pycon.org
 - [x] cron us.pycon.org pull
+- [x] What's up with the talks not being pulled?
 - [ ] Email reminders/updates to committee members
 - [ ] Handle withdrawn talks
-- [ ] What's up with the talks not being pulled?
 - [ ] ~~Analysis export~~ (Just SQL query it)
 - [ ] ~~Remove random chat from talks~~ (Leave chat on talks)
 - [ ] ~~batch group tweaking UI~~ (Do it before import)

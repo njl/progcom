@@ -34,10 +34,15 @@ def api_call(uri):
     url = 'http://{}{}'.format(API_HOST, uri)
     return requests.get(url, headers=headers).json()
 
+TALK_IDS_FORCE = [1553, 1554, 1555, 1556, 1557, 1559, 1560, 1561, 1562, 1565,
+                  1566, 1568, 1569, 1570, 1571, 1572, 1573, 1576, 1577, 1579, 1580,
+                  1581, 1582, 1583, 1584, 1585, 1586, 1587, 1590]
+
 def fetch_ids():
     raw = api_call('/2016/pycon_api/proposals/?type=talk')
     #print len(raw['data'])
-    return [x['id'] for x in raw['data']]
+    rv = [x['id'] for x in raw['data']]
+    return list(set(TALK_IDS_FORCE + rv))
 
 def fetch_talk(id):
     rv = api_call('/2016/pycon_api/proposals/{}/'.format(id))['data']
