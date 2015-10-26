@@ -19,8 +19,18 @@ def main():
         l.approve_user(uid)
 
 
+    """
     for n in range(6):
         l.add_standard(words(3, 10)[:50])
+    """
+    standards = ["follows PyCon's Code of Conduct",
+                "is complete, clearly written, and articulate",
+                "has a thorough and achievable outline",
+                "has a coherent and primarily technical subject",
+                "is about the Python ecosystem",
+                "has an audience among likely PyCon attendees"]
+    for s in standards:
+        l.add_standard(s)
 
     user_ids = [x.id for x in l.list_users()]
     standards = [x.id for x in l.get_standards()]

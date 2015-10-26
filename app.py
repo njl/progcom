@@ -128,16 +128,16 @@ def approve_user(uid):
     flash('Approved user {}'.format(user.email))
     return redirect(url_for('list_users'))
 
-@app.route('/admin/reasons/')
-def list_reasons():
-    return render_template('reasons.html', reasons=l.get_reasons())
+@app.route('/admin/standards/')
+def list_standards():
+    return render_template('standards.html', standards=l.get_standards())
 
-@app.route('/admin/reasons/', methods=['POST'])
+@app.route('/admin/standards/', methods=['POST'])
 def add_reason():
     text = request.values.get('text')
-    l.add_reason(text)
-    flash('Added reason "{}"'.format(text))
-    return redirect(url_for('list_reasons'))
+    l.add_standard(text)
+    flash('Added standard "{}"'.format(text))
+    return redirect(url_for('list_standards'))
 
 
 """

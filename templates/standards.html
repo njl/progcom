@@ -1,14 +1,14 @@
 {%extends "base.html"%}
 {%block body %}
-<h3>Reasons</h3>
+<h3>Standards</h3>
 <ul>
-    {% for r in reasons %}
+    {% for r in standards %}
     <li>{{r}}</li>
     {% endfor %}
 </ul>
 <form method="POST">
     <div class="form-group">
-        <label for="text">Reason</label>
+        <label for="text">Standard</label>
         <input type="text" class="form-control" id="text"
                                                 placeholder="New reason text" name="text">
     </div>
