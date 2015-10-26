@@ -28,7 +28,7 @@ def main():
                 "has a thorough and achievable outline",
                 "has a coherent and primarily technical subject",
                 "is about the Python ecosystem",
-                "has an audience among likely PyCon attendees"]
+                "has a sufficient audience among attendees"]
     for s in standards:
         l.add_standard(s)
 
