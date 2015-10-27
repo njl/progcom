@@ -10,7 +10,7 @@
     <tr>
         <th>Talk</th>
         {% for s in standards %}
-            <th>{{s.description|truncate(15)}}</th>
+        <th title="{{s.description}}">{{s.description|truncate(35)}}</th>
         {% endfor %}
         <th>Nominated</th>
         <th>When</th>
