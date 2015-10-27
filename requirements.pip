@@ -7,7 +7,7 @@ mandrill
 bleach
 markdown
 
-requests
+requests[security]
 pytz
 
 gevent
