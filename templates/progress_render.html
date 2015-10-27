@@ -1,8 +1,8 @@
 {%macro progress_render(percent) %}
 <div class="progress"
-     title="You have reviewed {{"%0.2f"|format(percent)}}% of talk submissions. {% if percent > 50 %}Great job!!{% elif percent > 1 %}Keep going! :) {% else %}Welcome!{% endif %}">
-    <div class="progress-bar"style="width: {{"%0.2f"|format(percent)}}%;">
-        {{"%0.2f"|format(percent)}}%
+     title="You have reviewed {{percent}}% of talk submissions.">
+    <div class="progress-bar"style="width: {{percent}}%;">
+        {{percent}}%
     </div>
 </div>
 {%endmacro%}

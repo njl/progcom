@@ -146,7 +146,7 @@ User State
 @app.route('/votes/')
 def show_votes():
     votes = l.get_my_votes(request.user.id)
-    percent = 100.0*len(votes)/l.get_proposal_count()
+    percent = l.get_vote_percentage(request.user.email, request.user.id)
     return render_template('my_votes.html', votes=votes, percent=percent,
                             standards = l.get_standards())
 
@@ -237,7 +237,7 @@ def screening(id):
     votes = l.get_votes(id)
 
     my_votes = l.get_my_votes(request.user.id)
-    percent = 100.0*len(my_votes)/l.get_proposal_count()
+    percent = l.get_vote_percentage(request.user.email, request.user.id)
 
     return render_template('screening_proposal.html', proposal=proposal,
                             votes=votes, discussion=discussion,

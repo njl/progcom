@@ -178,9 +178,13 @@ def add_proposal(data):
     execute(q, **data)
     return data['id']
 
-def get_proposal_count():
-    q = 'SELECT COUNT(*) FROM proposals WHERE NOT withdrawn'
-    return scalar(q)
+def get_vote_percentage(email, id):
+    q = '''SELECT COUNT(*) FROM proposals WHERE NOT withdrawn
+            AND NOT (lower(%s) = ANY(author_emails) )'''
+    total = scalar(q, email)
+    q = 'SELECT COUNT(*) FROM votes WHERE voter=%s'
+    votes = scalar(q, id)
+    return "%0.2f" % (100.0*votes/total)
 
 """
 Bookmarks
