@@ -18,8 +18,7 @@
     </tr>
     </thead>
     {% for v in votes %}
-    {% with updated = v.added_on < v.updated %}
-    <tr{%if updated%} class="warning"{%endif%}>
+    <tr{%if v.updated%} class="warning"{%endif%}>
         <td><a href="{{url_for("screening", id=v.proposal)}}">{{v.title}} (#{{v.proposal}})</a></td>
         {% for s in standards %}
         <td>
@@ -28,8 +27,7 @@
         {% endfor %}
         <td>{% if v.nominate %}<span class="glyphicon glyphicon-star"></span>{%endif %}</td>
         <td>{{v.updated_on|date}}</td>
-        <td>{% if updated%}<span class="glyphicon glyphicon-asterisk"></span>{%endif%}</td>
-    {% endwith%}
+        <td>{% if v.updated%}<span class="glyphicon glyphicon-asterisk"></span>{%endif%}</td>
     {% endfor %}
 </table>
 {%endblock body%}
