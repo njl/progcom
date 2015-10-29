@@ -27,7 +27,7 @@
         </td>
         {% endfor %}
         <td>{% if v.nominate %}<span class="glyphicon glyphicon-star"></span>{%endif %}</td>
-        <td>{{v.added_on|date}}</td>
+        <td>{{v.updated_on|date}}</td>
         <td>{% if updated%}<span class="glyphicon glyphicon-asterisk"></span>{%endif%}</td>
     {% endwith%}
     {% endfor %}
