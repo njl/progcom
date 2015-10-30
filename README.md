@@ -64,8 +64,8 @@ Deployment
 ----------
 
 You'll need deploy-config in your root directory, which should have all the
-appropriate secrets. From the deployment directory, you can run
-`ansible-playbook -i hosts prod.yaml`.
+appropriate secrets. From the application's root directory, you can run
+`ansible-playbook -i hosts deploy.yaml`.
 
 
 
