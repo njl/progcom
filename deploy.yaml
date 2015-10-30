@@ -58,11 +58,11 @@
       - file: path=/opt/progcom-backup/db state=directory
       - file: path=/opt/progcom-backup/logs state=directory
       - file: path=/opt/progcom-backup-cache state=directory
-      - cron: name="backup" minute="0" hour="1" job="/opt/progcom/bin/backup"
+      - cron: name="backup" minute="0" hour="1" job="/opt/progcom/bin/backup >/dev/null 2>&1"
 
 
     #us.pycon.org pull
-      - cron: name="pycon pull" minute="0,15,30,45" job="/opt/progcom/bin/pull"
+      - cron: name="pycon pull" minute="0,15,30,45" job="/opt/progcom/bin/pull >/dev/null 2>&1"
 
   handlers:
       - name: restart nginx
