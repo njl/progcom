@@ -97,11 +97,27 @@ def login_post():
 def new_user():
     return render_template('new_user.html')
 
+_NEW_USER_EMAIL_TXT = """
+Hi,
+
+{} ({}) has asked for access to the program committee
+application. Approve them at http://progcom.njl.us/admin/users/
+
+Regards,
+
+The Robot"""
+
 @app.route('/user/new/', methods=['POST'])
 def new_user_post():
-    uid = l.add_user(request.values.get('email'),
-                       request.values.get('name'),
-                         request.values.get('pw'))
+    email = request.values.get('email')
+    name = request.values.get('name')
+    uid = l.add_user(email, name, request.values.get('pw'))
+    msg = {'text': _NEW_USER_EMAIL_TXT.format(name, email),
+            'subject': 'New Progcom User',
+            'from_email': 'njl@njl.us',
+            'from_name':'PyCon Program Committee Robot',
+            'to':[{'email':x} for x in _ADMIN_EMAILS]}
+    l._MANDRILL.messages.send(msg)
     flash('You will be able to log in after your account is approved!')
     return redirect(url_for('login'))
 
