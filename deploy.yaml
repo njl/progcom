@@ -18,6 +18,7 @@
             - ufw
             - libpq-dev
             - libffi-dev
+            - libssl-dev
             - python-psycopg2
             - e2fslibs-dev
             - anacron
