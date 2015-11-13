@@ -186,6 +186,10 @@ def get_vote_percentage(email, id):
     votes = scalar(q, id)
     return "%0.2f" % (100.0*votes/total)
 
+def get_all_proposal_ids():
+    q = 'SELECT id FROM proposals'
+    return [x.id for x in fetchall(q)]
+
 """
 Bookmarks
 """

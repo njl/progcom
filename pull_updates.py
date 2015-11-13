@@ -42,7 +42,7 @@ def fetch_ids():
     raw = api_call('/2016/pycon_api/proposals/?type=talk')
     #print len(raw['data'])
     rv = [x['id'] for x in raw['data']]
-    return list(set(TALK_IDS_FORCE + rv))
+    return list(set(TALK_IDS_FORCE + rv + l.get_all_proposal_ids()))
 
 def fetch_talk(id):
     rv = api_call('/2016/pycon_api/proposals/{}/'.format(id))['data']
