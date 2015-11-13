@@ -14,10 +14,10 @@
         <tr>
             <td><a href="mailto:{{u.email}}">{{u.email}}</a></td>
             <td>{{u.display_name}}</td>
-            <td>{{u.created_on.isoformat()}}</td>
+            <td>{{u.created_on|date}}</td>
             <td>
                 {% if u.approved_on %}
-                {{u.approved_on}}
+                {{u.approved_on|date}}
                 {% else %}
                 <form action="{{u.id}}/approve/" method="POST">
                     <input class="btn btn-default" type="submit" value="Approve">
