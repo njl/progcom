@@ -7,7 +7,7 @@ from flask import (Flask, render_template, request, session, url_for, redirect,
                     flash, abort)
 from jinja2 import Markup
 import bleach
-import markdown
+import markdown2 as markdown
 from raven.contrib.flask import Sentry
 
 

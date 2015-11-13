@@ -5,7 +5,7 @@ psycopg2
 itsdangerous
 mandrill
 bleach
-markdown
+markdown2
 
 requests[security]
 pytz
