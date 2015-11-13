@@ -462,3 +462,28 @@ def check_author_key(key):
         return _USER_FB_ITSD.loads(key)
     except Exception as e:
         return None, None
+
+"""
+Emails
+"""
+_ADMIN_EMAILS = set(json.loads(os.environ['ADMIN_EMAILS']))
+
+def email_approved(id):
+    user = get_user(id)
+    msg = {'text': _JINJA.get_template('welcome_user.txt').render(),
+            'subject': 'Welcome to the Program Committee Web App!',
+            'from_email': 'njl@njl.us',
+            'from_name':'Ned Jackson Lovely',
+            'to':[{'email':user.email}] + [{'email':x, 'type':'cc'} for x in _ADMIN_EMAILS]}
+    _MANDRILL.messages.send(msg)
+
+def email_new_user_pending(email, name):
+    msg = {'text': _JINJA.get_template('new_user_pending.txt').render(name=name,
+                    email=email),
+            'subject': 'New Progcom User',
+            'from_email': 'njl@njl.us',
+            'from_name':'PyCon Program Committee Robot',
+            'to':[{'email':x} for x in _ADMIN_EMAILS]}
+    _MANDRILL.messages.send(msg)
+ 
+

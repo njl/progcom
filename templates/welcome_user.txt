@@ -1,0 +1,31 @@
+Welcome to PyCon Program Committee Talk Review!
+
+If you aren't already subscribed to the pycon-pc mailing list, please take the
+time to do that now!
+
+https://mail.python.org/mailman/listinfo/pycon-pc
+
+Before reviewing proposals, please read http://www.njl.us/essays/pycon-process/.
+It explains the screening criteria for the first stage of review in greater detail.
+
+When you're ready to get started, please log in at http://progcom.njl.us/. 
+
+At that website you will see a talk proposal, chosen randomly from the pool of
+proposals that have the least reviews so far. Please review it based on the six
+criteria provided, nominate the talk for special consideration if you think it
+appropriate, and hit 'Save Vote' to save your vote.
+
+After you submit your evaluation, you'll be able to see how others have voted. If you
+disagree, feel free to start a discussion with other reviewers in the discussion box.
+After you have saved your evaluation, you can move on to the next proposal. Please
+vote for every proposal you are presented, in the state it is provided to you. We'll
+keep track of proposals that change after you vote on them, and allow you to go back
+and reevaluate them if necessary.
+
+Right now we are in the screening stage of talk proposal evaluation. Later stages
+of review will also occur on http://progcom.njl.us/, but we'll describe how those
+will work in a future mailing list message.
+
+Thank you so much for your help in making this year's PyCon program--we can't do
+it without your time and thoughtful input. We hope you have fun reading these
+talk proposals!

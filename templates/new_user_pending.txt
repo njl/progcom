@@ -1,0 +1,8 @@
+Hi,
+
+{{name}} ({{email}}) has asked for access to the program committee
+application. Approve them at http://progcom.njl.us/admin/users/
+
+Regards,
+
+The Robot
