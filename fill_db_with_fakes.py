@@ -56,14 +56,18 @@ def main():
         l.add_proposal(data)
         proposal_ids.append(prop_id)
 
-        if random.randint(0, 3) == 2:
+        if random.randint(0, 3) == 0:
             for n in range(random.randint(1, 10)):
                 l.add_to_discussion(random.choice(user_ids), prop_id, ipsum(1))
 
-        if random.randint(0, 2) == 2:
+        if random.randint(0, 2) == 0:
             for n in range(random.randint(1, 5)):
                 vote = {k:random.randint(0, 2) for k in standards}
                 l.vote(random.choice(user_ids), prop_id, vote)
+
+        if random.randint(0, 3) == 0:
+            data['notes'] = 'UPDATED' + ipsum(2)
+            l.add_proposal(data)
 
 
     random.shuffle(proposal_ids)
