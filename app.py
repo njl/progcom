@@ -40,7 +40,7 @@ def set_nofollow(attrs, new=False):
 @app.template_filter('markdown')
 def markdown_filter(s):
     raw = bleach.clean(markdown.markdown(s), 
-                    tags=bleach.ALLOWED_TAGS+['p', 'h1', 'h2'])
+                    tags=bleach.ALLOWED_TAGS+['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'br'])
     raw = bleach.linkify(raw, callbacks=[set_nofollow])
     return Markup(raw)
 
