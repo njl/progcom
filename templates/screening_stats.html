@@ -45,7 +45,17 @@ $(document).ready(function(){
         width: $('#votes-when').width(),
         height: 200,
         series: [{color:'steelblue', data:votes_when}],
+        renderer: 'bar',
     });
+    var vw_xAxis = new Rickshaw.Graph.Axis.Time({
+            graph: votes_when_graph
+    });
+    var vw_yAxis = new Rickshaw.Graph.Axis.Y({
+            graph: votes_when_graph 
+    });
+
+    vw_xAxis.render();
+    vw_yAxis.render();
     votes_when_graph.render();
 });
 </script>
