@@ -51,6 +51,9 @@
                 <ul class="nav navbar-nav">
                     <li><a href="{{url_for("show_votes")}}">Previous Votes</a></li>
                     <li><a href="{{url_for("show_bookmarks")}}">Bookmarks</a></li>
+                    {% if request.user.email in config.ADMIN_EMAILS %}
+                    <li><a href="{{url_for("admin_menu")}}">Admin</a></li>
+                    {% endif %}
                 </ul>
                 {% endif %}
                 <ul class="nav navbar-nav navbar-right">

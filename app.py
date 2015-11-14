@@ -23,6 +23,9 @@ if 'SENTRY_DSN' in os.environ:
 THIS_IS_BATCH = 'THIS_IS_BATCH' in os.environ
 app.config.THIS_IS_BATCH = THIS_IS_BATCH
 
+_ADMIN_EMAILS = set(json.loads(os.environ['ADMIN_EMAILS']))
+app.config.ADMIN_EMAILS = _ADMIN_EMAILS
+
 if THIS_IS_BATCH:
     print 'THIS IS BATCH'
 else:
@@ -47,7 +50,6 @@ def markdown_filter(s):
 """
 Account Silliness
 """ 
-_ADMIN_EMAILS = set(json.loads(os.environ['ADMIN_EMAILS']))
 @app.before_request
 def security_check():
     request.user = l.get_user(session.get('userid'))
