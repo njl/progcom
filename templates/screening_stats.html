@@ -1,13 +1,14 @@
 {%extends "base.html"%}
 {%block body %}
-<div class="row">
-    <div class="col-md-6">
+    <div class="col-md-12">
+        <h4>Votes Per Day</h4>
         <div id="votes-when">
+            <svg></svg>
         </div>
     </div>
-</div>
 <div class="row">
     <div class="col-md-6">
+        <h4>Overall Vote Coverage</h4>
 <table class="table table-striped table-condensed">
     <thead><tr><th>Proposals</th><th>Votes</th></tr></thead>
     <tbody>
@@ -16,8 +17,13 @@
         {% endfor %}
     </tbody>
 </table>
+    <h4>Vote Coverage By Week Added</h4>
+        <div id="votes-progress">
+            <svg></svg>
+        </div>
     </div>
 <div class="col-md-6">
+    <h4>Votes Per Committee Member</h4>
 <table class="table table-striped table-condensed">
     <thead><tr><th>Voter</th><th>Votes</th></tr></thead>
     <tbody>
@@ -30,36 +36,58 @@
 </div>
 {%endblock body%}
 {%block extracss%}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rickshaw/1.5.1/rickshaw.min.css">
+<link rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.1/nv.d3.min.css">
+<style type="text/css">
+#votes-when svg {height:200px;}
+#votes-progress svg {height:200px; width:100%;}
+</style>
 {%endblock%}
 {%block extrajs%}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.8/d3.min.js"></script> 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/rickshaw/1.5.1/rickshaw.min.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.8/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.1/nv.d3.min.js"></script>
 <script type="text/javascript">
 var votes_when={{votes_when|tojson}};
+var coverage_by_age={{coverage_by_age|tojson}};
 
 $(document).ready(function(){
-    var votes_when_graph = new Rickshaw.Graph({
-        element: document.getElementById('votes-when'),
-        width: $('#votes-when').width(),
-        height: 200,
-        series: [{color:'steelblue', data:votes_when}],
-        renderer: 'bar',
-    });
-    var time = new Rickshaw.Fixtures.Time();
-    var days = time.unit('day');
-    var vw_xAxis = new Rickshaw.Graph.Axis.Time({
-            graph: votes_when_graph,
-            timeUnit: days
-    });
-    var vw_yAxis = new Rickshaw.Graph.Axis.Y({
-            graph: votes_when_graph 
+    nv.addGraph(function(){
+        var chart = nv.models.multiBarChart()
+            .x(function(d){return d.day;})
+            .y(function(d){return d.count;})
+            .reduceXTicks(true)
+            .showControls(false);
+        chart.xAxis.tickFormat(
+                function(d){
+                    return d3.time.format('%x')(new Date(d))
+                });
+        chart.yAxis.tickFormat(Math.floor);
+        d3.select('#votes-when svg')
+            .datum([{key:'votes', values:votes_when}])
+            .call(chart)
+        nv.utils.windowResize(chart.update);
+        return chart;
     });
 
-    vw_xAxis.render();
-    vw_yAxis.render();
-    votes_when_graph.render();
+    nv.addGraph(function(){
+        var chart = nv.models.multiBarChart()
+            .x(function(d){return d.week})
+            .y(function(d){return d.votes})
+            .reduceXTicks(true)
+            .stacked(true)
+            .showControls(false);
+        chart.xAxis.tickFormat(
+                function(d){
+                    return d3.time.format('%x')(new Date(d))
+                });
+        chart.yAxis.tickFormat(Math.floor);
+        d3.select('#votes-progress svg')
+            .datum(coverage_by_age)
+            .call(chart);
+
+        nv.utils.windowResize(chart.update);
+        return chart;
+    });
 });
 </script>
 {%endblock%}

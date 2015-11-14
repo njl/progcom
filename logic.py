@@ -4,10 +4,11 @@ import random
 import json
 import logging
 import datetime
+import time
 
+import pandas as pd
 import itsdangerous
 import mandrill
-
 import bcrypt
 from sqlalchemy import create_engine
 from sqlalchemy.exc import IntegrityError
@@ -312,12 +313,42 @@ def get_my_votes(uid):
 """
 Screening stats
 """
+def _js_time(d):
+    return int(time.mktime(d.timetuple()))*1000;
+
 def get_votes_by_day():
     q = '''SELECT COUNT(*) as count, 
             date_trunc('day', updated_on) AS day
-            FROM votes GROUP BY day
-            ORDER BY day ASC'''
-    return fetchall(q)
+            FROM votes GROUP BY day'''
+    results = {x.day.date().isoformat():x.count for x in fetchall(q)}
+    full = pd.Series(results)
+    full.index = pd.DatetimeIndex(full.index)
+    full = full.reindex(pd.date_range(min(full.index),
+                                        max(full.index)), fill_value=0)
+    return [{'count':v, 'day':_js_time(k)} for k,v in full.iteritems()]
+
+
+
+def coverage_by_age():
+    q = '''SELECT COUNT(*) as total,
+            date_trunc('week', added_on) AS week,
+            vote_count FROM proposals GROUP BY week, vote_count
+            ORDER BY vote_count ASC'''
+    result = defaultdict(dict)
+    for r in fetchall(q):
+        result[r.vote_count][r.week.date().isoformat()] = r.total
+    
+    df = pd.DataFrame(result).fillna(0)
+    df.index = pd.DatetimeIndex(df.index)
+
+    result = {votes:series for votes, series in df.iteritems()}
+    rv = []
+    for key, series in result.iteritems():
+        rv.append({'key':key, 
+            'values': [{'week':_js_time(k), 'votes':v}
+                        for k,v in series.iteritems()]})
+    return rv
+
 
 """
 Batch

@@ -3,6 +3,7 @@ import os
 import json
 import random
 import time
+from collections import defaultdict
 
 from flask import (Flask, render_template, request, session, url_for, redirect,
                     flash, abort)
@@ -233,15 +234,19 @@ def batch_discussion(id):
 Screening Actions
 """
 
+
 @app.route('/screening/stats/')
 def screening_stats():
     users = l.list_users()
     users.sort(key=lambda x:-x.votes)
     progress = l.screening_progress()
-    votes_when = [{'x':int(time.mktime(d.day.timetuple())*1000),
-                    'y': d.count} for d in l.get_votes_by_day()]
+    votes_when = l.get_votes_by_day()
+    coverage_by_age = l.coverage_by_age()
+
+
     return render_template('screening_stats.html',
                             users=users, progress=progress,
+                            coverage_by_age=coverage_by_age,
                             votes_when=votes_when)
 
 @app.route('/screening/<int:id>/')
