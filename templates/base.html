@@ -5,7 +5,7 @@
         <link rel="stylesheet" href="/static/css/bootstrap.min.css">
         <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css">
         <link rel="stylesheet" href="/static/css/style.css">
-
+        {%block extracss%}{%endblock%}
 
         <link rel="apple-touch-icon" sizes="57x57" href="/static/favicons/apple-touch-icon-57x57.png">
         <link rel="apple-touch-icon" sizes="60x60" href="/static/favicons/apple-touch-icon-60x60.png">
@@ -92,5 +92,7 @@
         <script src="/static/js/underscore-1.8.3.min.js"></script>
         <script src="/static/js/bootstrap.3.3.5.min.js"></script>
         <script src="/static/js/app.js"></script>
+        {% block extrajs %}
+        {% endblock %}
     </body>
 </html>

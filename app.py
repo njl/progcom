@@ -2,6 +2,7 @@
 import os
 import json
 import random
+import time
 
 from flask import (Flask, render_template, request, session, url_for, redirect,
                     flash, abort)
@@ -237,7 +238,11 @@ def screening_stats():
     users = l.list_users()
     users.sort(key=lambda x:-x.votes)
     progress = l.screening_progress()
-    return render_template('screening_stats.html', users=users, progress=progress)
+    votes_when = [{'x':int(time.mktime(d.day.timetuple())*1000),
+                    'y': d.count} for d in l.get_votes_by_day()]
+    return render_template('screening_stats.html',
+                            users=users, progress=progress,
+                            votes_when=votes_when)
 
 @app.route('/screening/<int:id>/')
 def screening(id):

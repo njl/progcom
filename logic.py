@@ -310,6 +310,16 @@ def get_my_votes(uid):
     return [_clean_vote(v) for v in fetchall(q, uid)]
 
 """
+Screening stats
+"""
+def get_votes_by_day():
+    q = '''SELECT COUNT(*) as count, 
+            date_trunc('day', updated_on) AS day
+            FROM votes GROUP BY day
+            ORDER BY day ASC'''
+    return fetchall(q)
+
+"""
 Batch
 """
 def create_group(name, proposals):
