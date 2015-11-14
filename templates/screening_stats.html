@@ -47,8 +47,11 @@ $(document).ready(function(){
         series: [{color:'steelblue', data:votes_when}],
         renderer: 'bar',
     });
+    var time = new Rickshaw.Fixtures.Time();
+    var days = time.unit('day');
     var vw_xAxis = new Rickshaw.Graph.Axis.Time({
-            graph: votes_when_graph
+            graph: votes_when_graph,
+            timeUnit: days
     });
     var vw_yAxis = new Rickshaw.Graph.Axis.Y({
             graph: votes_when_graph 
