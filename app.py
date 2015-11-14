@@ -40,10 +40,12 @@ def set_nofollow(attrs, new=False):
     attrs['target'] = '_blank'
     return attrs
 
+
+__ALLOWED_TAGS =['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'br'] 
 @app.template_filter('markdown')
 def markdown_filter(s):
     raw = bleach.clean(markdown.markdown(s), 
-                    tags=bleach.ALLOWED_TAGS+['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'br'])
+                    tags=bleach.ALLOWED_TAGS+__ALLOWED_TAGS)
     raw = bleach.linkify(raw, callbacks=[set_nofollow])
     return Markup(raw)
 
@@ -163,7 +165,8 @@ def show_votes():
 
 @app.route('/bookmarks/')
 def show_bookmarks():
-    return render_template('bookmarks.html', bookmarks=l.get_bookmarks(request.user.id))
+    return render_template('bookmarks.html',
+                            bookmarks=l.get_bookmarks(request.user.id))
 
 @app.route('/unread/')
 def show_unread():
@@ -174,7 +177,8 @@ Batch Actions
 """
 @app.route('/batch/')
 def batch_splash_page():
-    return render_template('batch.html', unread=l.get_unread_batches(request.user.id),
+    return render_template('batch.html',
+                            unread=l.get_unread_batches(request.user.id),
                             groups=l.list_groups(request.user.id))
 
 @app.route('/batch/<int:id>/')

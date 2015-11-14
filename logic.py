@@ -405,7 +405,8 @@ def get_discussion(proposal):
     return fetchall(q, proposal)
 
 def add_to_discussion(userid, proposal, body, feedback=False, name=None):
-    l('add_to_discussion', uid=userid, id=proposal, body=body, feedback=feedback, name=name)
+    l('add_to_discussion', uid=userid, id=proposal, body=body,
+                            feedback=feedback, name=name)
     q = 'SELECT voter FROM votes WHERE proposal=%s'
     users = set(x.voter for x in fetchall(q, proposal))
     q = 'SELECT frm FROM discussion WHERE proposal=%s AND frm IS NOT NULL'
@@ -415,7 +416,8 @@ def add_to_discussion(userid, proposal, body, feedback=False, name=None):
         users.remove(userid)
 
     if userid:
-        q = 'INSERT INTO discussion(frm, proposal, body, feedback) VALUES (%s, %s,%s,%s)'
+        q = '''INSERT INTO discussion(frm, proposal, body, feedback)
+                VALUES (%s, %s,%s,%s)'''
         execute(q, userid, proposal, body, feedback)
     else:
         q = 'INSERT INTO discussion(proposal, body, name) VALUES (%s, %s, %s)'
@@ -452,7 +454,8 @@ def mark_read(userid, proposal):
 
 def get_unread(userid):
     q = '''SELECT unread.proposal as id, proposals.title as title
-                FROM unread LEFT JOIN proposals ON (unread.proposal = proposals.id)
+                FROM unread
+                LEFT JOIN proposals ON (unread.proposal = proposals.id)
                 WHERE voter=%s'''
     return fetchall(q, userid)
 
@@ -485,12 +488,14 @@ def email_approved(id):
             'subject': 'Welcome to the Program Committee Web App!',
             'from_email': 'njl@njl.us',
             'from_name':'Ned Jackson Lovely',
-            'to':[{'email':user.email}] + [{'email':x, 'type':'cc'} for x in _ADMIN_EMAILS]}
+            'to':[{'email':user.email}] 
+                + [{'email':x, 'type':'cc'} for x in _ADMIN_EMAILS]}
     _MANDRILL.messages.send(msg)
 
 def email_new_user_pending(email, name):
-    msg = {'text': _JINJA.get_template('new_user_pending.txt').render(name=name,
-                    email=email),
+    body = _JINJA.get_template('new_user_pending.txt').render(name=name,
+                                                            email=email)
+    msg = {'text': body,
             'subject': 'New Progcom User',
             'from_email': 'njl@njl.us',
             'from_name':'PyCon Program Committee Robot',
