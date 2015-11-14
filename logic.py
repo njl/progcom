@@ -114,8 +114,9 @@ def get_user(id):
     return fetchone(q, id, id)
 
 def list_users():
-    q = '''SELECT id, email, display_name, created_on, approved_on
-            FROM users'''
+    q = '''SELECT id, email, display_name, created_on, approved_on,
+            (SELECT COUNT(*) FROM votes WHERE users.id=votes.voter)
+            as votes FROM users '''
     return fetchall(q)
 
 """

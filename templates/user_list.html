@@ -3,8 +3,10 @@
 <table class="table table-striped">
     <thead>
         <tr>
+            <th>Id</th>
             <th>Email</th>
             <th>Name</th>
+            <th>Votes</th>
             <th>Created On</th>
             <th>Approved</th>
         </tr>
@@ -12,8 +14,10 @@
     <tbody>
         {% for u in users %}
         <tr>
+            <td>{{u.id}}</td>
             <td><a href="mailto:{{u.email}}">{{u.email}}</a></td>
             <td>{{u.display_name}}</td>
+            <td>{{u.votes}}</td>
             <td>{{u.created_on|date}}</td>
             <td>
                 {% if u.approved_on %}
