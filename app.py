@@ -231,6 +231,14 @@ def batch_discussion(id):
 """
 Screening Actions
 """
+
+@app.route('/screening/stats/')
+def screening_stats():
+    users = l.list_users()
+    users.sort(key=lambda x:-x.votes)
+    progress = l.screening_progress()
+    return render_template('screening_stats.html', users=users, progress=progress)
+
 @app.route('/screening/<int:id>/')
 def screening(id):
     l.l('screening_view', uid=request.user.id, id=id)
