@@ -109,9 +109,15 @@ def get_user(id):
     if not id:
         return None
     q = '''SELECT id, email, display_name, approved_on IS NOT NULL AS approved,
-            EXISTS (SELECT 1 FROM unread WHERE voter=%s limit 1) as unread
+            EXISTS (SELECT 1 FROM unread WHERE voter=%s limit 1) 
+                AS unread,
+            EXISTS (SELECT 1 FROM votes 
+                        INNER JOIN proposals ON (votes.proposal = proposals.id)
+                        WHERE votes.voter=%s
+                                AND proposals.updated > votes.updated_on) 
+                AS revisit
             FROM users WHERE id=%s'''
-    return fetchone(q, id, id)
+    return fetchone(q, id, id, id)
 
 def list_users():
     q = '''SELECT id, email, display_name, created_on, approved_on,
