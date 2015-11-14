@@ -75,8 +75,12 @@ def _mangle_pw(pw, salt=None):
 def add_user(email, display_name, pw):
     q = '''INSERT INTO users (email, display_name, pw)
                 VALUES (%s, %s, %s) RETURNING id'''
-    id = scalar(q, email, display_name, _mangle_pw(pw))
-    l('add_user', email=email, display_name=display_name, uid=id)
+    try:
+        id = scalar(q, email, display_name, _mangle_pw(pw))
+        l('add_user', email=email, display_name=display_name, uid=id)
+    except IntegrityError:
+        l('add_user_dupe', email=email, display_name=display_name)
+        return -1
     return id 
 
 def approve_user(id):

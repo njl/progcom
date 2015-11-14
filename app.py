@@ -101,7 +101,14 @@ def new_user():
 def new_user_post():
     email = request.values.get('email')
     name = request.values.get('name')
-    uid = l.add_user(email, name, request.values.get('pw'))
+    pw = request.values.get('pw')
+    if not pw or not pw.strip():
+        flash('No empty passwords, please!')
+        return redirect(url_for('new_user'))
+    uid = l.add_user(email, name, pw)
+    if uid == -1:
+        flash('An account with that email address already exists')
+        return redirect(url_for('login'))
     l.email_new_user_pending(email, name)
     flash('You will be able to log in after your account is approved!')
     return redirect(url_for('login'))
