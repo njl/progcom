@@ -27,10 +27,10 @@
 - [x] cron us.pycon.org pull
 - [x] What's up with the talks not being pulled?
 - [x] Reply when a user is approved!
-- [ ] Weekly status email
+- [x] Weekly status email
+- [x] Better display of talks with votes before an update
 - [ ] Email reminders/updates to committee members
 - [ ] Handle withdrawn talks
-- [x] Better display of talks with votes before an update
 - [ ] Need an inbetween mode; post proposals closing, before batch opens
 - [ ] ~~Analysis export~~ (Just SQL query it)
 - [ ] ~~Remove random chat from talks~~ (Leave chat on talks)

@@ -298,11 +298,6 @@ def needs_votes(email, uid):
     l('needs_votes', uid=uid, id=rv)
     return rv
 
-def screening_progress():
-    q = '''SELECT vote_count, COUNT(vote_count) as quantity
-            FROM proposals GROUP BY vote_count'''
-    return fetchall(q)
-
 def get_my_votes(uid):
     q = '''SELECT votes.*, proposals.updated > votes.updated_on AS updated,
             proposals.title AS title, proposals.updated AS proposal_updated
@@ -313,6 +308,11 @@ def get_my_votes(uid):
 """
 Screening stats
 """
+def screening_progress():
+    q = '''SELECT vote_count, COUNT(vote_count) as quantity
+            FROM proposals GROUP BY vote_count'''
+    return fetchall(q)
+
 def _js_time(d):
     return int(time.mktime(d.timetuple()))*1000;
 
@@ -326,8 +326,6 @@ def get_votes_by_day():
     full = full.reindex(pd.date_range(min(full.index),
                                         max(full.index)), fill_value=0)
     return [{'count':v, 'day':_js_time(k)} for k,v in full.iteritems()]
-
-
 
 def coverage_by_age():
     q = '''SELECT COUNT(*) as total,
@@ -352,6 +350,12 @@ def coverage_by_age():
 def added_last_week():
     q = '''SELECT COUNT(*) AS total FROM proposals 
             WHERE added_on > current_date - interval '7 days' '''
+    return scalar(q)
+
+def updated_last_week():
+    q = '''SELECT COUNT(*) AS total FROM proposals
+            WHERE added_on < current_date - interval '7 days'
+                    AND updated > current_date - interval '7 days' '''
     return scalar(q)
 
 def votes_last_week():
@@ -561,4 +565,16 @@ def email_new_user_pending(email, name):
             'to':[{'email':x} for x in _ADMIN_EMAILS]}
     _MANDRILL.messages.send(msg)
  
-
+def send_weekly_update():
+    body = _JINJA.get_template('weekly_email.txt')
+    body = body.render(new_proposal_count=added_last_week(),
+                        updated_proposal_count=updated_last_week(),
+                        votes_last_week=votes_last_week(),
+                        active_discussions=active_discussions(),
+                        screening_progress=screening_progress())
+    msg = {'text':body,
+            'subject':'Weekly Program Committee Status',
+            'from_email': 'njl@njl.us',
+            'from_name': 'PyCon Program Committee Robot',
+            'to':[{'email':'pycon-pc@python.org'}]}
+    _MANDRILL.messages.send(msg)

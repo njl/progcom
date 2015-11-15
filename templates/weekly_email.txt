@@ -1,0 +1,19 @@
+Hi, this is your friendly PyCon program committee bot.
+
+In the past seven days...
+{{new_proposal_count}} new proposals.
+{{updated_proposal_count}} updated proposals.
+{{votes_last_week}} votes recorded.
+{{active_discussions|length}} discussions contributed to.
+
+Our coverage currently looks like this:
+{% for sp in screening_progress %}{{sp.quantity}} proposals have {{sp.vote_count}} votes each.
+{% endfor %}
+
+The five busiest discussions are:{%for ad in active_discussions[:5] %}
+{{ad.count}} messages about {{ad.title}}
+http://progcom.njl.us/screening/{{ad.id}}/{% endfor %}
+
+Regards,
+
+PyCon Bot

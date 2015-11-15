@@ -1,0 +1,3 @@
+#!/bin/sh
+
+/usr/bin/envdir /opt/progcom-envdir/ /opt/progcom-venv/bin/python /opt/progcom/send_email.py

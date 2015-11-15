@@ -64,6 +64,7 @@
 
     #us.pycon.org pull
       - cron: name="pycon pull" minute="0,15,30,45" job="/opt/progcom/bin/pull >/dev/null 2>&1"
+      - cron: name="pycon update" minute="20" hour="7" weekday="1" job="/opt/progcom/bin/weekly_email >/dev/null 2>&1"
 
   handlers:
       - name: restart nginx
