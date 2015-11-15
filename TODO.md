@@ -26,11 +26,11 @@
 - [x] Integrate with us.pycon.org
 - [x] cron us.pycon.org pull
 - [x] What's up with the talks not being pulled?
-- [ ] Reply when a user is approved!
+- [x] Reply when a user is approved!
+- [ ] Weekly status email
 - [ ] Email reminders/updates to committee members
 - [ ] Handle withdrawn talks
-- [ ] Better display of talks with votes before an update
-- [ ] Weekly status email
+- [x] Better display of talks with votes before an update
 - [ ] ~~Analysis export~~ (Just SQL query it)
 - [ ] ~~Remove random chat from talks~~ (Leave chat on talks)
 - [ ] ~~batch group tweaking UI~~ (Do it before import)

@@ -54,12 +54,16 @@ var votes_when={{votes_when|tojson}};
 var coverage_by_age={{coverage_by_age|tojson}};
 
 $(document).ready(function(){
+    var zero_margin = {bottom:20, left:0, right:30, top:0};
+
     nv.addGraph(function(){
         var chart = nv.models.multiBarChart()
             .x(function(d){return d.day;})
             .y(function(d){return d.count;})
             .reduceXTicks(true)
-            .showControls(false);
+            .rightAlignYAxis(true)
+            .showControls(false)
+            .margin(zero_margin);
         chart.xAxis.tickFormat(
                 function(d){
                     return d3.time.format('%x')(new Date(d))
@@ -78,10 +82,13 @@ $(document).ready(function(){
             .y(function(d){return d.votes})
             .reduceXTicks(true)
             .stacked(true)
-            .showControls(false);
+            .rightAlignYAxis(true)
+            .showControls(false)
+            .margin(zero_margin);
+
         chart.xAxis.tickFormat(
                 function(d){
-                    return d3.time.format('%x')(new Date(d))
+                    return d3.time.format('Week Of %x')(new Date(d))
                 });
         chart.yAxis.tickFormat(Math.floor);
         d3.select('#votes-progress svg')
