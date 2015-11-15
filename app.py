@@ -228,7 +228,8 @@ def batch_discussion(id):
     if request.user.email in group.author_emails:
         abort(404)
     l.add_batch_message(request.user.id, id, request.values.get('comment'))
-    return redirect(url_for('batch_view', id=id))
+    return render_template('batch_discussion_snippet.html',
+                            msgs=l.get_batch_messages(id))
 
 """
 Screening Actions

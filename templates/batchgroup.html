@@ -1,5 +1,7 @@
 {%extends "base.html"%}
 {%import "proposal_render.html" as pr%}
+{%import "batch_render.html" as br%}
+
 {%block body %}
 <h1>Group: {{group.name}}</h1>
 
@@ -54,67 +56,47 @@
             <input type="hidden" name="accept" value="<%=id%>"></li>
     </script>
 
-    <div class="col-md-4">
-            <form action="vote/" method="POST">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <h3 class="panel-title">Select Talks</h3>
-            </div>
-            <div class="panel-body">
-                <h4>Selected Proposals</h4>
-                <ul class="list-group" id="accept">
-                    {% for v in vote.accept%}
+    <div class="col-md-4" id="batch-right-column">
+        <form action="vote/" method="POST" id="vote">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Select Talks</h3>
+                </div>
+                <div class="panel-body">
+                    <h4>Selected Proposals</h4>
+                    <ul class="list-group" id="accept">
+                        {% for v in vote.accept%}
                         <li class="list-group-item">
                             <span class="glyphicon glyphicon-star"></span> {{proposal_map[v].title}}
                             <input type="hidden" name="accept" value="{{v}}">
                         </li>
-                    {% endfor %}
-                </ul>
-                <div id="notalks" class="alert alert-warning" {% if vote.accept %}style="display: none;"{% endif %}>No talks selected.</div>
-                <h4>Remaining Proposals</h4>
-                <ul class="list-group" id="unranked">
-                    {% for p in proposals%}
-                    <li data-id="{{p.proposal.id}}"
-                        class="list-group-item"
-                        id="unranked-prop-{{p.proposal.id}}"
-                        {%if vote and p.proposal.id in vote.accept%}
-                        style="display:none;"
-                        {%endif%}
-                        >
+                        {% endfor %}
+                    </ul>
+                    <div id="notalks" class="alert alert-warning" {% if vote.accept %}style="display: none;"{% endif %}>No talks selected.</div>
+                    <h4>Remaining Proposals</h4>
+                    <ul class="list-group" id="unranked">
+                        {% for p in proposals%}
+                        <li data-id="{{p.proposal.id}}"
+                            class="list-group-item"
+                            id="unranked-prop-{{p.proposal.id}}"
+                            {%if vote and p.proposal.id in vote.accept%}
+                            style="display:none;"
+                            {%endif%}
+                            >
                             {{p.proposal.title}}
-                    </li>
-                    {% endfor %}
-                </ul>
+                        </li>
+                            {% endfor %}
+                    </ul>
+                </div>
+                <div class="panel-footer">
+                    <button type="submit" class="btn btn-primary btn-block" id="save">Save Choices</button>
+                    <span class="help-block">Choose a talk from this group for PyCon. If none seem good enough, you may choose none;
+                        if you think there are two excellent, non-overlapping options, you may choose two.</span>
+                </div>
             </div>
-            <div class="panel-footer">
-                <button type="submit" class="btn btn-primary btn-block" id="save">Save Choices</button>
-                 <span class="help-block">Choose a talk from this group for PyCon. If none seem good enough, you may choose none;
-                     if you think there are two excellent, non-overlapping options, you may choose 2.</span>
-            </div>
-        </div>
-            </form>
-
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Messages</h3>
-            </div>
-            <table class="table table-striped">
-                {% for m in msgs %}
-                    <tr><th>{{m.display_name}}</th><th>{{m.created|date}}</th></tr>
-                    <tr><td colspan="2">{{m.body}}</td></tr>
-                {% endfor %}
-            </table>
-            <div class="panel-body">
-                <form method="POST" action="comment/">
-                    <div class="form-group">
-                        <label for="comment">Add Comment</label>
-                        <textarea type="" class="form-control" id="comment" placeholder="Internal Comment" name="comment"></textarea>
-                        <p class="help-block">Please be both kind and succinct with your comments.</p>
-                    </div>
-                    <button type="submit" class="btn btn-default">Submit</button>
-                </form>
-            </div>
-        </div>
+        </form>
+    
+    {{br.batch_discussion(msgs)}}
 
     </div><!--end side column-->
 </div>

@@ -101,6 +101,13 @@ function toggle_bookmark(ev){
     });
 }
 
+function batch_add_comment(ev){
+    ev.preventDefault();
+    $.post('comment/', $('#add-comment').serialize()).then(function(text){
+        $('#batch-messages').replaceWith(text);
+    });
+}
+
 TEMPLATES = {};
 
 $(document).ready(function(){
@@ -114,8 +121,9 @@ $(document).ready(function(){
     $('#unranked li').on('click', batch_add);
     $('#accept').on('click', 'li', batch_rem);
     $('#proposal-tabs a').first().tab("show");
+    $('#batch-right-column').on('submit', '#add-comment', batch_add_comment);
 
-    //
+    //Screening
     $('#right-column').on('click', '.voting-stripe button', vote_click);
     $('#right-column').on('click', '#nominate', nominate_click);
     $('#right-column').on('click', '#save', save_vote);
