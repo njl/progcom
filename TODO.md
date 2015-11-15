@@ -31,6 +31,7 @@
 - [ ] Email reminders/updates to committee members
 - [ ] Handle withdrawn talks
 - [x] Better display of talks with votes before an update
+- [ ] Need an inbetween mode; post proposals closing, before batch opens
 - [ ] ~~Analysis export~~ (Just SQL query it)
 - [ ] ~~Remove random chat from talks~~ (Leave chat on talks)
 - [ ] ~~batch group tweaking UI~~ (Do it before import)

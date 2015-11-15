@@ -349,6 +349,24 @@ def coverage_by_age():
                         for k,v in series.iteritems()]})
     return rv
 
+def added_last_week():
+    q = '''SELECT COUNT(*) AS total FROM proposals 
+            WHERE added_on > current_date - interval '7 days' '''
+    return scalar(q)
+
+def votes_last_week():
+    q = '''SELECT COUNT(*) AS total FROM votes 
+            WHERE updated_on > current_date - interval '7 days' '''
+    return scalar(q)
+
+def active_discussions():
+    q = '''SELECT COUNT(d.id) as count, p.title as title, p.id as id
+            FROM discussion as d INNER JOIN proposals AS p ON (d.proposal=p.id)
+            WHERE d.created > current_date - interval '7 days'
+            GROUP BY p.title, p.id
+            ORDER BY count DESC'''
+    return fetchall(q)
+
 
 """
 Batch
