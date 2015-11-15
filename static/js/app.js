@@ -99,6 +99,8 @@ function load_vote(){
     _.each(JSON.parse(votes), function(id){
         $('#'+id).click();
     });
+    $('#vote-panel').popover({container:"body", placement:"left"});
+    $('#vote-panel').popover('show');
 }
 
 function clear_vote(){
