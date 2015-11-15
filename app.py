@@ -247,6 +247,7 @@ def screening_stats():
     return render_template('screening_stats.html',
                             users=users, progress=progress,
                             coverage_by_age=coverage_by_age,
+                            total_proposals=sum(p.quantity for p in progress),
                             votes_when=votes_when)
 
 @app.route('/screening/<int:id>/')
