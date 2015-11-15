@@ -23,7 +23,8 @@
                 <tr>
                     <td>
                         <div class="btn-group btn-group-xs voting-stripe" style="min-width:75px;">
-                            <button type="button" class="btn
+                            <button type="button" id="standard-id-{{s.id}}-2"
+                            class="btn
                             {% if existing_vote
                                     and existing_vote.scores[s.id] == 2 %}
                             btn-success
@@ -32,7 +33,8 @@
                             {%endif%}
 
                                 " data-val="2"><span class="glyphicon glyphicon-ok" title="Meets Standard"></span></button>
-                            <button type="button" class="btn
+                            <button type="button"id="standard-id-{{s.id}}-1" 
+                            class="btn
                             {% if existing_vote
                                     and existing_vote.scores[s.id] == 1 %}
                             btn-warning
@@ -40,7 +42,8 @@
                             btn-default
                             {%endif%}
                                 " data-val="1"><span class="glyphicon glyphicon-warning-sign" title="Concern it Might Not Meet Standard"></span></button>
-                            <button type="button" class="btn
+                            <button type="button" id="standard-id-{{s.id}}-0"
+                            class="btn
                             {% if existing_vote
                                     and existing_vote.scores[s.id] == 0 %}
                             btn-danger
@@ -204,4 +207,7 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+var proposal_id={{proposal.id|tojson}}
+</script>
 {%endblock body%}

@@ -45,8 +45,10 @@ function vote_click(){
     $this.siblings('input').val($this.data().val);
     $this.siblings().addClass('btn-default').removeClass('btn-success btn-warning btn-danger');
     $this.addClass({'0':'btn-danger', '1':'btn-warning', '2': 'btn-success'}[$this.data().val])
+    $this.removeClass('btn-default');
     $('#save').attr('disabled', $('#vote-form input[value=-1]').length > 0);
     nominate_status()
+    save_vote()
 }
 
 function nominate_click(){
@@ -61,9 +63,47 @@ function nominate_click(){
         $inp.val(0);
         $this.addClass("btn-default").removeClass("btn-success")
     }
+    save_vote();
 }
 
 TEMPLATES = {};
+
+function save_vote(){
+    if(typeof(Storage) === "undefined") {
+        return;
+    }
+    var votes = [];
+    $('.voting-stripe .btn:not(.btn-default)')
+        .each(function(){
+            votes.push($(this).attr('id'))});
+    if($('input[name=nominate]').val() == 1){
+        votes.push('nominate');
+    }
+    localStorage.setItem('VOTES-'+proposal_id, JSON.stringify(votes));
+}
+
+function load_vote(){
+    if(typeof(Storage) === "undefined") {
+        return;
+    }
+    if(typeof(proposal_id) === "undefined"){
+        return;
+    }
+    var votes = localStorage.getItem('VOTES-'+proposal_id);
+    if(!votes){
+        return;
+    }
+    $('.voting-stripe btn').removeClass('btn-success')
+            .removeClass('btn-danger').removeClass('btn-warning');
+    $('.voting-stripe input[type=hidden]').val(-1);
+    _.each(JSON.parse(votes), function(id){
+        $('#'+id).click();
+    });
+}
+
+function clear_vote(){
+    localStorage.removeItem('VOTES-'+proposal_id);
+}
 
 $(document).ready(function(){
     $('script[type="underscore/template"]').each(function(){
@@ -75,10 +115,13 @@ $(document).ready(function(){
     $('#proposal-tabs a').click(show_proposal_tabs);
     $('#unranked li').on('click', batch_add);
     $('#accept').on('click', 'li', batch_rem);
+
     $('.voting-stripe button').on('click', vote_click);
     $('#proposal-tabs a').first().tab("show");
     $('#nominate').on('click', nominate_click);
     if($("#vote-form").length > 0){
         nominate_status();
     }
+    load_vote()
+    $('#save').on('click', clear_vote);
 });
