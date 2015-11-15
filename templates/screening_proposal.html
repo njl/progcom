@@ -1,7 +1,6 @@
 {%extends "base.html"%}
 {%import "proposal_render.html" as pr%}
 {%import "progress_render.html" as prog%}
-{%import "vote_display.html" as vd%}
 {%block body %}
 <div class="row">
     <div class="col-md-12">
@@ -9,89 +8,15 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-8" id="left-column">
         {{ pr.proposal_render(proposal, bookmarked, anonymize=True)}}
     </div>
-    <div class="col-md-4">
-        <div class="panel panel-primary">
-            <div class="panel-heading"
-            data-content="These votes were loaded from your local browser cache, and are not yet saved." id="vote-panel">
-                <h3 class="panel-title">This Proposal...</h3>
-            </div>
-            <form method="POST" action="vote/" id="vote-form">
-                  <table class="table">
-                {% for s in standards %}
-                <tr>
-                    <td>
-                        <div class="btn-group btn-group-xs voting-stripe" style="min-width:75px;">
-                            <button type="button" id="standard-id-{{s.id}}-2"
-                            class="btn
-                            {% if existing_vote
-                                    and existing_vote.scores[s.id] == 2 %}
-                            btn-success
-                            {%else %}
-                            btn-default
-                            {%endif%}
+    <div class="col-md-4" id="right-column">
+        {{ pr.user_vote_render(standards, existing_vote) }}
 
-                                " data-val="2"><span class="glyphicon glyphicon-ok" title="Meets Standard"></span></button>
-                            <button type="button"id="standard-id-{{s.id}}-1" 
-                            class="btn
-                            {% if existing_vote
-                                    and existing_vote.scores[s.id] == 1 %}
-                            btn-warning
-                            {%else %}
-                            btn-default
-                            {%endif%}
-                                " data-val="1"><span class="glyphicon glyphicon-warning-sign" title="Concern it Might Not Meet Standard"></span></button>
-                            <button type="button" id="standard-id-{{s.id}}-0"
-                            class="btn
-                            {% if existing_vote
-                                    and existing_vote.scores[s.id] == 0 %}
-                            btn-danger
-                            {%else %}
-                            btn-default
-                            {%endif%}
-                                " data-val="0"><span class="glyphicon glyphicon-remove" title="Does Not Meet Standard"></span></button>
-                            <input name="standard-{{s.id}}"
-                                {%if existing_vote and existing_vote.scores %}
-                                   value="{{existing_vote.scores[s.id]}}"
-                                {% else %}
-                                   value="-1"
-                                {% endif %}
-                            type="hidden">
-                        </div>
-                    </td>
-                    <td><small>{{s.description}}.</small></td>
-                </tr>
-                {% endfor %}
-                </table>
-                <div class="panel-body">
-                    {% if existing_vote and existing_vote.nominate %}
-                    <button type="button" class="btn btn-block btn-success" id="nominate"><span class="glyphicon glyphicon-star"></span> Nominated for Special Consideration</button>
-                    <input name="nominate" value="1" type="hidden">
-                    {% else %}
-                    <button type="button" class="btn btn-block btn-default" id="nominate">Nominate for Special Consideration</button>
-                    <input name="nominate" value="0" type="hidden">
-                    {% endif %}
-                    <p class="help-block">
-                    If you feel this talk didn't meet the objective standards but would
-                    still be a strong addition to PyCon, you can nominate it for special
-                    consideration.
-                    </p>
-                </div>
-                <div class="panel-footer">
-                    {% if existing_vote %}
-                    <a href="/" class="btn btn-default btn-lg">Next Proposal &raquo;</a>
-                    {% endif %}
-                    <button type="Submit" class="btn btn-primary pull-right" id="save"
-                        {% if not existing_vote %}
-                            disabled="disabled"
-                        {% endif %}
-                        >Save Vote</button>
-                    <div class="clearfix"></div>
-                </div>
-            </form>
-        </div>
+        {% if existing_vote %}
+        {{pr.existing_vote_render(votes, standards)}}
+        {% endif %}
 
         <div class="alert alert-warning">
             <p>Out of respect for potential speakers and your fellow committee
@@ -100,115 +25,37 @@
             shared outside the program committee.</p>
         </div>
 
-        {% if existing_vote %}
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Votes</h3>
-            </div>
-            <table class="table">
-                <thead>
-                    <tr><th></th>
-                        {% for s in standards %}
-                        <th>{{s.id}}</th>
-                        {% endfor %}
-                        <th>N</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for v in votes %}
-                    <tr><td>{{v.display_name}}</td>
-                        {% for s in standards %}
-                            <td>{{vd.vote_display(v.scores[s.id])}}</td>
-                        {% endfor %}
-                        <td>{% if v.nominate %}
-                            <span class="glyphicon glyphicon-star"></span>
-                            {%endif%}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        {% endif %}
+        <!-- Macro here -->
 
-{% if unread %}
-        <div class="panel panel-danger">
-            <div class="panel-heading">
-                <h3 class="panel-title">Unread Discussion</h3>
-            </div>
-{% else %}
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Discussion</h3>
-            </div>
-{% endif %}
-            <table class="table table-striped">
-            {% for d in discussion %}
-            <tr {%if d.feedback%}class="danger"{%endif%}
-                        {% if d.name%}class="success"{%endif%}>
-                <td>{%if d.name%}Proposal Author{%else%}{{d.display_name}}{%endif%}</td>
-                <td>{{d.created|date}}</td>
-                <td>{%if d.feedback%}<strong>To Author</strong>{%endif%}
-                    {%if d.name%}<strong>From Author</strong>{%endif%}
+        {{pr.discussion_render(unread, discussion)}}
 
-                </td>
-            </tr>
-            <tr><td  style="padding-bottom:2em;" colspan="3">{{d.body}}</td></tr>
-            {% endfor %}
-            </table>
-            {% if unread %}
-            <div class="panel-body">
-                <form method="POST" action="mark_read/">
-                    <button type="submit" class="btn btn-danger">Mark Read</button>
-                </form>
+        <div class="panel panel-default" id="feedback">
+            <div class="panel-heading">
+                <h3 class="panel-title">Feedback</h3>
             </div>
-            {% endif %}
             <div class="panel-body">
-                <form method="POST" action="comment/">
+                <form method="POST" action="feedback/" id="feedback-form">
                     <div class="form-group">
-                        <label for="comment">Add Comment</label>
-                        <textarea type="" class="form-control" id="comment" placeholder="Internal Comment" name="comment"></textarea>
-                        <p class="help-block">Please be both kind and succinct with your comments.</p>
+                        <label for="feedback">Give Author Direct Feedback</label>
+                        <textarea type="" class="form-control" id="feedback" placeholder="Feedback to email author" name="feedback"></textarea>
+                        <div class="alert alert-warning">Messages sent here are emailed directly to the proposal author!</div>
                     </div>
                     <button type="submit" class="btn btn-default">Submit</button>
                 </form>
             </div>
         </div>
 
-
-
-
-
-
-
-
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Feedback</h3>
-            </div>
-            <div class="panel-body">
-            <form method="POST" action="feedback/">
-                <div class="form-group">
-                    <label for="feedback">Give Author Direct Feedback</label>
-                    <textarea type="" class="form-control" id="feedback" placeholder="Feedback to email author" name="feedback"></textarea>
-                    <div class="alert alert-warning">Messages sent here are emailed directly to the proposal author!</div>
-                </div>
-                <button type="submit" class="btn btn-default">Submit</button>
-            </form>
-            </div>
-        </div>
         <div class="panel panel-default">
             <div class="panel-heading">Program Committee Progress</div>
-                <table class="table table-condensed table-hover">
-                    <tr><th>Votes</th><th>Proposals</th></tr>
-                    {% for p in progress|sort(attribute='vote_count')%}
-                    <tr><td>{{p.vote_count}}</td><td>{{p.quantity}}</td></tr>
-                    {%endfor%}
-                </table>
+            <table class="table table-condensed table-hover">
+                <tr><th>Votes</th><th>Proposals</th></tr>
+                {% for p in progress|sort(attribute='vote_count')%}
+                <tr><td>{{p.vote_count}}</td><td>{{p.quantity}}</td></tr>
+                {%endfor%}
+            </table>
         </div>
+
+
     </div>
 </div>
-<script type="text/javascript">
-var proposal_id={{proposal.id|tojson}}
-</script>
 {%endblock body%}

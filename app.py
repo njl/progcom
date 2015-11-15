@@ -288,46 +288,48 @@ def vote(id):
     for s in standards:
         scores[s.id] = int(request.values['standard-{}'.format(s.id)])
     nominate = request.values.get('nominate', '0') == '1'
-    redir = redirect(url_for('screening', id=id))
-    if l.vote(request.user.id, id, scores, nominate):
-        proposal = l.get_proposal(id)
-        return redir
-    return redir
+    l.vote(request.user.id, id, scores, nominate)
+    return render_template('user_vote_snippet.html', 
+                            standards=l.get_standards(),
+                            votes = l.get_votes(id),
+                            existing_vote=l.get_user_vote(request.user.id, id))
 
 @app.route('/screening/<int:id>/comment/', methods=['POST'])
 def comment(id):
     comment = request.values.get('comment').strip()
-    redir = redirect(url_for('screening', id=id))
-    if not comment:
-        flash("Empty comment")
-        return redir
-    l.add_to_discussion(request.user.id, id, comment, feedback=False)
-    return redir
+    if comment:
+        l.add_to_discussion(request.user.id, id, comment, feedback=False)
+    return render_template('discussion_snippet.html', 
+            unread = l.is_unread(request.user.id, id),
+            discussion = l.get_discussion(id))
 
 @app.route('/screening/<int:id>/feedback/', methods=['POST'])
 def feedback(id):
     comment = request.values.get('feedback').strip()
-    redir = redirect(url_for('screening', id=id))
-    if not comment:
-        flash('Empty comment')
-        return redir
-    l.add_to_discussion(request.user.id, id, comment, feedback=True)
-    return redir
+    if comment:
+        l.add_to_discussion(request.user.id, id, comment, feedback=True)
+    return render_template('discussion_snippet.html', 
+            unread = l.is_unread(request.user.id, id),
+            discussion = l.get_discussion(id))
 
 @app.route('/screening/<int:id>/bookmark/add/', methods=['POST'])
 def add_bookmark(id):
     l.add_bookmark(request.user.id, id)
-    return redirect(url_for('screening', id=id))
+    return render_template('proposal_snippet.html', proposal=l.get_proposal(id),
+                            bookmarked=l.has_bookmark(request.user.id, id))
 
 @app.route('/screening/<int:id>/bookmark/remove/', methods=['POST'])
 def remove_bookmark(id):
     l.remove_bookmark(request.user.id, id)
-    return redirect(url_for('screening', id=id))
+    return render_template('proposal_snippet.html', proposal=l.get_proposal(id),
+                            bookmarked=l.has_bookmark(request.user.id, id))
 
 @app.route('/screening/<int:id>/mark_read/', methods=['POST'])
 def mark_read(id):
     l.mark_read(request.user.id, id)
-    return redirect(url_for('screening', id=id))
+    return render_template('discussion_snippet.html', 
+            unread = l.is_unread(request.user.id, id),
+            discussion = l.get_discussion(id))
 
 """
 Author Feedback
