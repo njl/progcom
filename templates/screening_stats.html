@@ -6,21 +6,27 @@
         <svg></svg>
     </div>
 </div>
-<div class="col-md-6">
-    <h4>Overall Vote Coverage</h4>
-    <table class="table table-striped table-condensed">
-        <thead><tr><th>Proposals</th><th>Votes</th></tr></thead>
-        <tbody>
-            {% for p in progress %}
-            <tr><td>{{p.quantity}}</td><td>{{p.vote_count}}</td></tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-<div class="col-md-6">
-    <h4>Vote Coverage By Week Added</h4>
-    <div id="votes-progress">
-        <svg></svg>
+<div class="row">
+    <div class="col-md-6">
+        <h4>Overall Vote Coverage</h4>
+        <table class="table table-striped table-condensed">
+            <thead><tr><th>Votes</th><th>Proposals</th></tr></thead>
+            <tbody>
+                {% for p in progress %}
+                <tr>
+                    <td>{{p.vote_count}}</td>
+                    <td>{{p.quantity}}</td>
+                </tr>
+                {% endfor %}
+                <tr><th>Total</th><th>{{total_proposals}}</th></tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-6">
+        <h4>Vote Coverage By Week Added</h4>
+        <div id="votes-progress">
+            <svg></svg>
+        </div>
     </div>
 </div>
 <div class="col-md-6">

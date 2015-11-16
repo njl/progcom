@@ -310,7 +310,8 @@ Screening stats
 """
 def screening_progress():
     q = '''SELECT vote_count, COUNT(vote_count) as quantity
-            FROM proposals GROUP BY vote_count'''
+            FROM proposals GROUP BY vote_count
+            ORDER BY vote_count ASC'''
     return fetchall(q)
 
 def _js_time(d):
