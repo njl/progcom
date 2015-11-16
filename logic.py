@@ -308,6 +308,23 @@ def get_my_votes(uid):
 """
 Screening stats
 """
+
+def scored_proposals():
+    q = '''SELECT scores, nominate, proposal, proposals.title FROM votes
+                INNER JOIN proposals ON (votes.proposal = proposals.id)'''
+    votes = fetchall(q)
+    scores = defaultdict(list)
+    nominations = Counter()
+    titles = {v.proposal:v.title for v in votes}
+    for v in votes:
+        scores[v.proposal].extend(v.scores.values())
+        nominations[v.proposal] += 1 if v.nominate else 0
+    rv = [{'id':k, 'score':int(100*sum(v)/(2.0*len(v))), 
+        'nominations': nominations[k], 'title':titles[k]}
+                    for k,v in scores.items()]
+    rv.sort(key=lambda x:-x['score'])
+    return rv
+
 def screening_progress():
     q = '''SELECT vote_count, COUNT(vote_count) as quantity
             FROM proposals GROUP BY vote_count

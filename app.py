@@ -154,6 +154,9 @@ def add_reason():
     flash('Added standard "{}"'.format(text))
     return redirect(url_for('list_standards'))
 
+@app.route('/admin/rough_scores/')
+def rough_scores():
+    return render_template('rough_scores.html', proposals=l.scored_proposals())
 
 """
 User State
