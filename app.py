@@ -244,8 +244,10 @@ def screening_stats():
     votes_when = l.get_votes_by_day()
     coverage_by_age = l.coverage_by_age()
     active_discussions = l.active_discussions()
+    nomination_density = l.nomination_density()
     return render_template('screening_stats.html',
                             users=users, progress=progress,
+                            nomination_density=nomination_density,
                             coverage_by_age=coverage_by_age,
                             total_proposals=sum(p.quantity for p in progress),
                             active_discussions=active_discussions,

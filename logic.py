@@ -372,6 +372,12 @@ def active_discussions():
             ORDER BY count DESC'''
     return fetchall(q)
 
+def nomination_density():
+    q = '''SELECT count(proposal) FROM votes 
+            WHERE nominate=TRUE GROUP BY proposal'''
+    rv = [x for x in Counter([x.count for x in fetchall(q)]).items() ]
+    rv.sort(key=lambda x:-x[0])
+    return rv
 
 """
 Batch
