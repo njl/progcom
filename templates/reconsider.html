@@ -1,0 +1,8 @@
+{%extends "base.html"%}
+{%block body %}
+<ul class="nav nav-pills nav-stacked">
+    {% for talk in talks %}
+    <li><a href="{{url_for("screening", id=talk.id)}}">{{talk.title}}</a></li>
+    {% endfor %}
+</ul>
+{%endblock body%}
