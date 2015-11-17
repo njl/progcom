@@ -1,15 +1,60 @@
 {%extends "base.html"%}
 {%block body %}
 <table class="table table-striped table-compact">
-    <thead><tr><th>Rank</th><th>Proposal</th><th>Rough Score</th><th>Nominations</th></tr></thead>
-    <tbody>
-        {% for p in proposals %}
-        <tr>
-            <td>{{loop.index}}</td>
-            <td><a href="{{url_for("screening", id=p['id'])}}">{{p.title}}</a></td>
-            <td>{{p.score}}</td>
-            <td>{{p.nominations}}</td></tr>
-        {% endfor %}
+    <thead>
+        <tr><th data-column="rank">Rank</th>
+            <th data-column="title">Proposal</th>
+            <th data-column="score" data-invert="1">Rough Score</th>
+            <th data-column="nontech_score" data-invert="1">Non-tech Rough Score</th>
+            <th data-column="delta" data-invert="1">Score Delta</th>
+            <th data-column="nominations" data-invert="1">Nominations</th>
+        </tr></thead>
+    <tbody id="table-body">
     </tbody>
 </table>
+<script type="underscore/template" id="table_row">
+    <tr>
+        <td><%=rank+1%></td>
+        <td><a href="/screening/<%=id%>/"><%=title%></a></td>
+        <td><%=score%></td>
+        <td><%=nontech_score%></td>
+        <td><%=delta%></td>
+        <td><%=nominations%></td>
+    </tr>
+</script>
 {%endblock body%}
+{%block extrajs %}
+<script type="text/javascript">
+var proposals = {{proposals|tojson}};
+
+function render_proposals(){
+    var new_body = "";
+    _.each(proposals, function(p){
+        new_body += TEMPLATES.table_row(p);
+    });
+    $('#table-body').html(new_body);
+}
+
+function handle_click(ev){
+    var $this = $(this);
+    $this.siblings().removeClass('success');
+    if($this.hasClass('success')){
+        proposals = proposals.reverse();
+    }else{
+        var column = $this.data().column;
+        proposals = _.sortBy(proposals, function(x){return x[column];});
+        if($this.data().invert){
+            proposals = proposals.reverse();
+        }
+        $this.addClass('success');
+    }
+    render_proposals();
+};
+
+$(document).ready(function(){
+        render_proposals();
+        $('thead th').on('click', handle_click);
+});
+
+</script>
+{% endblock %}

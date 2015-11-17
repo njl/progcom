@@ -315,15 +315,22 @@ def scored_proposals():
                 INNER JOIN proposals ON (votes.proposal = proposals.id)'''
     votes = fetchall(q)
     scores = defaultdict(list)
+    nontech_scores = defaultdict(list)
     nominations = Counter()
     titles = {v.proposal:v.title for v in votes}
     for v in votes:
         scores[v.proposal].extend(v.scores.values())
+        del v.scores['4']
+        nontech_scores[v.proposal].extend(v.scores.values())
         nominations[v.proposal] += 1 if v.nominate else 0
     rv = [{'id':k, 'score':int(100*sum(v)/(2.0*len(v))), 
+        'nontech_score':int(100*sum(nontech_scores[k])/(2.0*len(nontech_scores[k]))),
         'nominations': nominations[k], 'title':titles[k]}
                     for k,v in scores.items()]
     rv.sort(key=lambda x:-x['score'])
+    for n, v in enumerate(rv):
+        v['delta'] = abs(v['score'] - v['nontech_score'])
+        v['rank'] = n
     return rv
 
 def screening_progress():
