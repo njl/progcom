@@ -141,6 +141,7 @@ def _clean_proposal(raw):
     T = build_tuple(keys)
     return T(*values)
 
+
 def get_proposal(id):
     q = 'SELECT * FROM proposals WHERE id=%s'
     raw = fetchone(q, id)
@@ -305,6 +306,15 @@ def get_my_votes(uid):
             FROM votes INNER JOIN proposals ON (votes.proposal = proposals.id)
             WHERE votes.voter=%s ORDER BY updated DESC'''
     return [_clean_vote(v) for v in fetchall(q, uid)]
+
+
+def get_reconsider(id):
+    q = '''SELECT proposal as id, proposals.title AS title 
+            FROM votes INNER JOIN proposals ON (votes.proposal = proposals.id)
+            WHERE voter=%s AND
+            json_extract_path(scores, '4')::text = ANY('{0,1}'::text[])
+            AND updated_on < timestamp '2015-11-17 16:00-05' '''
+    return fetchall(q, id)
 
 """
 Screening stats

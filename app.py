@@ -237,6 +237,10 @@ def batch_discussion(id):
 """
 Screening Actions
 """
+@app.route('/votes/reconsider/')
+def reconsider():
+    return render_template('reconsider.html',
+                            talks=l.get_reconsider(request.user.id))
 
 
 @app.route('/screening/stats/')

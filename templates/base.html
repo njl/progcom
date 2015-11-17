@@ -52,6 +52,7 @@
                     <li><a href="{{url_for("show_votes")}}">Previous Votes</a></li>
                     <li><a href="{{url_for("show_bookmarks")}}">Bookmarks</a></li>
                     <li><a href="{{url_for("screening_stats")}}">Stats</a></li>
+                    <li><a href="{{url_for("reconsider")}}">Reconsider</a></li>
                     {% if request.user.email in config.ADMIN_EMAILS %}
                     <li><a href="{{url_for("admin_menu")}}">Admin</a></li>
                     {% endif %}
