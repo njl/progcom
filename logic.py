@@ -324,15 +324,13 @@ Screening stats
 """
 
 def get_reconsider_left():
-    q = '''SELECT count(id) FROM votes 
+    q = '''SELECT voter, count(id) FROM votes
             WHERE json_extract_path(scores, '4')::text = ANY('{0,1}'::text[])
-            AND updated_on < timestamp '2015-11-17 16:00-05' '''
-    votes = scalar(q)
-    q = '''SELECT count(voter) as voters FROM votes 
-            WHERE json_extract_path(scores, '4')::text = ANY('{0,1}'::text[])
-            AND updated_on < timestamp '2015-11-17 16:00-05' 
+            AND updated_on < timestamp '2015-11-17 16:00-05'
             GROUP BY voter'''
-    return {'votes_left': votes, 'voters_left': scalar(q)}
+    results = fetchall(q)
+    return {'votes_left': sum(x.count for x in results),
+            'voters_left': len(results)}
  
 
 def scored_proposals():
