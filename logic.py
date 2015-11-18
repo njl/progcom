@@ -320,6 +320,13 @@ def get_reconsider(id):
 Screening stats
 """
 
+def get_reconsider_left():
+    q = '''SELECT count(id) FROM votes 
+            WHERE json_extract_path(scores, '4')::text = ANY('{0,1}'::text[])
+            AND updated_on < timestamp '2015-11-17 16:00-05' '''
+    return scalar(q)
+ 
+
 def scored_proposals():
     q = '''SELECT scores, nominate, proposal, proposals.title FROM votes
                 INNER JOIN proposals ON (votes.proposal = proposals.id)'''

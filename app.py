@@ -258,6 +258,7 @@ def screening_stats():
                             coverage_by_age=coverage_by_age,
                             total_proposals=sum(p.quantity for p in progress),
                             active_discussions=active_discussions,
+                            reconsideration_count=l.get_reconsider_left(),
                             votes_when=votes_when)
 
 @app.route('/screening/<int:id>/')
