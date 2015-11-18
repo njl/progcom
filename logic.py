@@ -123,7 +123,10 @@ def get_user(id):
 def list_users():
     q = '''SELECT id, email, display_name, created_on, approved_on,
             (SELECT COUNT(*) FROM votes WHERE users.id=votes.voter)
-            as votes FROM users
+            AS votes,
+            (SELECT MAX(updated_on) FROM votes WHERE users.id=votes.voter)
+            AS last_voted
+            FROM users
             ORDER BY id'''
     return fetchall(q)
 
