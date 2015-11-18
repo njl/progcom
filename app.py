@@ -35,6 +35,8 @@ else:
 
 @app.template_filter('date')
 def date_filter(d):
+    if not d:
+        return ''
     return d.strftime('%B %-d, %-I:%M %p')
 
 
