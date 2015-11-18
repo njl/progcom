@@ -260,7 +260,7 @@ def screening_stats():
                             coverage_by_age=coverage_by_age,
                             total_proposals=sum(p.quantity for p in progress),
                             active_discussions=active_discussions,
-                            reconsideration_count=l.get_reconsider_left(),
+                            reconsideration=l.get_reconsider_left(),
                             votes_when=votes_when)
 
 @app.route('/screening/<int:id>/')
@@ -277,7 +277,6 @@ def screening(id):
     discussion = l.get_discussion(id)
 
     standards = l.get_standards()
-    progress = l.screening_progress()
     bookmarked = l.has_bookmark(request.user.id, id)
 
     existing_vote = l.get_user_vote(request.user.id, id)
@@ -288,7 +287,7 @@ def screening(id):
 
     return render_template('screening_proposal.html', proposal=proposal,
                             votes=votes, discussion=discussion,
-                            standards=standards, progress=progress,
+                            standards=standards,
                             bookmarked=bookmarked,
                             existing_vote=existing_vote,
                             unread=unread,
@@ -382,7 +381,7 @@ def pick():
     id = l.needs_votes(request.user.email, request.user.id)
     if not id:
         flash("You have voted on every proposal!")
-        return redirect(url_for('show_votes'))
+        return redirect(url_for('screening_stats'))
     return redirect(url_for('screening', id=id))
 
 if __name__ == '__main__':

@@ -44,18 +44,6 @@
                 </form>
             </div>
         </div>
-
-        <div class="panel panel-default">
-            <div class="panel-heading">Program Committee Progress</div>
-            <table class="table table-condensed table-hover">
-                <tr><th>Votes</th><th>Proposals</th></tr>
-                {% for p in progress|sort(attribute='vote_count')%}
-                <tr><td>{{p.vote_count}}</td><td>{{p.quantity}}</td></tr>
-                {%endfor%}
-            </table>
-        </div>
-
-
     </div>
 </div>
 {%endblock body%}
