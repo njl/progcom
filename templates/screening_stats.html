@@ -54,6 +54,7 @@
                 <td>{{"%.2f"|format(user.votes/total_proposals*100)}}</td>
             </tr>
             {% endfor %}
+            <tr><th>Total</th><th>{{total_votes}}</th><td></td></tr>
         </tbody>
     </table>
 </div>
@@ -123,7 +124,7 @@ $(document).ready(function(){
 
         chart.xAxis.tickFormat(
                 function(d){
-                    return d3.time.format('Week Of %x')(new Date(d))
+                    return d3.time.format('%x')(new Date(d))
                 });
         chart.yAxis.tickFormat(Math.floor);
         d3.select('#votes-progress svg')

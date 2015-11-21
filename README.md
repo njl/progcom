@@ -17,6 +17,7 @@ Configuring the Applications
 The application picks up configuration from environment variables. I like to
 use the envdir tool, but you can set them however you like. A complete set of
 configuration values, reasonable for testing, are available in `dev-config/`.
+In production, you should add a SENTRY_DSN.
 
 You can install envdir via `brew install daemontools` on OS X, and `apt-get
 install daemontools` on Ubuntu and Debian.

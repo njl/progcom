@@ -258,6 +258,7 @@ def screening_stats():
                             users=users, progress=progress,
                             nomination_density=nomination_density,
                             coverage_by_age=coverage_by_age,
+                            total_votes=sum(u.votes for u in users),
                             total_proposals=sum(p.quantity for p in progress),
                             active_discussions=active_discussions,
                             reconsideration=l.get_reconsider_left(),
