@@ -166,6 +166,7 @@ User State
 @app.route('/votes/')
 def show_votes():
     votes = l.get_my_votes(request.user.id)
+    votes = [x._replace(updated_on=l._js_time(x.updated_on)) for x in votes]
     percent = l.get_vote_percentage(request.user.email, request.user.id)
     return render_template('my_votes.html', votes=votes, percent=percent,
                             standards = l.get_standards())

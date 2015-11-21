@@ -5,29 +5,86 @@
 
 <h4>My Votes</h4>
 {{ prog.progress_render(percent)}}
-<table class="table table-striped table-condensed">
+<table class="table table-striped table-condensed" id="votes-table">
     <thead>
     <tr>
-        <th>Talk</th>
+        <th data-column="proposal">Id</th>
+        <th data-column="title">Talk</th>
         {% for s in standards %}
-        <th title="{{s.description}}">{{s.description|truncate(35)}}</th>
+        <th data-column="vote" data-standard="{{s.id}}"
+            title="{{s.description}}">{{s.description|truncate(25)}}</th>
         {% endfor %}
-        <th>Nominated</th>
-        <th>When</th>
-        <th>Updated</th>
+        <th data-column="nominate" data-reverse="1">Nominated</th>
+        <th data-column="updated_on" data-reverse="1">When</th>
+        <th data-column="updated" data-reverse="1"
+            class="warning">Updated</th>
     </tr>
     </thead>
-    {% for v in votes %}
-    <tr{%if v.updated%} class="warning"{%endif%}>
-        <td><a href="{{url_for("screening", id=v.proposal)}}">{{v.title}} (#{{v.proposal}})</a></td>
-        {% for s in standards %}
-        <td>
-            {{vd.vote_display(v.scores[s.id])}}
-        </td>
-        {% endfor %}
-        <td>{% if v.nominate %}<span class="glyphicon glyphicon-star"></span>{%endif %}</td>
-        <td>{{v.updated_on|date}}</td>
-        <td>{% if v.updated%}<span class="glyphicon glyphicon-asterisk"></span>{%endif%}</td>
-    {% endfor %}
+    <tbody>
+    </tbody>
 </table>
+<script type="underscore/template" id="votes_row">
+<tr
+<% if(e.updated){ %>
+    class="warning"
+<% } %>
+>
+    <td><%=e.id%></td>
+    <td><a href="/screening/<%=e.id%>/"><%=e.title%></a></td>
+
+    <% _.each(raw_standards, function(s){ %>
+        <td>
+        <% switch(e.scores[s.id]){
+            case 0:
+                %>
+<span class="label label-danger"><span class="glyphicon glyphicon-remove"></span></span>
+                <%
+                break;
+            case 1:
+                %>
+<span class="label label-warning"><span class="glyphicon glyphicon-warning-sign"></span></span>
+                
+                <%
+                break;
+            case 2:
+                %> 
+<span class="label label-success"><span class="glyphicon glyphicon-ok"></span></span>
+                <%
+                break;
+            default:
+                %> ERROR <%
+                break;
+        } %>
+        </td>
+    <% }); %>
+
+    <td><%if(e.nominate){ %>
+        <span class="glyphicon glyphicon-star"></span>
+        <% } %>
+    </td>
+    <td><% var date_tmp = new Date(e.updated_on); %>
+        <%= date_tmp.toLocaleDateString() %>
+        <%= date_tmp.toLocaleTimeString() %> </td>
+    <td><%if(e.updated){ %>
+            <span class="glyphicon glyphicon-asterisk"></span>
+        <% } %>
+    </td>
+</tr>
+</script>
 {%endblock body%}
+{%block extrajs %}
+<script type="text/javascript">
+var raw_data = {{votes|tojson}};
+var raw_standards = {{standards|tojson}};
+var extra_column_functions = {'vote': function($this){ 
+    var standard_id = $this.data().standard;
+    return function(x){
+        return -x['scores'][standard_id];
+    }
+}}
+$('document').ready(function(){
+    table_sorter($('#votes-table'), raw_data, TEMPLATES.votes_row,
+                    extra_column_functions);
+});
+</script>
+{%endblock%}
