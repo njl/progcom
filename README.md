@@ -17,8 +17,6 @@ Configuring the Applications
 The application picks up configuration from environment variables. I like to
 use the envdir tool, but you can set them however you like. A complete set of
 configuration values, reasonable for testing, are available in `dev-config/`.
-The exception is `MANDRILL_API_KEY`. You'll have to get your own one of
-those.
 
 You can install envdir via `brew install daemontools` on OS X, and `apt-get
 install daemontools` on Ubuntu and Debian.

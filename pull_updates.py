@@ -3,9 +3,11 @@ import os
 from hashlib import sha1
 from calendar import timegm
 from datetime import datetime
+import sys
 
 import pytz
 import requests
+from raven import Client
 
 import logic as l
 
@@ -59,5 +61,11 @@ def main():
         l.add_proposal(proposal)
 
 
+raven_client = Client(os.environ['SENTRY_DSN'])
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except:
+        raven_client.captureException()
+        sys.exit(1)
+
