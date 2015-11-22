@@ -418,7 +418,7 @@ def active_discussions():
             WHERE d.created > current_date - interval '7 days'
             GROUP BY p.title, p.id
             ORDER BY count DESC'''
-    return fetchall(q)
+    return [x for x in fetchall(q) if x.count > 2]
 
 def nomination_density():
     q = '''SELECT count(proposal) FROM votes 
