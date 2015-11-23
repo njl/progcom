@@ -331,28 +331,32 @@ def get_reconsider_left():
     results = fetchall(q)
     return {'votes_left': sum(x.count for x in results),
             'voters_left': len(results)}
- 
+
+def _score_weight_average(v):
+    return int(100*sum(v)/(2.0*len(v)))
 
 def scored_proposals():
     q = '''SELECT scores, nominate, proposal, proposals.title FROM votes
                 INNER JOIN proposals ON (votes.proposal = proposals.id)'''
     votes = fetchall(q)
     scores = defaultdict(list)
-    nontech_scores = defaultdict(list)
+    nom_green = defaultdict(list)
     nominations = Counter()
     titles = {v.proposal:v.title for v in votes}
     for v in votes:
         scores[v.proposal].extend(v.scores.values())
-        del v.scores['4']
-        nontech_scores[v.proposal].extend(v.scores.values())
+        if v.nominate:
+            nom_green[v.proposal].extend(2 for _ in v.scores.values())
+        else:
+            nom_green[v.proposal].extend(v.scores.values())
         nominations[v.proposal] += 1 if v.nominate else 0
-    rv = [{'id':k, 'score':int(100*sum(v)/(2.0*len(v))), 
-        'nontech_score':int(100*sum(nontech_scores[k])/(2.0*len(nontech_scores[k]))),
+    rv = [{'id':k, 'score':_score_weight_average(v),
+            'nom_is_green':_score_weight_average(nom_green[k]),
         'nominations': nominations[k], 'title':titles[k]}
                     for k,v in scores.items()]
     rv.sort(key=lambda x:-x['score'])
     for n, v in enumerate(rv):
-        v['delta'] = abs(v['score'] - v['nontech_score'])
+        v['delta'] = abs(v['score'] - v['nom_is_green'])
         v['rank'] = n
     return rv
 
