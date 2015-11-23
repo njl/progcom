@@ -3,6 +3,8 @@
 <ul class="nav nav-pills nav-stacked">
     {% for talk in talks %}
     <li><a href="{{url_for("screening", id=talk.id)}}">{{talk.title}}</a></li>
+    {% else %}
+    <h4>You don't have any reconsiderations pending.</h4>
     {% endfor %}
 </ul>
 {%endblock body%}
