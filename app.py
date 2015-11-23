@@ -45,7 +45,7 @@ def set_nofollow(attrs, new=False):
     return attrs
 
 
-__ALLOWED_TAGS =['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'br', 'hr']
+__ALLOWED_TAGS =['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'br', 'hr', 'pre']
 @app.template_filter('markdown')
 def markdown_filter(s):
     raw = bleach.clean(markdown.markdown(s), 
