@@ -248,7 +248,7 @@ def reconsider():
 
 @app.route('/screening/stats/')
 def screening_stats():
-    users = l.list_users()
+    users = [x for x in l.list_users() if x.votes]
     users.sort(key=lambda x:-x.votes)
     progress = l.screening_progress()
     votes_when = l.get_votes_by_day()
