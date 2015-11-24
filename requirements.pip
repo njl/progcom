@@ -8,6 +8,7 @@ bleach
 markdown2
 simplejson
 pandas
+gensim
 
 requests[security]
 pytz

@@ -5,6 +5,7 @@ import json
 import logging
 import datetime
 import time
+import re
 
 import pandas as pd
 import itsdangerous
@@ -637,3 +638,86 @@ def send_weekly_update():
             'from_name': 'PyCon Program Committee Robot',
             'to':[{'email':'pycon-pc@python.org'}]}
     _MANDRILL.messages.send(msg)
+
+"""
+Experimental Topic Grouping
+"""
+
+from gensim import corpora, models, similarities
+from gensim.similarities.docsim import MatrixSimilarity
+
+#Installing NLTK and downloading everything is a trial.
+_NLTK_ENGLISH_STOPWORDS = set([u'i', u'me', u'my', u'myself', u'we', u'our',
+u'ours', u'ourselves', u'you', u'your', u'yours', u'yourself', u'yourselves',
+u'he', u'him', u'his', u'himself', u'she', u'her', u'hers', u'herself', u'it',
+u'its', u'itself', u'they', u'them', u'their', u'theirs', u'themselves',
+u'what', u'which', u'who', u'whom', u'this', u'that', u'these', u'those',
+u'am', u'is', u'are', u'was', u'were', u'be', u'been', u'being', u'have',
+u'has', u'had', u'having', u'do', u'does', u'did', u'doing', u'a', u'an',
+u'the', u'and', u'but', u'if', u'or', u'because', u'as', u'until', u'while',
+u'of', u'at', u'by', u'for', u'with', u'about', u'against', u'between',
+u'into', u'through', u'during', u'before', u'after', u'above', u'below', u'to',
+u'from', u'up', u'down', u'in', u'out', u'on', u'off', u'over', u'under',
+u'again', u'further', u'then', u'once', u'here', u'there', u'when', u'where',
+u'why', u'how', u'all', u'any', u'both', u'each', u'few', u'more', u'most',
+u'other', u'some', u'such', u'no', u'nor', u'not', u'only', u'own', u'same',
+u'so', u'than', u'too', u'very', u's', u't', u'can', u'will', u'just', u'don',
+u'should', u'now'] + ['www', 'youtube', 'com', 'google', 'python', 'http',
+'talk', 'https', 'programming'])
+
+def _get_words(s):
+    s = re.sub("[^A-Za-z]", " ", s)
+    return [x for x in s.lower().split() if x not in _NLTK_ENGLISH_STOPWORDS]
+
+def _get_raw_docs():
+    fields = ('title', 'category', 'description', 'audience', 'objective',
+                'abstract', 'outline', 'notes')
+    q = 'SELECT id, {} FROM proposals'.format(', '.join(fields))
+    raw_documents = fetchall(q)
+    doc_words = []
+    all_words = Counter()
+    for doc in raw_documents:
+        words = []
+        for k in fields:
+            words.extend(_get_words(getattr(doc, k)))
+        doc_words.append(words)
+        all_words.update(set(words))
+    drop = {k for k,v in all_words.iteritems() if v == 1}
+
+    doc_words = [ [w for w in doc if w not in drop] for doc in doc_words]
+    titles = {n:x.title for n,x in enumerate(raw_documents)}
+    ids = {n:x.id for n,x in enumerate(raw_documents)}
+    return doc_words, ids, titles
+
+def neighbors(row_n, sim_matrix, vectors, cutoff):
+    seen = set()
+    follow = [row_n]
+    while follow:
+        base = follow.pop()
+        seen.add(base)
+        for n, score in enumerate(sim_matrix[vectors[base]]):
+            if score < cutoff or n in seen:
+                continue
+            follow.append(n)
+    return seen
+
+def get_proposals_auto_grouped(topics_count=20, cutoff=0.7):
+    doc_words, ids, titles = _get_raw_docs()
+
+    dictionary = corpora.Dictionary(doc_words)
+    corpus = [dictionary.doc2bow(x) for x in doc_words]
+    tfidf = models.TfidfModel(corpus)
+    corpus_tfidf = tfidf[corpus]
+    lsi = models.LsiModel(corpus_tfidf, id2word=dictionary, num_topics=topics_count)
+    lsi_corpus = lsi[corpus_tfidf]
+    ms = MatrixSimilarity(lsi_corpus)
+
+    neighborhoods = []
+    seen = set()
+    for n in range(len(lsi_corpus)):
+        if n in seen:
+            continue
+        near = neighbors(n, ms, lsi_corpus, cutoff)
+        neighborhoods.append({'talks':[{'id':ids[x], 'title':titles[x]} for x in near]})
+        seen.update(near)
+    return neighborhoods
