@@ -7,17 +7,35 @@
         <div class="col-sm-2">
             <input class="form-control" name="min_normed_score" value="{{min_normed_score}}">
         </div>
+        <div class="col-sm-7">
+            <span class="help-block">Minimum "average" score, with green is 100, yellow is 50, and red is 0, to allow into the next round.</span>
+        </div>
     </div>
     <div class="form-group">
         <label for="min_nominations" class="col-sm-3">Minimum Nominations</label>
         <div class="col-sm-2">
             <input class="form-control" name="min_nominations" value="{{min_nominations}}">
         </div>
+        <div class="col-sm-7">
+            <span class="help-block">Minimum number of nominations, despite score, to allow into the next round.</span>
+        </div>
     </div>
     <div class="form-group">
         <label for="group_size" class="col-sm-3">Number of Topics</label>
         <div class="col-sm-2">
             <input class="form-control" name="group_size" value="{{group_size}}">
+        </div>
+        <div class="col-sm-7">
+            <span class="help-block">Number of underlying topics to assume; input to gensim.</span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="cutoff" class="col-sm-3">Similarity Cutoff</label>
+        <div class="col-sm-2">
+            <input class="form-control" name="cutoff" value="{{cutoff}}">
+        </div>
+        <div class="col-sm-7">
+            <span class="help-block">Magic number between -1 and 1 of minimal "stickiness" to group talks.</span>
         </div>
     </div>
     <div class="form-group">

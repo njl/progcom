@@ -663,7 +663,7 @@ u'why', u'how', u'all', u'any', u'both', u'each', u'few', u'more', u'most',
 u'other', u'some', u'such', u'no', u'nor', u'not', u'only', u'own', u'same',
 u'so', u'than', u'too', u'very', u's', u't', u'can', u'will', u'just', u'don',
 u'should', u'now'] + ['www', 'youtube', 'com', 'google', 'python', 'http',
-'talk', 'https', 'programming'])
+'talk', 'https', 'programming', 'markdown', 'mins', 'min'])
 
 def _get_words(s):
     s = re.sub("[^A-Za-z]", " ", s)
@@ -701,7 +701,7 @@ def neighbors(row_n, sim_matrix, vectors, cutoff):
             follow.append(n)
     return seen
 
-def get_proposals_auto_grouped(topics_count=20, cutoff=0.7):
+def get_proposals_auto_grouped(topics_count=20, cutoff=0.75):
     doc_words, ids, titles = _get_raw_docs()
 
     dictionary = corpora.Dictionary(doc_words)
@@ -718,6 +718,14 @@ def get_proposals_auto_grouped(topics_count=20, cutoff=0.7):
         if n in seen:
             continue
         near = neighbors(n, ms, lsi_corpus, cutoff)
-        neighborhoods.append({'talks':[{'id':ids[x], 'title':titles[x]} for x in near]})
+        neighborhoods.append({'talks':[{'id':ids[x], 'title':titles[x], 'row':x} for x in near]})
         seen.update(near)
+
+    for group in neighborhoods:
+        rows = [x['row'] for x in group['talks']]
+        #Horrible way to get closest topic, but just looking for a hint.
+        closest_topic = sorted(lsi[lsi_corpus[rows[0]]], key=lambda x:x[-1])[0][0]
+        topic = sorted(lsi.show_topic(closest_topic), key=lambda x:-x[-1])
+        group['topic'] = ', '.join('{} ({:.2f})'.format(x, score) for x, score in topic)
+
     return neighborhoods
