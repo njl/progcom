@@ -165,7 +165,7 @@ def sample_grouping():
     min_normed_score = int(request.values.get('min_normed_score', '80'))
     min_nominations = int(request.values.get('min_nominations', '5'))
     group_size = int(request.values.get('group_size', '20'))
-    cutoff = float(request.values.get('cutoff', '0.7'))
+    cutoff = float(request.values.get('cutoff', '0.75'))
 
     scored_proposals = {x['id']:x for x in l.scored_proposals()}
     groups = l.get_proposals_auto_grouped(topics_count=group_size,

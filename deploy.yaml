@@ -22,6 +22,10 @@
             - python-psycopg2
             - e2fslibs-dev
             - anacron
+            - libblas-dev
+            - liblapack-dev
+            - gfortran
+            - cython
 
 
     #Basic service
