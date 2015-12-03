@@ -61,16 +61,9 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li><a class="pull-right" href="{{url_for("logout")}}">Log Out</a></li>
                 </ul>
-                <div class="btn-group pull-right">
-                {%if request.user.revisit and not config.THIS_IS_BATCH %}
-                <a class="btn btn-warning navbar-btn" 
-                   href="{{url_for("show_votes")}}" title="Revisit Discussions">
-                    <span class="glyphicon glyphicon-asterisk"></span>
-                </a>
-                {% endif %}
-                {%if request.user.unread and not config.THIS_IS_BATCH %}
-                    <a class="btn btn-warning navbar-btn" href="{{url_for("show_unread")}}" title="Unread discussions"><span class="glyphicon glyphicon-envelope"></span></a>
-                {% endif %}
+
+                <div class="btn-group pull-right" id="activity-buttons">
+                    {% include "activity_button_fragment.html" %}
                 </div>
             </div>
             {% endif %}

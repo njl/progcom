@@ -258,6 +258,10 @@ def batch_discussion(id):
 """
 Screening Actions
 """
+@app.route('/activity_buttons/')
+def activity_buttons():
+    return render_template('activity_button_fragment.html')
+
 @app.route('/votes/reconsider/')
 def reconsider():
     return render_template('reconsider.html',

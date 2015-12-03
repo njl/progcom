@@ -69,13 +69,15 @@ function save_vote(ev){
     $.post('vote/', $('#vote-form').serialize(), null, 'html').then(function(data){
         $('#existing-votes-block').remove();
         $('#user-vote-block').replaceWith(data);
+        update_activity_buttons();
     });
 }
 
 function mark_read(ev){
     ev.preventDefault();
     $.post('mark_read/').then(function(text){
-        $('#discussion-panel').replaceWith(text);
+        $('#discussion-panel').replaceWith(text)
+        update_activity_buttons();
     });
 }
 
@@ -149,6 +151,10 @@ function table_sorter($table, data_src, row_template, extra_column_functions){
 }
 
 TEMPLATES = {};
+
+function update_activity_buttons(){
+    $('#activity-buttons').load('/activity_buttons/');
+}
 
 $(document).ready(function(){
     $('script[type="underscore/template"]').each(function(){
