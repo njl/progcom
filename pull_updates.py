@@ -47,7 +47,10 @@ def fetch_ids():
     return list(set(TALK_IDS_FORCE + rv + l.get_all_proposal_ids()))
 
 def fetch_talk(id):
-    rv = api_call('/2016/pycon_api/proposals/{}/'.format(id))['data']
+    rv = api_call('/2016/pycon_api/proposals/{}/'.format(id))
+    if not rv or 'data' not in rv:
+        return {}
+    rv = rv['data']
     rv['authors'] = rv['speakers']
     del rv['speakers']
     rv.update(rv['details'])
@@ -58,7 +61,8 @@ def main():
     for id in fetch_ids():
         #print 'FETCHING {}'.format(id)
         proposal = fetch_talk(id)
-        l.add_proposal(proposal)
+        if proposal:
+            l.add_proposal(proposal)
 
 
 raven_client = Client(os.environ['SENTRY_DSN'])
