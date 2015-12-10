@@ -402,6 +402,22 @@ def pick():
     if THIS_IS_BATCH:
         return redirect(url_for('batch_splash_page'))
 
+    reconsider = l.get_reconsider(request.user.id)
+
+    if reconsider:
+        msg = """You voted on this proposal before the change to standard #4.
+                 Please reconsider and save your vote!"""
+        flash(msg)
+        return redirect(url_for('screening', id=reconsider[0].id))
+
+    if request.user.revisit:
+        data = [x for x in l.get_my_votes(request.user.id) if x.updated]
+        if data:
+            msg = """This proposal has been updated since your last vote.
+                    Please reconsider and save your vote!"""
+            flash(msg)
+            return redirect(url_for('screening', id=data[0].proposal))
+
     id = l.needs_votes(request.user.email, request.user.id)
     if not id:
         flash("You have voted on every proposal!")
