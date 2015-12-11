@@ -470,7 +470,9 @@ def get_group(batchgroup):
     return fetchone('SELECT * FROM batchgroups WHERE id=%s', batchgroup)
 
 def get_group_proposals(batchgroup):
-    q = 'SELECT * FROM proposals WHERE batchgroup=%s'
+    q = '''SELECT proposals.*, count(batchvotes.voter)
+            FROM proposals LEFT JOIN batchvotes ON (proposals.id = ANY(batchvotes.accept))
+            WHERE proposals.batchgroup=%s GROUP BY proposals.id'''
     rv = fetchall(q, batchgroup)
     return [_clean_proposal(x._asdict()) for x in rv]
 

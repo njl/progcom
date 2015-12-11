@@ -236,15 +236,7 @@ def batch_vote(id):
     accept = request.values.getlist('accept', int)
 
     l.vote_group(id, request.user.id, accept)
-    if not accept:
-        txt = 'You chose no talks from group {}'.format(id)
-    else:
-        txt = 'You chose talk{} {} from group {}'
-        txt = txt.format('' if len(accept) == 1 else 's',
-                    ' and '.join('#'+str(x) for x in accept),
-                    id)
-    flash(txt)
-    return redirect(url_for('batch_splash_page'))
+    return redirect(url_for('batch_view', id=id))
 
 @app.route('/batch/<int:id>/comment/', methods=['POST'])
 def batch_discussion(id):

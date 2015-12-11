@@ -57,8 +57,8 @@
     </script>
 
     <div class="col-md-4" id="batch-right-column">
-        <form action="vote/" method="POST" id="vote">
             <div class="panel panel-primary">
+                <form action="vote/" method="POST" id="vote">
                 <div class="panel-heading">
                     <h3 class="panel-title">Select Talks</h3>
                 </div>
@@ -67,7 +67,11 @@
                     <ul class="list-group" id="accept">
                         {% for v in vote.accept%}
                         <li class="list-group-item">
-                            <span class="glyphicon glyphicon-star"></span> {{proposal_map[v].title}}
+                        <span class="glyphicon glyphicon-star"></span> 
+                            {% if vote %}
+                            <span class="label label-primary">{{proposal_map[v].count}} vote(s)</span>
+                            {% endif %}
+                            {{proposal_map[v].title}}
                             <input type="hidden" name="accept" value="{{v}}">
                         </li>
                         {% endfor %}
@@ -83,6 +87,9 @@
                             style="display:none;"
                             {%endif%}
                             >
+                            {% if vote %}
+                            <span class="label label-primary">{{p.proposal.count}} vote(s)</span>
+                            {% endif %}
                             {{p.proposal.title}}
                         </li>
                             {% endfor %}
@@ -93,8 +100,8 @@
                     <span class="help-block">Choose a talk from this group for PyCon. If none seem good enough, you may choose none;
                         if you think there are two excellent, non-overlapping options, you may choose two.</span>
                 </div>
+                </form>
             </div>
-        </form>
     
     {{br.batch_discussion(msgs)}}
 
