@@ -31,6 +31,8 @@
     #Basic service
       - service: name=postgresql state=started
       - service: name=supervisor state=started
+      - template: src=certs/progcom.njl.us.crt dest=/etc/nginx/progcom.njl.us.crt
+      - template: src=certs/progcom.njl.us.key dest=/etc/nginx/progcom.njl.us.key
       - template: src=deployment/nginx.conf dest=/etc/nginx/sites-enabled/default
         notify: restart nginx
       - lineinfile: dest=/etc/postgresql/9.3/main/pg_hba.conf
