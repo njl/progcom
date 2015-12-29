@@ -198,7 +198,13 @@
     </table>
     {% if unread %}
     <div class="panel-body">
+
+        <form action="mark_read/next/" method="POST">
+        <div class="btn-group" role="group">
         <button id="mark-read" type="button" class="btn btn-danger">Mark Read</button>
+            <input type="submit" class="btn btn-danger" value="Mark Read, Next Unread">
+        </div>
+        </form>
     </div>
     {% endif %}
     <div class="panel-body">

@@ -359,6 +359,16 @@ def mark_read(id):
             unread = l.is_unread(request.user.id, id),
             discussion = l.get_discussion(id))
 
+@app.route('/screening/<int:id>/mark_read/next/', methods=['POST'])
+def mark_read_read_next(id):
+    l.mark_read(request.user.id, id)
+    unread = l.get_unread(request.user.id)
+    if not unread:
+        flash('All unread messages marked as read')
+        return redirect(url_for('screening_stats'))
+    target = random.choice(unread)
+    return redirect(url_for('screening', id=random.choice(unread).id))
+
 """
 Author Feedback
 """
