@@ -355,7 +355,7 @@ def scored_proposals():
             'nom_is_green':_score_weight_average(nom_green[k]),
         'nominations': nominations[k], 'title':titles[k]}
                     for k,v in scores.items()]
-    rv.sort(key=lambda x:-x['score'])
+    rv.sort(key=lambda x:-x['nom_is_green'])
     for n, v in enumerate(rv):
         v['delta'] = abs(v['score'] - v['nom_is_green'])
         v['rank'] = n
