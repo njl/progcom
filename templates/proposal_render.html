@@ -184,27 +184,13 @@
     <div class="panel-heading">
         <h3 class="panel-title">Discussion</h3>
     </div>
-    <!--
-    <table class="table table-striped">
-        {% for d in discussion %}
-        <tr {%if d.feedback%}class="danger"{%endif%}
-           {% if d.name%}class="success"{%endif%}>
-            <td>{%if d.name%}Proposal Author{%else%}{{d.display_name}}{%endif%}</td>
-            <td>{{d.created|date}}</td>
-            <td>{%if d.feedback%}<strong>To Author</strong>{%endif%}
-                {%if d.name%}<strong>From Author</strong>{%endif%}</td>
-        </tr>
-        <tr><td  style="padding-bottom:2em;" colspan="3">{{d.body}}</td></tr>
-        {% endfor %}
-    </table>
-    -->
     <ul class="list-group">
     {% for d in discussion %}
         <li class="list-group-item
                     {% if d.feedback %}list-group-item-danger
                     {% elif d.name %}list-group-item-success
                     {%else%}disabled{%endif%}" style="display:flex;justify-content:space-between">
-            {%if d.name%}Proposal Author{%else%}{{d.display_name}}{%endif%}
+            {%if d.name%}Proposal Author{%else%}<strong>{{d.display_name}}</strong>{%endif%}
             <span style="order:1">{{d.created|date}}</span>
             {%if d.feedback%}<strong>To Author</strong>{%endif%}
             {%if d.name%}<strong>From Author</strong>{%endif%}
