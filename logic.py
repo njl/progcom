@@ -342,17 +342,22 @@ def scored_proposals():
     votes = fetchall(q)
     scores = defaultdict(list)
     nom_green = defaultdict(list)
+    greenness = defaultdict(list)
     nominations = Counter()
     titles = {v.proposal:v.title for v in votes}
     for v in votes:
         scores[v.proposal].extend(v.scores.values())
         if v.nominate:
             nom_green[v.proposal].extend(2 for _ in v.scores.values())
+            greenness[v.proposal].append(1.0)
         else:
             nom_green[v.proposal].extend(v.scores.values())
+            greenness[v.proposal].append(sum(1.0 for x in v.scores.values() if x == 2)/(1.0*len(v.scores.values())))
         nominations[v.proposal] += 1 if v.nominate else 0
+    print greenness
     rv = [{'id':k, 'score':_score_weight_average(v),
             'nom_is_green':_score_weight_average(nom_green[k]),
+            'greenness':int(100*sum(greenness[k])/len(greenness[k])),
         'nominations': nominations[k], 'title':titles[k]}
                     for k,v in scores.items()]
     rv.sort(key=lambda x:-x['nom_is_green'])
