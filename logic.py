@@ -354,7 +354,6 @@ def scored_proposals():
             nom_green[v.proposal].extend(v.scores.values())
             greenness[v.proposal].append(sum(1.0 for x in v.scores.values() if x == 2)/(1.0*len(v.scores.values())))
         nominations[v.proposal] += 1 if v.nominate else 0
-    print greenness
     rv = [{'id':k, 'score':_score_weight_average(v),
             'nom_is_green':_score_weight_average(nom_green[k]),
             'greenness':int(100*sum(greenness[k])/len(greenness[k])),
