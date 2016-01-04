@@ -29,6 +29,7 @@
 
         {{pr.discussion_render(unread, discussion)}}
 
+        {% if not config.CUTOFF_FEEDBACK %}
         <div class="panel panel-default" id="feedback">
             <div class="panel-heading">
                 <h3 class="panel-title">Feedback</h3>
@@ -44,6 +45,7 @@
                 </form>
             </div>
         </div>
+        {%endif%}
     </div>
 </div>
 {%endblock body%}

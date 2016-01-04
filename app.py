@@ -25,6 +25,9 @@ if 'SENTRY_DSN' in os.environ:
 THIS_IS_BATCH = 'THIS_IS_BATCH' in os.environ
 app.config.THIS_IS_BATCH = THIS_IS_BATCH
 
+CUTOFF_FEEDBACK = 'CUTOFF_FEEDBACK' in os.environ
+app.config.CUTOFF_FEEDBACK = CUTOFF_FEEDBACK
+
 _ADMIN_EMAILS = set(json.loads(os.environ['ADMIN_EMAILS']))
 app.config.ADMIN_EMAILS = _ADMIN_EMAILS
 
@@ -333,6 +336,8 @@ def comment(id):
 
 @app.route('/screening/<int:id>/feedback/', methods=['POST'])
 def feedback(id):
+    if CUTOFF_FEEDBACK:
+        abort(404)
     comment = request.values.get('feedback').strip()
     if comment:
         l.add_to_discussion(request.user.id, id, comment, feedback=True)
@@ -372,6 +377,7 @@ def mark_read_read_next(id):
 """
 Author Feedback
 """
+
 @app.route('/feedback/<key>')
 def author_feedback(key):
     name, id = l.check_author_key(key)
@@ -384,6 +390,8 @@ def author_feedback(key):
 
 @app.route('/feedback/<key>', methods=['POST'])
 def author_post_feedback(key):
+    if CUTOFF_FEEDBACK:
+        abort(404)
     name, id = l.check_author_key(key)
     if not name:
         return render_template('bad_feedback_key.html')

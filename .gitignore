@@ -1,5 +1,6 @@
 private-config/
 deploy-config/
 dev-config/THIS_IS_BATCH
+dev-config/CUTOFF_FEEDBACK
 *.pyc
 certs

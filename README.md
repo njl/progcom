@@ -82,3 +82,5 @@ a winner or two picked from every group. Some groups feel weak enough that no
 winners are picked.
 
 To turn on Batch, `echo 1 > dev-config/THIS_IS_BATCH`.
+
+To disable feedback in screening, `echo 1 > dev-config/CUTOFF_FEEDBACK`.

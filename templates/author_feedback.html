@@ -54,6 +54,9 @@
             {% endfor %}
         </table>
 
+        {% if config.CUTOFF_FEEDBACK %}
+        <p>Unfortunately, the deadline for submissions has passed; replies to feedback are now disabled.</p>
+        {% else %}
         <form method="POST">
             <div class="form-group">
             <textarea name="message" class="form-control" rows="3"></textarea>
@@ -63,6 +66,7 @@
               </div>
 
         </form>
+        {% endif %}
 
         </div>
     </body>
