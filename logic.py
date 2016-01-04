@@ -126,7 +126,9 @@ def list_users():
             (SELECT COUNT(*) FROM votes WHERE users.id=votes.voter)
             AS votes,
             (SELECT MAX(updated_on) FROM votes WHERE users.id=votes.voter)
-            AS last_voted
+            AS last_voted,
+            (SELECT COUNT(*) FROM proposals WHERE lower(users.email) = ANY(author_emails))
+            AS proposals_made
             FROM users
             ORDER BY id'''
     return fetchall(q)

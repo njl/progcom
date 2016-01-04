@@ -59,7 +59,7 @@
             {% for user in users%}
             <tr><td>{{user.display_name}}</td>
                 <td>{{user.votes}}</td>
-                <td>{{"%.2f"|format(user.votes/total_proposals*100)}}</td>
+                <td>{{"%.2f"|format(user.votes/(total_proposals-user.proposals_made)*100)}}</td>
             </tr>
             {% endfor %}
             <tr><th>Total</th><th>{{total_votes}}</th><td></td></tr>
