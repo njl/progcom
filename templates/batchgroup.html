@@ -7,9 +7,15 @@
 
 <div class="row">
     <div class="col-md-8">
-        <ul class="nav nav-tabs" id="proposal-tabs">
+        <ul class="nav nav-pills nav-justified" id="proposal-tabs">
             {% for p in proposals %}
-            <li> <a href="#proposal-{{p.proposal.id}}">{{p.proposal.title}}</a>
+            <li>
+                <a href="#proposal-{{p.proposal.id}}">{{p.proposal.title}}
+                    {% if p.proposal.count %}
+                    <span class="badge">{{p.proposal.count}} nominations</span>
+                    {%endif%}
+                </a>
+            </li>
             {% endfor %}
         </ul>
         <div class="tab-content">
@@ -66,11 +72,8 @@
                     <h4>Selected Proposals</h4>
                     <ul class="list-group" id="accept">
                         {% for v in vote.accept%}
-                        <li class="list-group-item">
+                        <li class="list-group-item batch-vote">
                         <span class="glyphicon glyphicon-star"></span> 
-                            {% if vote %}
-                            <span class="label label-primary">{{proposal_map[v].count}} vote(s)</span>
-                            {% endif %}
                             {{proposal_map[v].title}}
                             <input type="hidden" name="accept" value="{{v}}">
                         </li>
@@ -81,15 +84,12 @@
                     <ul class="list-group" id="unranked">
                         {% for p in proposals%}
                         <li data-id="{{p.proposal.id}}"
-                            class="list-group-item"
+                            class="list-group-item batch-vote"
                             id="unranked-prop-{{p.proposal.id}}"
                             {%if vote and p.proposal.id in vote.accept%}
                             style="display:none;"
                             {%endif%}
                             >
-                            {% if vote %}
-                            <span class="label label-primary">{{p.proposal.count}} vote(s)</span>
-                            {% endif %}
                             {{p.proposal.title}}
                         </li>
                             {% endfor %}
