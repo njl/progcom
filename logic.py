@@ -570,7 +570,7 @@ def add_to_discussion(userid, proposal, body, feedback=False, name=None):
 
     if feedback:
         full_proposal = get_proposal(proposal)
-        email = _JINJA.get_template('feedback_notice.txt')
+        email = _JINJA.get_template('email/feedback_notice.txt')
         for to, key in generate_author_keys(proposal).items():
             url = 'http://{}/feedback/{}'.format(_WEB_HOST, key)
             edit_url = 'https://us.pycon.org/2016/proposals/{}/'.format(proposal)
@@ -623,7 +623,7 @@ _ADMIN_EMAILS = set(json.loads(os.environ['ADMIN_EMAILS']))
 
 def email_approved(id):
     user = get_user(id)
-    msg = {'text': _JINJA.get_template('welcome_user.txt').render(),
+    msg = {'text': _JINJA.get_template('email/welcome_user.txt').render(),
             'subject': 'Welcome to the Program Committee Web App!',
             'from_email': 'njl@njl.us',
             'from_name':'Ned Jackson Lovely',
@@ -632,7 +632,7 @@ def email_approved(id):
     _MANDRILL.messages.send(msg)
 
 def email_new_user_pending(email, name):
-    body = _JINJA.get_template('new_user_pending.txt').render(name=name,
+    body = _JINJA.get_template('email/new_user_pending.txt').render(name=name,
                                                             email=email)
     msg = {'text': body,
             'subject': 'New Progcom User',
@@ -642,7 +642,7 @@ def email_new_user_pending(email, name):
     _MANDRILL.messages.send(msg)
  
 def send_weekly_update():
-    body = _JINJA.get_template('weekly_email.txt')
+    body = _JINJA.get_template('email/weekly_email.txt')
     body = body.render(new_proposal_count=added_last_week(),
                         updated_proposal_count=updated_last_week(),
                         votes_last_week=votes_last_week(),
