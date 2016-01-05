@@ -505,7 +505,10 @@ def add_batch_message(frm, batch, body):
 
     if users:
         q = 'INSERT INTO batchunread (batch, voter) VALUES (%s, %s)'
-        execute(q, [(batch, u) for u in users])
+        try:
+            execute(q, [(batch, u) for u in users])
+        except IntegrityError:
+            pass #Already exists
     return id
 
 def get_batch_messages(batch):

@@ -206,7 +206,7 @@ Batch Actions
 """
 @app.route('/batch/')
 def batch_splash_page():
-    return render_template('batch.html',
+    return render_template('batch/batch.html',
                             unread=l.get_unread_batches(request.user.id),
                             groups=l.list_groups(request.user.id))
 
@@ -225,7 +225,7 @@ def batch_view(id):
     vote = l.get_batch_vote(id, request.user.id)
     msgs = l.get_batch_messages(id)
     l.mark_batch_read(id, request.user.id)
-    return render_template('batchgroup.html', group=group,
+    return render_template('batch/batchgroup.html', group=group,
                             proposals=proposals, proposal_map=proposal_map,
                             basics=basics, msgs=msgs,
                             vote = vote._asdict() if vote else None)
@@ -247,7 +247,7 @@ def batch_discussion(id):
     if request.user.email in group.author_emails:
         abort(404)
     l.add_batch_message(request.user.id, id, request.values.get('comment'))
-    return render_template('batch_discussion_snippet.html',
+    return render_template('batch/batch_discussion_snippet.html',
                             msgs=l.get_batch_messages(id))
 
 """
