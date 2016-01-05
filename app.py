@@ -134,11 +134,11 @@ Admin
 """
 @app.route('/admin/')
 def admin_menu():
-    return render_template('admin_page.html')
+    return render_template('admin/admin_page.html')
 
 @app.route('/admin/users/')
 def list_users():
-    return render_template('user_list.html', users=l.list_users())
+    return render_template('admin/user_list.html', users=l.list_users())
 
 @app.route('/admin/users/<int:uid>/approve/', methods=['POST'])
 def approve_user(uid):
@@ -150,7 +150,7 @@ def approve_user(uid):
 
 @app.route('/admin/standards/')
 def list_standards():
-    return render_template('standards.html', standards=l.get_standards())
+    return render_template('admin/standards.html', standards=l.get_standards())
 
 @app.route('/admin/standards/', methods=['POST'])
 def add_reason():
@@ -161,7 +161,7 @@ def add_reason():
 
 @app.route('/admin/rough_scores/')
 def rough_scores():
-    return render_template('rough_scores.html', proposals=l.scored_proposals())
+    return render_template('admin/rough_scores.html', proposals=l.scored_proposals())
 
 @app.route('/admin/sample_grouping/')
 def sample_grouping():
@@ -173,7 +173,7 @@ def sample_grouping():
     scored_proposals = {x['id']:x for x in l.scored_proposals()}
     groups = l.get_proposals_auto_grouped(topics_count=group_size,
                                             cutoff=cutoff)
-    return render_template('sample_grouping.html',
+    return render_template('admin/sample_grouping.html',
                             group_size=group_size,
                             min_normed_score=min_normed_score,
                             min_nominations=min_nominations,

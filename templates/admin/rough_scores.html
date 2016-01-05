@@ -4,6 +4,7 @@
     <thead>
         <tr><th data-column="rank">Rank</th>
             <th data-column="title">Proposal</th>
+            <th data-column="batchgroup">Batch Group</th>
             <th data-column="score" data-invert="1">Rough Score</th>
             <th data-column="nom_is_green" data-invert="1">Nomination
                                             Green Equivalent</th>
@@ -18,6 +19,7 @@
     <tr>
         <td><%=rank+1%></td>
         <td><a href="/screening/<%=id%>/"><%=title%></a></td>
+        <td><%=batchgroup%></td>
         <td><%=score%></td>
         <td><%=nom_is_green%></td>
         <td><%=greenness%></td>
