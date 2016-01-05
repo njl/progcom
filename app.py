@@ -139,12 +139,14 @@ def admin_menu():
 @app.route('/admin/batchgroups/')
 def list_batchgroups():
     return render_template('admin/batchgroups.html',
-                            groups=l.list_groups(request.user.id))
+                            groups=l.raw_list_groups())
 
 @app.route('/admin/batchgroups/', methods=['POST'])
 def add_batchgroup():
-    l.create_group(request.values.get('name'))
-    return jsonify(groups=l.list_groups(request.user.id))
+    l.create_group(request.values.get('name'), None)
+    if request.is_xhr:
+        return jsonify(groups=l.raw_list_groups())
+    return redirect(url_for('list_batchgroups'))
 
 @app.route('/admin/assign/', methods=['POST'])
 def assign_proposal():
@@ -179,7 +181,7 @@ def add_reason():
 def rough_scores():
     return render_template('admin/rough_scores.html',
                             proposals=l.scored_proposals(),
-                            groups=l.list_groups(request.user.id))
+                            groups=l.raw_list_groups())
 
 @app.route('/admin/sample_grouping/')
 def sample_grouping():

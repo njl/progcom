@@ -473,6 +473,8 @@ def vote_group(batchgroup, voter, accept):
             WHERE batchgroup=%s AND voter=%s'''
     execute(q, [[accept, batchgroup, voter]])
 
+def raw_list_groups():
+    return fetchall('SELECT * FROM batchgroups')
 
 def list_groups(userid):
     user = get_user(userid)
