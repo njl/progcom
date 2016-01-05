@@ -6,7 +6,7 @@ import time
 from collections import defaultdict
 
 from flask import (Flask, render_template, request, session, url_for, redirect,
-                    flash, abort)
+                    flash, abort, jsonify)
 from jinja2 import Markup
 import bleach
 import markdown2 as markdown
@@ -136,6 +136,22 @@ Admin
 def admin_menu():
     return render_template('admin/admin_page.html')
 
+@app.route('/admin/batchgroups/')
+def list_batchgroups():
+    return render_template('admin/batchgroups.html',
+                            groups=l.list_groups(request.user.id))
+
+@app.route('/admin/batchgroups/', methods=['POST'])
+def add_batchgroup():
+    l.create_group(request.values.get('name'))
+    return jsonify(groups=l.list_groups(request.user.id))
+
+@app.route('/admin/assign/', methods=['POST'])
+def assign_proposal():
+    l.assign_proposal(request.values.get('gid', None),
+                        request.values.get('pid'))
+    return jsonify(status='ok')
+
 @app.route('/admin/users/')
 def list_users():
     return render_template('admin/user_list.html', users=l.list_users())
@@ -161,7 +177,9 @@ def add_reason():
 
 @app.route('/admin/rough_scores/')
 def rough_scores():
-    return render_template('admin/rough_scores.html', proposals=l.scored_proposals())
+    return render_template('admin/rough_scores.html',
+                            proposals=l.scored_proposals(),
+                            groups=l.list_groups(request.user.id))
 
 @app.route('/admin/sample_grouping/')
 def sample_grouping():

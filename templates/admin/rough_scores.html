@@ -19,7 +19,7 @@
     <tr>
         <td><%=rank+1%></td>
         <td><a href="/screening/<%=id%>/"><%=title%></a></td>
-        <td><%=batchgroup%></td>
+        <td class="batchgroup" data-id="<%=id%>"><%=batchgroup%></td>
         <td><%=score%></td>
         <td><%=nom_is_green%></td>
         <td><%=greenness%></td>
@@ -29,8 +29,22 @@
 </script>
 {%endblock body%}
 {%block extrajs %}
+<script type="underscore/template" id="group_select">
+<select>
+    <option value="NONE"></option>
+<% _.each(groups, function(g){ %>
+    <option value="<%=g.id%>"
+    <% if(g.name === active){ %>
+        selected="selected"
+    <% } %>
+    ><%=g.name%></option>
+<% }) %>
+</select>
+</script>
 <script type="text/javascript">
 var proposals = {{proposals|tojson}};
+
+var groups = {{groups|tojson}};
 
 function render_proposals(){
     var new_body = "";
@@ -56,9 +70,43 @@ function handle_click(ev){
     render_proposals();
 };
 
+function handle_batch_click(ev){
+    var $this = $(this);
+    if($this.find('select').length > 0){
+        return;
+    }
+    $this.html(TEMPLATES.group_select({groups:groups, active: $this.text()}))
+}
+
+function handle_batch_change(ev){
+    var $this = $(this),
+        gid = $this.val(),
+        txt = $this.find('option:selected').text(),
+        pid = $this.parent().data().id;
+    var data = {pid:pid}
+    if(gid !== 'NONE'){
+        data.gid=gid;
+    }
+    $.post('/admin/assign/', data, null, 'json').then(
+            function(){
+                for(var i=0; i < proposals.length;++i){
+                    if(proposals[i].id == pid){
+                        proposals[i].batchgroup = txt;
+                        break;
+                    }
+                }
+                $this.parent('td').html(txt);
+            },
+            function(){
+                alert('assignment failed');
+            })
+}
+
 $(document).ready(function(){
         render_proposals();
         $('thead th').on('click', handle_click);
+        $('tbody').on('click', '.batchgroup', handle_batch_click);
+        $('tbody').on('change', '.batchgroup select', handle_batch_change);
 });
 
 </script>

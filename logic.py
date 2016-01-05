@@ -449,10 +449,16 @@ Batch
 def create_group(name, proposals):
     q = 'INSERT INTO batchgroups (name) VALUES (%s) RETURNING id'
     id = scalar(q, name)
-    q = 'UPDATE proposals SET batchgroup=%s WHERE id = ANY(%s)'
-    execute(q, id, proposals)
+    if proposals:
+        q = 'UPDATE proposals SET batchgroup=%s WHERE id = ANY(%s)'
+        execute(q, id, proposals)
     l('create_group', name=name, proposals=proposals, gid=id)
     return id
+
+def assign_proposal(gid, pid):
+    q = 'UPDATE proposals SET batchgroup=%s WHERE id = %s'
+    execute(q, gid, pid)
+    l('assign_proposal', gid=gid, pid=pid)
 
 def vote_group(batchgroup, voter, accept):
     l('vote_group', gid=batchgroup, uid=voter, accept=accept)

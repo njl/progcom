@@ -47,17 +47,17 @@
             </div>
             {% else %}
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                {% if not config.THIS_IS_BATCH %}
                 <ul class="nav navbar-nav">
+                {% if not config.THIS_IS_BATCH %}
                     <li><a href="{{url_for("show_votes")}}">Previous Votes</a></li>
                     <li><a href="{{url_for("show_bookmarks")}}">Bookmarks</a></li>
                     <li><a href="{{url_for("screening_stats")}}">Stats</a></li>
                     <li><a href="{{url_for("reconsider")}}">Reconsider</a></li>
+                {% endif %}
                     {% if request.user.email in config.ADMIN_EMAILS %}
                     <li><a href="{{url_for("admin_menu")}}">Admin</a></li>
                     {% endif %}
                 </ul>
-                {% endif %}
                 <ul class="nav navbar-nav navbar-right">
                     <li><a class="pull-right" href="{{url_for("logout")}}">Log Out</a></li>
                 </ul>
