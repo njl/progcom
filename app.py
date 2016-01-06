@@ -179,27 +179,14 @@ def add_reason():
 
 @app.route('/admin/rough_scores/')
 def rough_scores():
+    proposals = l.scored_proposals()
+    proposal_groups = l.get_proposals_auto_grouped()
+    for p in proposals:
+        p['auto_group'] = proposal_groups[p['id']]
+
     return render_template('admin/rough_scores.html',
-                            proposals=l.scored_proposals(),
+                            proposals=proposals,
                             groups=l.raw_list_groups())
-
-@app.route('/admin/sample_grouping/')
-def sample_grouping():
-    min_normed_score = int(request.values.get('min_normed_score', '80'))
-    min_nominations = int(request.values.get('min_nominations', '5'))
-    group_size = int(request.values.get('group_size', '20'))
-    cutoff = float(request.values.get('cutoff', '0.75'))
-
-    scored_proposals = {x['id']:x for x in l.scored_proposals()}
-    groups = l.get_proposals_auto_grouped(topics_count=group_size,
-                                            cutoff=cutoff)
-    return render_template('admin/sample_grouping.html',
-                            group_size=group_size,
-                            min_normed_score=min_normed_score,
-                            min_nominations=min_nominations,
-                            scored_proposals=scored_proposals,
-                            groups=groups,
-                            cutoff=cutoff)
 
 """
 User State

@@ -15,6 +15,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.exc import IntegrityError
 from jinja2 import Environment, FileSystemLoader
 
+from gensim import corpora, models, similarities
+from gensim.similarities.docsim import MatrixSimilarity
+
 """
 Log It
 """
@@ -343,7 +346,7 @@ def scored_proposals():
                     batchgroups.name as batchgroup
             FROM votes
             INNER JOIN proposals ON (votes.proposal = proposals.id)
-            INNER JOIN batchgroups ON (proposals.batchgroup = batchgroups.id)'''
+            LEFT JOIN batchgroups ON (proposals.batchgroup = batchgroups.id)'''
     votes = fetchall(q)
     scores = defaultdict(list)
     nom_green = defaultdict(list)
@@ -667,8 +670,6 @@ def send_weekly_update():
 Experimental Topic Grouping
 """
 
-from gensim import corpora, models, similarities
-from gensim.similarities.docsim import MatrixSimilarity
 
 #Installing NLTK and downloading everything is a trial.
 _NLTK_ENGLISH_STOPWORDS = set([u'i', u'me', u'my', u'myself', u'we', u'our',
@@ -690,66 +691,57 @@ u'should', u'now'] + ['www', 'youtube', 'com', 'google', 'python', 'http',
 'talk', 'https', 'programming', 'markdown', 'mins', 'min'])
 
 def _get_words(s):
-    s = re.sub("[^A-Za-z]", " ", s)
-    return [x for x in s.lower().split() if x not in _NLTK_ENGLISH_STOPWORDS]
+    s = s.lower()
+    s = re.sub("[^a-z]", " ", s)
+    return [x for x in s.lower().split() if x and x not in _NLTK_ENGLISH_STOPWORDS]
 
 def _get_raw_docs():
     fields = ('title', 'category', 'description', 'audience', 'objective',
                 'abstract', 'outline', 'notes')
     q = 'SELECT id, {} FROM proposals'.format(', '.join(fields))
     raw_documents = fetchall(q)
-    doc_words = []
+    rv = {}
     all_words = Counter()
-    for doc in raw_documents:
-        words = []
-        for k in fields:
-            words.extend(_get_words(getattr(doc, k)))
-        doc_words.append(words)
-        all_words.update(set(words))
-    drop = {k for k,v in all_words.iteritems() if v == 1}
+    for row in raw_documents:
+        rv[row.id] = _get_words(' '.join(getattr(row, k) for k in fields))
+        all_words.update(set(rv[row.id]))
 
-    doc_words = [ [w for w in doc if w not in drop] for doc in doc_words]
-    titles = {n:x.title for n,x in enumerate(raw_documents)}
-    ids = {n:x.id for n,x in enumerate(raw_documents)}
-    return doc_words, ids, titles
+    useful_words = set(k for k,v in all_words.items() if v > 1)
 
-def neighbors(row_n, sim_matrix, vectors, cutoff):
-    seen = set()
-    follow = [row_n]
-    while follow:
-        base = follow.pop()
-        seen.add(base)
-        for n, score in enumerate(sim_matrix[vectors[base]]):
-            if score < cutoff or n in seen:
-                continue
-            follow.append(n)
-    return seen
+    ids, words = zip(*{k:[x for x in v if x in useful_words] for k,v in rv.iteritems()}.items())
+    return ids, words
 
-def get_proposals_auto_grouped(topics_count=20, cutoff=0.75):
-    doc_words, ids, titles = _get_raw_docs()
+def get_proposals_auto_grouped(topics_count=100, threshold=.5):
+    ids, words = _get_raw_docs()
 
-    dictionary = corpora.Dictionary(doc_words)
-    corpus = [dictionary.doc2bow(x) for x in doc_words]
+    dictionary = corpora.Dictionary(words)
+    corpus = [dictionary.doc2bow(x) for x in words]
     tfidf = models.TfidfModel(corpus)
     corpus_tfidf = tfidf[corpus]
     lsi = models.LsiModel(corpus_tfidf, id2word=dictionary, num_topics=topics_count)
     lsi_corpus = lsi[corpus_tfidf]
+
     ms = MatrixSimilarity(lsi_corpus)
 
-    neighborhoods = []
-    seen = set()
-    for n in range(len(lsi_corpus)):
-        if n in seen:
-            continue
-        near = neighbors(n, ms, lsi_corpus, cutoff)
-        neighborhoods.append({'talks':[{'id':ids[x], 'title':titles[x], 'row':x} for x in near]})
-        seen.update(near)
+    neighbors = {}
+    for frm, row in zip(ids, lsi_corpus):
+        neighbors[frm] = [ids[n] for n, match in enumerate(ms[row]) if match > threshold and ids[n] != frm]
 
-    for group in neighborhoods:
-        rows = [x['row'] for x in group['talks']]
-        #Horrible way to get closest topic, but just looking for a hint.
-        closest_topic = sorted(lsi[lsi_corpus[rows[0]]], key=lambda x:x[-1])[0][0]
-        topic = sorted(lsi.show_topic(closest_topic), key=lambda x:-x[-1])
-        group['topic'] = ', '.join('{} ({:.2f})'.format(x, score) for x, score in topic)
+    results = []
+    groups = {}
+    for root, children in neighbors.items():
+        target = groups.get(root, None)
+        if not target:
+            target = set()
+            results.append(target)
+        target.add(root)
+        target.update(children)
+        for c in children:
+            groups[c] = target
 
-    return neighborhoods
+    rv = {}
+    for n, row in enumerate(results):
+        for x in row:
+            rv[x] = n
+
+    return rv
