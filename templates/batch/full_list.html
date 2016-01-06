@@ -1,0 +1,58 @@
+{%extends "base.html"%}
+{%block body %}
+<h4>Batch Review Groups</h4>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th data-column="batchgroup">Batch Group</td>
+            <th data-column="id">Id</td>
+            <th data-column="title">Title</td>
+            <th data-column="author_names">Author Names</td>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+{%endblock body%}
+{%block extrajs%}
+<script type="underscore/template" id="table_row">
+    <tr>
+        <td><%=batchgroup%></td>
+        <td><%=id%></td>
+        <td><a href="<%=id%>/"><%=title%></a></td>
+        <td><%=author_names%></td>
+    </tr>
+</script>
+<script type="text/javascript">
+    var data = {{proposals|tojson}};
+    function render_table(){
+        var txt = "";
+        for(var i=0;i<data.length;++i){
+            txt += TEMPLATES.table_row(data[i]);
+        }
+        $('tbody').html(txt);
+    }
+    function resort(){
+        var $this = $(this),
+            column = $this.data().column;
+        data = _.sortBy(data, function(x){
+                if(x[column] === ""){
+                    return 'ZZZZZZZZZZZZZZZZ';
+                }
+                return x[column];
+        });
+        if($this.hasClass('success')){
+            $this.addClass('warning').removeClass('success');
+            data = data.reverse();
+        }else{
+            $this.addClass('success').removeClass('warning');
+        }
+        $this.siblings().removeClass('success warning');
+        render_table();
+    }
+    $(document).ready(function(){
+            render_table();
+            $('thead th').on('click', resort);
+    });
+</script>
+{%endblock%}

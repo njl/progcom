@@ -1,0 +1,35 @@
+{%extends "base.html"%}
+{%import "proposal_render.html" as pr%}
+
+{%block body %}
+
+{{pr.proposal_render(proposal)}}
+<hr>
+<h2>Screening Discussion</h2>
+{% for msg in discussion%}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        {% if msg.name %}
+        {{msg.name}}
+        {% else %}
+        {{msg.display_name}}
+        {% endif %}
+    </div>
+    <div class="panel-body">
+        {{msg.body}}
+    </div>
+    {% if msg.name %}
+    <div class="panel-footer">
+        <strong> Message From Author</strong>
+    </div>
+    {% endif %}
+    {% if msg.feedback %}
+    <div class="panel-footer">
+        <strong>Message To Author</strong>
+    </div>
+    {% endif %}
+</div>
+{% else %}
+<p>No dicussion in Screening</p>
+{% endfor %}
+{%endblock body%}

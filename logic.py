@@ -449,6 +449,14 @@ def nomination_density():
 """
 Batch
 """
+
+def full_proposal_list(email):
+    q = '''SELECT p.id, p.title, array_to_string(p.author_names, ', ') AS author_names,
+            COALESCE(bg.name, '') AS batchgroup
+            FROM proposals AS p LEFT JOIN batchgroups AS bg ON (p.batchgroup = bg.id)
+            WHERE NOT (%s = ANY(p.author_emails))'''
+    return fetchall(q, email)
+
 def create_group(name, proposals):
     q = 'INSERT INTO batchgroups (name) VALUES (%s) RETURNING id'
     id = scalar(q, name)
