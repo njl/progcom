@@ -140,27 +140,34 @@ def admin_menu():
 
 @app.route('/admin/batchgroups/')
 def list_batchgroups():
+    l.l('list_batchgroups', user=request.user.id)
     return render_template('admin/batchgroups.html',
                             groups=l.raw_list_groups())
 
 @app.route('/admin/batchgroups/', methods=['POST'])
 def add_batchgroup():
-    l.create_group(request.values.get('name'), None)
+    name = request.values.get('name')
+    id = l.create_group(request.values.get('name'), None)
+    l.l('add_batchgroup', uid=request.user.id, name = name, id=id)
     if request.is_xhr:
         return jsonify(groups=l.raw_list_groups())
     return redirect(url_for('list_batchgroups'))
 
 @app.route('/admin/batchgroups/<int:id>/', methods=['POST'])
 def rename_batch_group(id):
-    l.rename_batch_group(id,request.values.get('name'))
+    name = request.values.get('name')
+    l.l('rename_batch_group', uid=request.user.id, name=name, gid=id)
+    l.rename_batch_group(id,name)
     if request.is_xhr:
         return jsonify(groups=l.raw_list_groups())
     return redirect(url_for('list_batchgroups'))
 
 @app.route('/admin/assign/', methods=['POST'])
 def assign_proposal():
-    l.assign_proposal(request.values.get('gid', None),
-                        request.values.get('pid'))
+    gid = request.values.get('gid', None)
+    pid = request.values.get('pid')
+    l.l('assign_proposal', uid=request.user.id, gid=gid, pid=pid)
+    l.assign_proposal(gid, pid)
     return jsonify(status='ok')
 
 @app.route('/admin/users/')
