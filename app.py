@@ -62,10 +62,11 @@ Account Silliness
 @app.before_request
 def security_check():
     request.user = l.get_user(session.get('userid'))
+
     if request.user and not request.user.approved:
         session.clear()
         return redirect(url_for('login'))
-   
+
     path = request.path
     if (request.user and path.startswith('/admin') 
             and request.user.email not in _ADMIN_EMAILS):
@@ -75,7 +76,8 @@ def security_check():
         abort(403)
 
     if path.startswith('/batch') and not THIS_IS_BATCH:
-        abort(403)
+        if request.user and request.user.email not in _ADMIN_EMAILS:
+            abort(403)
 
     if request.user:
         return
