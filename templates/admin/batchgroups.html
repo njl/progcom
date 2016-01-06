@@ -12,7 +12,7 @@
         {% for g in groups %}
         <tr>
             <td>{{g.id}}</td>
-            <td>{{g.name}}</td>
+            <td class="name" data-id="{{g.id}}">{{g.name}}</td>
             <td>{{g.talk_count}}</td>
         </tr>
         {% endfor %}
@@ -29,3 +29,37 @@
 </form>
 
 {%endblock body%}
+{%block extrajs %}
+
+<script type="underscore/template" id="name_edit">
+    <form method="POST" target="<%=id%>/">
+        <input type="text" value="<%=val%>">
+    </form>
+</script>
+
+<script type="text/javascript">
+function change_name(){
+    var $this = $(this);
+    if ($this.find('input').length > 0){
+        return;
+    }
+    var txt = $this.text();
+    $this.html(TEMPLATES.name_edit({val:txt, id:$this.data().id}))
+}
+
+function rewrite_name(ev){
+    ev.preventDefault();
+    var $this = $(this),
+        id = $this.parents('td').data().id,
+        val = $this.find('input').val();
+        $.post(id+'/', {name:val}, null, 'json').then(function(){
+            $this.html(val);
+        })
+}
+
+$(document).ready(function(){
+        $('table').on('click', 'td.name', change_name);
+        $('table').on('submit', 'form', rewrite_name);
+});
+</script>
+{%endblock%}

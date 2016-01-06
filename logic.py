@@ -458,6 +458,10 @@ def create_group(name, proposals):
     l('create_group', name=name, proposals=proposals, gid=id)
     return id
 
+def rename_batch_group(id, name):
+    q = 'UPDATE batchgroups SET name=%s WHERE id=%s'
+    execute(q, name, id)
+
 def assign_proposal(gid, pid):
     q = 'UPDATE proposals SET batchgroup=%s WHERE id = %s'
     execute(q, gid, pid)

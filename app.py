@@ -148,6 +148,13 @@ def add_batchgroup():
         return jsonify(groups=l.raw_list_groups())
     return redirect(url_for('list_batchgroups'))
 
+@app.route('/admin/batchgroups/<int:id>/', methods=['POST'])
+def rename_batch_group(id):
+    l.rename_batch_group(id,request.values.get('name'))
+    if request.is_xhr:
+        return jsonify(groups=l.raw_list_groups())
+    return redirect(url_for('list_batchgroups'))
+
 @app.route('/admin/assign/', methods=['POST'])
 def assign_proposal():
     l.assign_proposal(request.values.get('gid', None),
