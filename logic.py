@@ -477,7 +477,10 @@ def vote_group(batchgroup, voter, accept):
     execute(q, [[accept, batchgroup, voter]])
 
 def raw_list_groups():
-    return fetchall('SELECT * FROM batchgroups')
+    return fetchall('''SELECT batchgroups.*, 
+        (SELECT COUNT(*) FROM proposals
+            WHERE proposals.batchgroup = batchgroups.id) AS talk_count
+            FROM batchgroups''')
 
 def list_groups(userid):
     user = get_user(userid)
