@@ -145,9 +145,7 @@ def list_batchgroups():
 def add_batchgroup():
     l.create_group(request.values.get('name'), None)
     if request.is_xhr:
-        groups = l.raw_list_groups()
-        groups.sort(key = lambda x:x.name.lower())
-        return jsonify(groups=groups)
+        return jsonify(groups=l.raw_list_groups())
     return redirect(url_for('list_batchgroups'))
 
 @app.route('/admin/assign/', methods=['POST'])
@@ -185,12 +183,10 @@ def rough_scores():
     proposal_groups = l.get_proposals_auto_grouped()
     for p in proposals:
         p['auto_group'] = proposal_groups[p['id']]
-    groups =l.raw_list_groups()
-    groups.sort(key=lambda x:x.name.lower())
 
     return render_template('admin/rough_scores.html',
                             proposals=proposals,
-                            groups=groups)
+                            groups=l.raw_list_groups())
 
 """
 User State
