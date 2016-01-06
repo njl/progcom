@@ -74,7 +74,15 @@ function handle_click(ev){
         proposals = proposals.reverse();
     }else{
         var column = $this.data().column;
-        proposals = _.sortBy(proposals, function(x){return x[column];});
+        var sort_func = function(x){
+            var val = x[column];
+            if(val){
+                return val;
+            }else{
+                return 'ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ'
+            }
+        }
+        proposals = _.sortBy(proposals, sort_func);
         if($this.data().invert){
             proposals = proposals.reverse();
         }
