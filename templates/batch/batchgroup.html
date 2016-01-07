@@ -9,7 +9,7 @@
         <ul class="nav nav-pills nav-justified" id="proposal-tabs">
             {% for p in proposals %}
             <li>
-                <a href="#proposal-{{p.proposal.id}}">{{p.proposal.title}}
+            <a href="#proposal-{{p.proposal.id}}">{{p.proposal.title}} (#{{p.proposal.id}})
                     {% if p.proposal.count %}
                     <span class="badge">{{p.proposal.count}} nominations</span>
                     {%endif%}
