@@ -498,13 +498,14 @@ def raw_list_groups():
 
 def list_groups(userid):
     user = get_user(userid)
-    q = '''SELECT tg.*, tv.batchgroup IS NOT NULL AS voted
+    q = '''SELECT tg.*, tv.batchgroup IS NOT NULL AS voted,
+            (SELECT COUNT(*) FROM proposals WHERE proposals.batchgroup = tg.id) as count
             FROM batchgroups as tg
             LEFT JOIN batchvotes as tv 
             ON tg.id=tv.batchgroup AND tv.voter = %s
             WHERE NOT (%s = ANY(author_emails))
             ORDER BY tg.name'''
-    return fetchall(q, userid, user.email)
+    return [x for x in fetchall(q, userid, user.email) if x.count]
 
 def get_group(batchgroup):
     return fetchone('''SELECT *,
