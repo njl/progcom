@@ -196,9 +196,13 @@ def add_reason():
 @app.route('/admin/rough_scores/')
 def rough_scores():
     proposals = l.scored_proposals()
-    proposal_groups = l.get_proposals_auto_grouped()
-    for p in proposals:
-        p['auto_group'] = proposal_groups[p['id']]
+    if 'SKIP_AUTO_GROUP' in os.environ:
+        for p in proposals:
+            p['auto_group'] = ''
+    else:
+        proposal_groups = l.get_proposals_auto_grouped()
+        for p in proposals:
+            p['auto_group'] = proposal_groups[p['id']]
 
     return render_template('admin/rough_scores.html',
                             proposals=proposals,
