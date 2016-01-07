@@ -4,10 +4,11 @@
 <table class="table table-hover">
     <thead>
         <tr>
-            <th data-column="batchgroup">Batch Group</td>
-            <th data-column="id">Id</td>
-            <th data-column="title">Title</td>
-            <th data-column="author_names">Author Names</td>
+            <th data-column="batchgroup">Batch Group</th>
+            <th data-column="id">Id</th>
+            <th data-column="title">Title</th>
+            <th data-column="author_names">Author Names</th>
+            <th data-column="progcom_member">Program Committee Member</th>
         </tr>
     </thead>
     <tbody>
@@ -21,6 +22,7 @@
         <td><%=id%></td>
         <td><a href="<%=id%>/"><%=title%></a></td>
         <td><%=author_names%></td>
+        <td><%=progcom_member?"*":""%></td>
     </tr>
 </script>
 <script type="text/javascript">
