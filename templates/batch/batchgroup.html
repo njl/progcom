@@ -21,6 +21,9 @@
         <div class="tab-content">
             {% for p in proposals %}
             <div role="tabpanel" class="tab-pane" id="proposal-{{p.proposal.id}}">
+                {%if p.voters %}
+                <h4>Nominated by {{p.voters}}</h4>
+                {%endif%}
                 {{pr.proposal_render(p.proposal)}}
                 <hr>
                 <h2>Screening Discussion</h2>
@@ -72,11 +75,13 @@
                     <h4>Selected Proposals</h4>
                     <ul class="list-group" id="accept">
                         {% for v in vote.accept%}
+                        {% if v in proposal_map %}
                         <li class="list-group-item batch-vote">
                         <span class="glyphicon glyphicon-star"></span> 
                             {{proposal_map[v].title}}
                             <input type="hidden" name="accept" value="{{v}}">
                         </li>
+                        {% endif %}
                         {% endfor %}
                     </ul>
                     <div id="notalks" class="alert alert-warning" {% if vote.accept %}style="display: none;"{% endif %}>No talks selected.</div>
@@ -101,6 +106,32 @@
                         if you think there are two excellent, non-overlapping options, you may choose two.</span>
                 </div>
                 </form>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Votes</h3>
+                </div>
+                <table class="table table-striped">
+                    <tbody>
+                        {% for v in all_votes %}
+                        <tr>
+                            <th>{{v.display_name}}</th>
+                            <td>
+                                {% for id in v.accept %}
+                                <ul class="list-inline">
+                                {% if id in proposal_map %}
+                                <li>{{proposal_map[id].title}}</li>
+                                {% endif %}
+                                </ul>
+                                {% else %}
+                                Don't advance any proposals.
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
             </div>
     
     {{br.batch_discussion(msgs)}}

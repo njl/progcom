@@ -255,8 +255,14 @@ def batch_view(id):
     if request.user.email in group.author_emails:
         abort(404)
     raw_proposals = l.get_group_proposals(id)
-    proposals = [{'proposal':x, 'discussion':l.get_discussion(x.id)}
-                    for x in raw_proposals]
+    votes  = l.get_group_votes(id)
+    proposals = []
+    for rp in raw_proposals:
+        clean_prop = {'proposal': rp, 'discussion': l.get_discussion(rp.id)}
+        voters = [v.display_name for v in votes if rp.id in v.accept]
+        clean_prop['voters'] = ', '.join(voters)
+        clean_prop['voters_count'] = len(voters)
+        proposals.append(clean_prop)
     proposal_map = {x.id:x for x in raw_proposals}
     random.shuffle(proposals)
     basics = {x['proposal'].id:x['proposal'].title for x in proposals}
@@ -266,6 +272,7 @@ def batch_view(id):
     return render_template('batch/batchgroup.html', group=group,
                             proposals=proposals, proposal_map=proposal_map,
                             basics=basics, msgs=msgs,
+                            all_votes=votes,
                             vote = vote._asdict() if vote else None)
 
 @app.route('/batch/<int:id>/vote/', methods=['POST'])

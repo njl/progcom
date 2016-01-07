@@ -512,7 +512,15 @@ def get_group_proposals(batchgroup):
             FROM proposals LEFT JOIN batchvotes ON (proposals.id = ANY(batchvotes.accept))
             WHERE proposals.batchgroup=%s GROUP BY proposals.id'''
     rv = fetchall(q, batchgroup)
-    return [_clean_proposal(x._asdict()) for x in rv]
+    rv = [_clean_proposal(x._asdict()) for x in rv]
+    return rv
+
+def get_group_votes(batchgroup):
+    q = '''SELECT batchvotes.accept, users.display_name
+            FROM batchvotes LEFT JOIN users ON (batchvotes.voter = users.id)
+            WHERE batchvotes.batchgroup=%s'''
+
+    return fetchall(q, batchgroup)
 
 def get_batch_vote(batchgroup, voter):
     q = 'SELECT * FROM batchvotes WHERE batchgroup=%s AND voter=%s'
