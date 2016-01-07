@@ -507,7 +507,9 @@ def list_groups(userid):
     return fetchall(q, userid, user.email)
 
 def get_group(batchgroup):
-    return fetchone('SELECT * FROM batchgroups WHERE id=%s', batchgroup)
+    return fetchone('''SELECT *,
+            ARRAY(SELECT display_name FROM users WHERE users.email = ANY (batchgroups.author_emails)) as progcom_members
+            FROM batchgroups WHERE id=%s''', batchgroup)
 
 def get_group_proposals(batchgroup):
     q = '''SELECT proposals.*, count(batchvotes.voter)

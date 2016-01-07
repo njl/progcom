@@ -66,6 +66,18 @@
     </script>
 
     <div class="col-md-4" id="batch-right-column">
+
+            {% if group.progcom_members %}
+            <div class="panel panel-warning">
+                <div class="panel-body">
+                    <p>The following committee members have proposals in this group;
+                    please exercise discretion when discussing these proposals
+                    on slack or email.</p>
+                    <ul class="list-inline">{% for m in group.progcom_members%}<li>{{m}}</li>{%endfor%}</ul>
+                </div>
+            </div>
+            {% endif %}
+
             <div class="panel panel-primary">
                 <form action="vote/" method="POST" id="vote">
                 <div class="panel-heading">
