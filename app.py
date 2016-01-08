@@ -235,6 +235,7 @@ Batch Actions
 def batch_splash_page():
     return render_template('batch/batch.html',
                             unread=l.get_unread_batches(request.user.id),
+                            stats=l.get_batch_stats(),
                             groups=l.list_groups(request.user.id))
 
 @app.route('/batch/full/<int:id>/')

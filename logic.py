@@ -496,6 +496,35 @@ def raw_list_groups():
             FROM batchgroups
             ORDER BY lower(name)''')
 
+def get_batch_stats():
+    q = 'SELECT batch, COUNT(id) FROM batchmessages GROUP BY batch'
+    message_count = {x.batch:x.count for x in fetchall(q)}
+    q = 'SELECT batchgroup, accept FROM batchvotes'
+    batchmap = defaultdict(Counter)
+    batch_voters = defaultdict(int)
+    for vote in fetchall(q):
+        batch_voters[vote.batchgroup] += 1
+        for selection in vote.accept:
+            batchmap[vote.batchgroup][selection] += 1
+
+    q = '''SELECT batchgroup as id, COUNT(id) as proposals FROM proposals
+            WHERE batchgroup IS NOT NULL GROUP BY batchgroup'''
+    rv = [x._asdict() for x in fetchall(q)]
+    for group in rv:
+        id = group['id']
+        group['voters'] = batch_voters.get(id, 0)
+        group['msgs'] = message_count.get(id, 0)
+        nominated_talks = batchmap.get(id, defaultdict(int))
+        group['nominated_talks'] = len(nominated_talks)
+        group['nominations'] = sum(nominated_talks.values())
+        max_nominations = max(nominated_talks.values()) if nominated_talks else 0
+        if group['voters']:
+            concenus = int((float(max_nominations)/group['voters'])*100)
+        else:
+            concensus = 0
+        group['concensus'] = concenus
+    return {x['id']:x for x in rv}
+
 def list_groups(userid):
     user = get_user(userid)
     q = '''SELECT tg.*, tv.batchgroup IS NOT NULL AS voted,

@@ -2,6 +2,19 @@
 {%block body %}
 <h4>Batch Review Groups</h4>
 <table class="table table-hover">
+    <thead>
+        <tr>
+            <th colspan="2">Name</th>
+            <th colspan="2"></th>
+            <th>Proposals</th>
+            <th>Votes</th>
+            <th>Messages</th>
+            <th>Talks Nominated</th>
+            <th>Total Nominations</th>
+            <th>Concensus</th>
+        </tr>
+    </thead>
+    <tbody>
     {% for g in groups %}
     <tr
     {%if g.voted%}
@@ -10,6 +23,7 @@
        class="danger"
     {%endif%}
        >
+       <th>{{g.id}}</th>
         <td>
             <a href="{{url_for("batch_view", id=g.id)}}">{{g.name}}</a>
         </td>
@@ -25,7 +39,16 @@
             <span class="glyphicon glyphicon-envelope"></span>
             {% endif %}
         </td>
+        {% with s = stats[g.id]%}
+        <td>{{s.proposals}}</td>
+        <td>{{s.voters}}</td>
+        <td>{{s.msgs}}</td>
+        <td>{{s.nominated_talks}}</td>
+        <td>{{s.nominations}}</td>
+        <td>{{s.concensus}}%</td>
+        {% endwith %}
     </tr>
     {% endfor %}
+    </tbody>
 </table>
 {%endblock body%}
