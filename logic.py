@@ -502,8 +502,11 @@ def get_batch_stats():
     q = 'SELECT batchgroup, accept FROM batchvotes'
     batchmap = defaultdict(Counter)
     batch_voters = defaultdict(int)
+    no_forward = defaultdict(int)
     for vote in fetchall(q):
         batch_voters[vote.batchgroup] += 1
+        if not vote.accept:
+            no_forward[vote.batchgroup] +=1
         for selection in vote.accept:
             batchmap[vote.batchgroup][selection] += 1
 
@@ -518,11 +521,12 @@ def get_batch_stats():
         group['nominated_talks'] = len(nominated_talks)
         group['nominations'] = sum(nominated_talks.values())
         max_nominations = max(nominated_talks.values()) if nominated_talks else 0
+        max_nominations = max(max_nominations, no_forward.get(id, 0))
         if group['voters']:
-            concenus = int((float(max_nominations)/group['voters'])*100)
+            consensus = int((float(max_nominations)/group['voters'])*100)
         else:
-            concensus = 0
-        group['concensus'] = concenus
+            consensus = 0
+        group['consensus'] = consensus
     return {x['id']:x for x in rv}
 
 def list_groups(userid):
