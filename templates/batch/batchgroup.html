@@ -10,7 +10,7 @@
             {% for p in proposals %}
             <li>
             <a href="#proposal-{{p.proposal.id}}">{{p.proposal.title}} (#{{p.proposal.id}})
-                    {% if p.proposal.count %}
+                    {% if p.proposal.count and vote %}
                     <span class="badge">{{p.proposal.count}} nominations</span>
                     {%endif%}
                 </a>
@@ -24,7 +24,7 @@
         <div class="tab-content">
             {% for p in proposals %}
             <div role="tabpanel" class="tab-pane" id="proposal-{{p.proposal.id}}">
-                {%if p.voters %}
+                {%if p.voters and vote%}
                 <h4>Nominated by {{p.voters}}</h4>
                 {%endif%}
                 {{pr.proposal_render(p.proposal)}}
@@ -81,11 +81,11 @@
             </div>
             {% endif %}
 
-            <div class="panel panel-primary">
-                <form action="vote/" method="POST" id="vote">
+            <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Select Talks</h3>
                 </div>
+                <form action="vote/" method="POST" id="vote">
                 <div class="panel-body">
                     <h4>Selected Proposals</h4>
                     <ul class="list-group" id="accept">
@@ -122,6 +122,7 @@
                 </div>
                 </form>
             </div>
+            {% if vote %}
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Votes</h3>
@@ -148,6 +149,7 @@
                 </table>
 
             </div>
+            {% endif %}
     
     {{br.batch_discussion(msgs)}}
 
