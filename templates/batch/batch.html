@@ -4,43 +4,49 @@
 <table class="table table-hover table-striped table-condensed">
     <thead>
         <tr>
-            <th colspan="2">Name</th>
-            <th colspan="2"></th>
-            <th>Proposals</th>
-            <th>Voters</th>
-            <th>Messages</th>
-            <th>Talks Nominated</th>
-            <th>Total Nominations</th>
-            <th>Consensus</th>
+            <th colspan="2" data-column="name">Name</th>
+            <th data-column="voted">Voted</th>
+            <th data-column="unread">Unread</th>
+            <th data-column="proposals">Proposals</th>
+            <th data-column="voters">Voters</th>
+            <th data-column="msgs">Messages</th>
+            <th data-column="nominated_talks">Talks Nominated</th>
+            <th data-column="nominations">Total Nominations</th>
+            <th data-column="consensus">Consensus</th>
         </tr>
     </thead>
     <tbody>
-    {% for g in groups %}
-    <tr>
-       <th>{{g.id}}</th>
-        <td>
-            <a href="{{url_for("batch_view", id=g.id)}}">{{g.name}}</a>
-        </td>
-            {% if g.voted %}
-            <td class="success"><strong>Voted</strong></td>
-            {% else %}
-            <td class="danger"><strong>Not Voted</strong></td>
-            {% endif %}
-        <td>
-            {% if g.id in unread %}
-            <span class="glyphicon glyphicon-envelope"></span>
-            {% endif %}
-        </td>
-        {% with s = stats[g.id]%}
-        <td>{{s.proposals}}</td>
-        <td>{{s.voters}}</td>
-        <td>{{s.msgs}}</td>
-        <td>{{s.nominated_talks}}</td>
-        <td>{{s.nominations}}</td>
-        <td>{{s.consensus}}%</td>
-        {% endwith %}
-    </tr>
-    {% endfor %}
     </tbody>
 </table>
-{%endblock body%}
+<script type="underscore/template" id="table_row">
+<tr>
+    <th><%=e.id%></th>
+    <td><a href="<%=e.id%>/"><%=e.name%></a></td>
+    <% if(e.voted){ %>
+        <td class="success"><strong>Voted</strong></td>
+    <% }else{ %>
+        <td class="danger"><strong>Not Voted</strong></td>
+    <% } %>
+    <td>
+        <% if(e.unread){ %>
+            <span class="glyphicon glyphicon-envelope"></span>
+        <% } %>
+    </td>
+    <td><%=e.proposals%></td>
+    <td><%=e.voters%></td>
+    <td><%=e.msgs%></td>
+    <td><%=e.nominated_talks%></td>
+    <td><%=e.nominations%></td>
+    <td><%=e.consensus%></td>
+</tr>
+</script>
+{%endblock%}
+
+{%block extrajs%}
+<script>
+var groups = {{groups|tojson}};
+$(document).ready(function(){
+    table_sorter($('table'), groups, TEMPLATES.table_row, {})
+});
+</script>
+{%endblock%}

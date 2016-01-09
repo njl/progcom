@@ -233,10 +233,14 @@ Batch Actions
 """
 @app.route('/batch/')
 def batch_splash_page():
-    return render_template('batch/batch.html',
-                            unread=l.get_unread_batches(request.user.id),
-                            stats=l.get_batch_stats(),
-                            groups=l.list_groups(request.user.id))
+    groups = [x._asdict() for x in l.list_groups(request.user.id)]
+    unread = l.get_unread_batches(request.user.id)
+    stats = l.get_batch_stats()
+    print unread
+    for group in groups:
+        group['unread'] = group['id'] in unread
+        group.update(stats[group['id']])
+    return render_template('batch/batch.html', groups=groups)
 
 @app.route('/batch/full/<int:id>/')
 def view_single_proposals(id):
