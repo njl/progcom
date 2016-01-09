@@ -579,7 +579,7 @@ def add_batch_message(frm, batch, body):
     if users:
         q = 'INSERT INTO batchunread (batch, voter) VALUES (%s, %s)'
         try:
-            execute(q, [(batch, u) for u in users])
+            execute(q, [(batch, u) for u in users if u != frm])
         except IntegrityError:
             pass #Already exists
     return id

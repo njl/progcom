@@ -236,7 +236,6 @@ def batch_splash_page():
     groups = [x._asdict() for x in l.list_groups(request.user.id)]
     unread = l.get_unread_batches(request.user.id)
     stats = l.get_batch_stats()
-    print unread
     for group in groups:
         group['unread'] = group['id'] in unread
         group.update(stats[group['id']])
