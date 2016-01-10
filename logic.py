@@ -714,9 +714,7 @@ def send_login_email(email):
             'from_email':'njl@njl.us',
             'from_name':'Ned Jackson Lovely',
             'to':[{'email':user.email}]}
-    #_MANDRILL.messages.send(msg)
-    print msg
-    print msg['text']
+    _MANDRILL.messages.send(msg)
     l('successful_pw_reset_request', email=email, id=user.id)
     return True
 
