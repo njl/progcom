@@ -226,17 +226,15 @@ def add_reason():
     flash('Added standard "{}"'.format(text))
     return redirect(url_for('list_standards'))
 
+@app.route('/admin/rough_scores/auto_grouping/')
+def get_auto_grouping():
+    return jsonify(data=l.get_proposals_auto_grouped())
+
 @app.route('/admin/rough_scores/')
 def rough_scores():
     proposals = l.scored_proposals()
-    if 'SKIP_AUTO_GROUP' in os.environ:
-        for p in proposals:
-            p['auto_group'] = ''
-    else:
-        proposal_groups = l.get_proposals_auto_grouped()
-        for p in proposals:
-            p['auto_group'] = proposal_groups[p['id']]
-
+    for x in proposals:
+        x['auto_group'] = ''
     return render_template('admin/rough_scores.html',
                             proposals=proposals,
                             groups=l.raw_list_groups())
