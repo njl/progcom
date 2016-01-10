@@ -90,7 +90,7 @@ def security_check():
 
 @app.route('/user/login/')
 def login():
-    return render_template('login.html')
+    return render_template('user/login.html')
 
 @app.route('/user/login/', methods=['POST'])
 def login_post():
@@ -108,7 +108,7 @@ def login_post():
 
 @app.route('/user/new/')
 def new_user():
-    return render_template('new_user.html')
+    return render_template('user/new_user.html')
 
 @app.route('/user/new/', methods=['POST'])
 def new_user_post():
@@ -130,6 +130,39 @@ def new_user_post():
 def logout():
     session.clear()
     return redirect(url_for('login'))
+
+@app.route('/user/email_login/')
+def request_reset():
+    return render_template('user/request_reset.html')
+
+@app.route('/user/email_login/', methods=['POST'])
+def request_reset_post():
+    if l.send_login_email(request.values.get('email')):
+        flash('Reset sent')
+    else:
+        flash('Reset failed; perhaps a bad email address?')
+    return redirect(url_for('request_reset'))
+
+@app.route('/user/login/<key>/')
+def view_reset_key(key):
+    uid = l.test_login_string(key)
+    if not uid:
+        flash('Bad key; has it expired?')
+        return redirect(url_for('request_reset'))
+    session['userid'] = uid
+    flash('Logged in!')
+    return redirect(url_for('reset_password'))
+
+@app.route('/me/change_password/')
+def reset_password():
+    return render_template('user/reset_password.html')
+
+
+@app.route('/me/change_password/', methods=['POST'])
+def reset_password_post():
+    l.change_pw(request.user.id, request.values.get('pw'))
+    flash('Password changed')
+    return redirect('/')
 
 """
 Admin

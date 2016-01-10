@@ -136,6 +136,7 @@ def list_users():
             ORDER BY id'''
     return fetchall(q)
 
+
 """
 Proposal Management
 """
@@ -693,6 +694,39 @@ def check_author_key(key):
 Emails
 """
 _ADMIN_EMAILS = set(json.loads(os.environ['ADMIN_EMAILS']))
+_LOGIN_EMAIL_ITSD = itsdangerous.URLSafeTimedSerializer(os.environ['ITSD_KEY'],
+                                                salt='loginemail')
+
+def send_login_email(email):
+    q = 'SELECT id, email FROM users WHERE lower(email) = lower(%s)'
+    user = fetchone(q, email)
+    if not user:
+        l('failed_pw_reset_request', email=email)
+        return False
+
+    body = _JINJA.get_template('email/login_email.txt')
+    key = _LOGIN_EMAIL_ITSD.dumps(user.id)
+    url = 'http://{}/user/login/{}/'.format(_WEB_HOST, key)
+    body = body.render(url=url)
+
+    msg = {'text':body,
+            'subject': 'PyCon Program Committee Password Reset',
+            'from_email':'njl@njl.us',
+            'from_name':'Ned Jackson Lovely',
+            'to':[{'email':user.email}]}
+    #_MANDRILL.messages.send(msg)
+    print msg
+    print msg['text']
+    l('successful_pw_reset_request', email=email, id=user.id)
+    return True
+
+def test_login_string(s):
+    try:
+        id = _LOGIN_EMAIL_ITSD.loads(s, max_age=60*20)
+    except Exception as e:
+        l('bad_pw_reset_key', e=str(e), s=s)
+        return False
+    return id
 
 def email_approved(id):
     user = get_user(id)
