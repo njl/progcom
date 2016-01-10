@@ -4,6 +4,8 @@ Otherwise, you can login into your program committee account below.
 
 {{url}}
 
+This link will expire in about twenty minutes.
+
 Regards,
 
 The PyCon Program Committee Robot
