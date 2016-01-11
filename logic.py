@@ -452,10 +452,13 @@ Batch
 """
 
 def full_proposal_list(email):
-    q = '''SELECT p.id, p.title, array_to_string(p.author_names, ', ') AS author_names,
+    q = '''SELECT p.id, p.title, bg.id as batch_id,
+            array_to_string(p.author_names, ', ') AS author_names,
             COALESCE(bg.name, '') AS batchgroup,
-            EXISTS (SELECT 1 FROM users WHERE users.email = ANY(p.author_emails)) as progcom_member
-            FROM proposals AS p LEFT JOIN batchgroups AS bg ON (p.batchgroup = bg.id)
+            EXISTS (SELECT 1 FROM users
+                    WHERE users.email = ANY(p.author_emails)) as progcom_member
+            FROM proposals AS p 
+            LEFT JOIN batchgroups AS bg ON (p.batchgroup = bg.id)
             WHERE NOT (%s = ANY(p.author_emails))'''
     return fetchall(q, email)
 
@@ -533,10 +536,11 @@ def get_batch_stats():
 def list_groups(userid):
     user = get_user(userid)
     q = '''SELECT tg.*, tv.batchgroup IS NOT NULL AS voted,
-            (SELECT COUNT(*) FROM proposals WHERE proposals.batchgroup = tg.id) as count
+            (SELECT COUNT(*) FROM proposals
+                WHERE proposals.batchgroup = tg.id) as count
             FROM batchgroups as tg
             LEFT JOIN batchvotes as tv 
-            ON tg.id=tv.batchgroup AND tv.voter = %s
+            ON (tg.id=tv.batchgroup AND tv.voter = %s)
             WHERE NOT (%s = ANY(author_emails))
             ORDER BY tg.name'''
     return [x for x in fetchall(q, userid, user.email) if x.count]

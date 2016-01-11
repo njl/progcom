@@ -278,11 +278,13 @@ def view_single_proposals(id):
     proposal = l.get_proposal(id)
     if request.user.email in [x.email for x in proposal.authors]:
         abort(404)
-    return render_template('batch/single_proposal.html', proposal=proposal, discussion=l.get_discussion(id))
+    return render_template('batch/single_proposal.html', proposal=proposal,
+                            discussion=l.get_discussion(id))
 
 @app.route('/batch/full/')
 def full_list():
-    return render_template('batch/full_list.html', proposals=l.full_proposal_list(request.user.email))
+    return render_template('batch/full_list.html',
+            proposals=l.full_proposal_list(request.user.email))
 
 @app.route('/batch/<int:id>/')
 def batch_view(id):

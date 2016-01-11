@@ -18,7 +18,10 @@
 {%block extrajs%}
 <script type="underscore/template" id="table_row">
     <tr>
-        <td><%=batchgroup%></td>
+        <td><% if(batch_id){ %>
+            <a href="/batch/<%=batch_id%>/"><%=batchgroup%></a>
+            <% } %>
+            </td>
         <td><%=id%></td>
         <td><a href="<%=id%>/"><%=title%></a></td>
         <td><%=author_names%></td>
