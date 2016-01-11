@@ -581,10 +581,10 @@ def add_batch_message(frm, batch, body):
     q = 'SELECT voter FROM batchvotes WHERE batchgroup=%s AND voter <> %s'
     users = set(x.voter for x in fetchall(q, batch, frm))
 
-    if users:
-        q = 'INSERT INTO batchunread (batch, voter) VALUES (%s, %s)'
+    q = 'INSERT INTO batchunread (batch, voter) VALUES (%s, %s)'
+    for user in users:
         try:
-            execute(q, [(batch, u) for u in users])
+            execute(q, batch, user)
         except IntegrityError:
             pass #Already exists
     return id
