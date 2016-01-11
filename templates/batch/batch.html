@@ -1,6 +1,9 @@
 {%extends "base.html"%}
 {%block body %}
 <h4>Batch Review Groups</h4>
+<div class="progress" title="You have voted on {{percent}}% of the batches!">
+    <div class="progress-bar" style="width: {{percent}}%;">{{percent}}%</div>
+</div>
 <table class="table table-hover table-striped table-condensed">
     <thead>
         <tr>

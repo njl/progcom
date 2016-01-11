@@ -270,7 +270,8 @@ def batch_splash_page():
     for group in groups:
         group['unread'] = group['id'] in unread
         group.update(stats[group['id']])
-    return render_template('batch/batch.html', groups=groups)
+    percent = int( 100.0*sum(1.0 for x in groups if x['voted']) / len(groups))
+    return render_template('batch/batch.html', groups=groups, percent=percent)
 
 @app.route('/batch/full/<int:id>/')
 def view_single_proposals(id):
