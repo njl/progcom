@@ -569,6 +569,65 @@ def get_batch_vote(batchgroup, voter):
     q = 'SELECT * FROM batchvotes WHERE batchgroup=%s AND voter=%s'
     return fetchone(q, batchgroup, voter)
 
+def get_batch_coverage():
+    q = '''SELECT id, title, author_names, batchgroup
+            FROM proposals WHERE batchgroup IS NOT NULL'''
+    groups = defaultdict(dict)
+    for row in fetchall(q):
+        groups[row.batchgroup][row.id] = 0
+        groups[row.batchgroup][None] = 0
+
+    voter_count = Counter()
+    q = 'SELECT batchgroup, accept from batchvotes'
+    votes = fetchall(q)
+    for vote in votes:
+        voter_count[vote.batchgroup] +=1
+        if not vote.accept:
+            groups[vote.batchgroup][None] += 1
+        for id in vote.accept:
+            groups[vote.batchgroup][id] += 1
+
+    for bg, batch in groups.iteritems():
+        total = voter_count[bg]
+        if not total:
+            continue
+        batch.update({k:int(100*float(v)/total) for k,v in batch.iteritems()})
+    return groups
+
+def get_my_pycon(user):
+    q = 'SELECT batchgroup, accept FROM batchvotes WHERE voter=%s'
+    votes = fetchall(q, user)
+
+    q = '''SELECT title, id,
+            array_to_string(author_names, ', ') AS author_names
+            FROM proposals WHERE batchgroup IS NOT NULL'''
+    proposals = {row.id:row for row in fetchall(q)}
+
+    q = 'SELECT id, name FROM batchgroups'
+    bg_names = {row.id:row.name for row in fetchall(q)}
+
+    coverage = get_batch_coverage()
+
+    rv = []
+    for v in votes:
+        if v.accept:
+            for p in v.accept:
+                rv.append({'batch_id':v.batchgroup,
+                            'batchgroup':bg_names[v.batchgroup],
+                            'id':p,
+                            'title': proposals[p].title,
+                            'author_names':proposals[p].author_names,
+                            'consensus':coverage[v.batchgroup][p]})
+        else:
+            rv.append({'batch_id':v.batchgroup,
+                        'batchgroup':bg_names[v.batchgroup],
+                        'id':None,
+                        'title':"Don't advance any from this group",
+                        'author_names':'',
+                        'consensus': coverage[v.batchgroup][None]})
+    return rv
+
+
 """
 Batch Discussion (this is just easier)
 """

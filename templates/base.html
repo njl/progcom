@@ -55,6 +55,7 @@
                     <li><a href="{{url_for("reconsider")}}">Reconsider</a></li>
                 {% else %}
                     <li><a href="{{url_for("batch_splash_page")}}">Batch Groups</a></li>
+                    <li><a href="{{url_for("my_nominations")}}">Your Nominations</a></li>
                     <li><a href="{{url_for("full_list")}}">Full Proposal List</a></li>
                 {% endif %}
                     {% if request.user.email in config.ADMIN_EMAILS %}

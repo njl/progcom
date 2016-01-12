@@ -333,6 +333,11 @@ def batch_discussion(id):
     return render_template('batch/batch_discussion_snippet.html',
                             msgs=l.get_batch_messages(id))
 
+@app.route('/batch/nominations/')
+def my_nominations():
+    return render_template('batch/my_pycon.html',
+                            proposals=l.get_my_pycon(request.user.id))
+
 """
 Screening Actions
 """

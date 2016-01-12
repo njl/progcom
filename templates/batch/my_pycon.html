@@ -1,0 +1,35 @@
+{%extends "base.html"%}
+{%block body %}
+<h4>Your PyCon</h4>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th data-column="batchgroup">Batch Group</th>
+            <th data-column="id">Id</th>
+            <th data-column="title">Title</th>
+            <th data-column="author_names">Author Names</th>
+            <th data-column="consensus">Consensus</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+{%endblock body%}
+{%block extrajs%}
+<script type="underscore/template" id="table_row">
+    <tr>
+        <td>
+            <a href="/batch/<%=e.batch_id%>/"><%=e.batchgroup%></a>
+        <td><%=e.id%></td>
+        <td><a href="/batch/<%=e.batch_id%>/"><%=e.title%></a></td>
+        <td><%=e.author_names%></td>
+        <td><%=e.consensus%></td>
+    </tr>
+</script>
+<script type="text/javascript">
+    var data = {{proposals|tojson}};
+    $(document).ready(function(){
+        table_sorter($('table'), data, TEMPLATES.table_row)
+    });
+</script>
+{%endblock%}
