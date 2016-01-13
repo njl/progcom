@@ -171,6 +171,13 @@ Admin
 def admin_menu():
     return render_template('admin/admin_page.html')
 
+@app.route('/admin/batchgroups/<int:id>/lock/', methods=['POST'])
+def lock_batch_group(id):
+    lock = request.values.get('lock', None) == 't'
+    l.l('lock_batch_group', user=request.user.id, lock=lock, id=id)
+    l.toggle_lock_batch(id, lock)
+    return jsonify(result='ok', status=lock)
+
 @app.route('/admin/batchgroups/')
 def list_batchgroups():
     l.l('list_batchgroups', user=request.user.id)

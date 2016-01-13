@@ -462,6 +462,9 @@ def nomination_density():
 """
 Batch
 """
+def toggle_lock_batch(id, lock):
+    q = 'UPDATE batchgroups SET locked=%s WHERE id=%s'
+    execute(q, lock, id)
 
 def full_proposal_list(email):
     q = '''SELECT p.id, p.title, bg.id as batch_id,

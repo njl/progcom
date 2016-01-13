@@ -1,5 +1,19 @@
 {%extends "base.html"%}
+
+
 {%block body %}
+{%set locked_button %}
+    <button class="btn btn-danger lock-btn" data-lock="f"
+            type="button">
+    <span class="glyphicon glyphicon-lock"></span> Locked</button>
+{%endset%}
+
+{%set unlocked_button %}
+    <button class="btn btn-success lock-btn" data-lock="t"
+            type="button">Unlocked</button>
+
+{%endset%}
+
 <table class="table table-striped">
     <thead>
         <tr>
@@ -19,7 +33,13 @@
             <td>{{g.talk_count}}</td>
             <td>{{g.skip_consensus}}</td>
             <td>{{g.talk_consensus|join(', ')}}</td>
-            <td>{{g.locked}}</td>
+            <td data-id="{{g.id}}">
+                {%if g.locked%}
+                    {{locked_button|safe}}
+                {%else%}
+                    {{unlocked_button|safe}}
+                {%endif%}
+            </td>
         </tr>
         {% endfor %}
     </tbody>
@@ -34,6 +54,13 @@
   <button type="submit" class="btn btn-default">Submit</button>
 </form>
 
+<script type="underscore/template" id="locked_button">
+{{locked_button|safe}}
+</script>
+<script type="underscore/template" id="unlocked_button">
+{{unlocked_button|safe}}
+</script>
+
 {%endblock body%}
 {%block extrajs %}
 
@@ -42,6 +69,7 @@
         <input type="text" value="<%=val%>">
     </form>
 </script>
+
 
 <script type="text/javascript">
 function change_name(){
@@ -63,9 +91,23 @@ function rewrite_name(ev){
         })
 }
 
+function toggle_locked(ev){
+    var $this = $(this),
+        p = $this.parents('td')
+        id = p.data().id,
+        lock = $this.data().lock;
+        console.log('CLICKED', id, lock);
+        $.post(id+'/lock/', {lock:lock}).then(function(data){
+            p.html(data.status?TEMPLATES.locked_button()
+                            :TEMPLATES.unlocked_button());
+            console.log(data);
+        });
+}
+
 $(document).ready(function(){
         $('table').on('click', 'td.name', change_name);
         $('table').on('submit', 'form', rewrite_name);
+        $('table').on('click', '.lock-btn', toggle_locked);
 });
 </script>
 {%endblock%}
