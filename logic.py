@@ -344,6 +344,7 @@ def _score_weight_average(v):
 
 def scored_proposals():
     q = '''SELECT scores, nominate, proposal, proposals.title,
+                    proposals.accepted,
                     batchgroups.name as batchgroup,
                     batchgroups.id as batch_id
             FROM votes
@@ -354,9 +355,12 @@ def scored_proposals():
     nom_green = defaultdict(list)
     greenness = defaultdict(list)
     nominations = Counter()
+    proposals_by_id = {v.proposal:v for v in votes}
+    """
     titles = {v.proposal:v.title for v in votes}
     batchgroups = {v.proposal:v.batchgroup for v in votes}
     batch_ids = {v.proposal:v.batch_id for v in votes}
+    """
     for v in votes:
         scores[v.proposal].extend(v.scores.values())
         if v.nominate:
@@ -366,13 +370,18 @@ def scored_proposals():
             nom_green[v.proposal].extend(v.scores.values())
             greenness[v.proposal].append(sum(1.0 for x in v.scores.values() if x == 2)/(1.0*len(v.scores.values())))
         nominations[v.proposal] += 1 if v.nominate else 0
-    rv = [{'id':k, 'score':_score_weight_average(v),
+    rv = []
+
+    for k,v in scores.items():
+        proposal = proposals_by_id[k]
+        rv.append({'id':k, 'score':_score_weight_average(v),
             'nom_is_green':_score_weight_average(nom_green[k]),
             'greenness':int(100*sum(greenness[k])/len(greenness[k])),
-        'nominations': nominations[k], 'title':titles[k],
-        'batch_id': batch_ids[k],
-        'batchgroup':batchgroups[k]}
-                    for k,v in scores.items()]
+        'nominations': nominations[k],
+        'title':proposal.title,
+        'batch_id': proposal.batch_id,
+        'batchgroup':proposal.batchgroup,
+        'accepted':proposal.accepted})
     rv.sort(key=lambda x:-x['nom_is_green'])
     for n, v in enumerate(rv):
         v['delta'] = abs(v['score'] - v['nom_is_green'])

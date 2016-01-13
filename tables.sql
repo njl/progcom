@@ -38,7 +38,8 @@ CREATE TABLE proposals (
     outline                 TEXT,
     notes                   TEXT,
     additional_requirements TEXT,
-    recording_release       BOOLEAN
+    recording_release       BOOLEAN,
+    accepted                BOOLEAN DEFAULT NULL
 );
 
 DROP AGGREGATE IF EXISTS email_aggregate(VARCHAR(254)[]);
