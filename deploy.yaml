@@ -1,6 +1,6 @@
 --- 
 - hosts: all
-  sudo: yes
+  become: yes
   tasks:
       - apt: upgrade=dist update_cache=yes
       - apt: pkg={{item}} state=latest
@@ -44,7 +44,7 @@
       - file: path=/opt/progcom state=directory owner=n group=n
       - git: repo=git@github.com:njl/progcom.git
                 dest=/opt/progcom accept_hostkey=True force=True
-        sudo: no
+        become: no
         notify: restart progcom
 
     #Virtualenv
@@ -54,7 +54,9 @@
 
     #Envdir
       - file: path=/opt/progcom-envdir state=directory
-      - synchronize: src=deploy-config/ dest=/opt/progcom-envdir/ delete=yes
+      - synchronize: src=deploy-config/ dest=/opt/progcom-envdir/
+                        delete=yes
+        become: no
         notify: restart progcom
 
     #Supervisor
@@ -71,6 +73,14 @@
     #us.pycon.org pull
       - cron: name="pycon pull" minute="0,15,30,45" job="/opt/progcom/bin/pull >/dev/null 2>&1" state=absent
       - cron: name="pycon update" minute="20" hour="7" weekday="1" job="/opt/progcom/bin/weekly_email >/dev/null 2>&1" state=absent
+
+      - name: Notify in slack channel
+        become: no
+        local_action:
+            module: slack
+            token: T0HUP6ZL6/B0JC6MH0E/hwrx6XAuyLSEnaq9zkUzMjag
+            msg: "Web app update deployed"
+
 
   handlers:
       - name: restart nginx
