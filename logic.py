@@ -130,7 +130,8 @@ def list_users():
             AS votes,
             (SELECT MAX(updated_on) FROM votes WHERE users.id=votes.voter)
             AS last_voted,
-            (SELECT COUNT(*) FROM proposals WHERE lower(users.email) = ANY(author_emails))
+            (SELECT COUNT(*) FROM proposals
+                WHERE lower(users.email) = ANY(author_emails))
             AS proposals_made
             FROM users
             ORDER BY id'''
@@ -368,7 +369,9 @@ def scored_proposals():
             greenness[v.proposal].append(1.0)
         else:
             nom_green[v.proposal].extend(v.scores.values())
-            greenness[v.proposal].append(sum(1.0 for x in v.scores.values() if x == 2)/(1.0*len(v.scores.values())))
+            greenness[v.proposal].append(sum(1.0 for x in v.scores.values()
+                                            if x == 2)
+                                                /(1.0*len(v.scores.values())))
         nominations[v.proposal] += 1 if v.nominate else 0
     rv = []
 
@@ -570,12 +573,15 @@ def list_groups(userid):
 
 def get_group(batchgroup):
     return fetchone('''SELECT *,
-            ARRAY(SELECT display_name FROM users WHERE users.email = ANY (batchgroups.author_emails)) as progcom_members
+            ARRAY(SELECT display_name FROM users
+                    WHERE users.email = ANY (batchgroups.author_emails))
+                AS progcom_members
             FROM batchgroups WHERE id=%s''', batchgroup)
 
 def get_group_proposals(batchgroup):
     q = '''SELECT proposals.*, count(batchvotes.voter)
-            FROM proposals LEFT JOIN batchvotes ON (proposals.id = ANY(batchvotes.accept))
+            FROM proposals LEFT JOIN batchvotes 
+                ON (proposals.id = ANY(batchvotes.accept))
             WHERE proposals.batchgroup=%s GROUP BY proposals.id'''
     rv = fetchall(q, batchgroup)
     rv = [_clean_proposal(x._asdict()) for x in rv]
@@ -890,7 +896,8 @@ def _get_raw_docs():
 
     useful_words = set(k for k,v in all_words.items() if v > 1)
 
-    ids, words = zip(*{k:[x for x in v if x in useful_words] for k,v in rv.iteritems()}.items())
+    ids, words = zip(*{k:[x for x in v if x in useful_words]
+                                for k,v in rv.iteritems()}.items())
     return ids, words
 
 def get_proposals_auto_grouped(topics_count=100, threshold=.5):
@@ -900,14 +907,16 @@ def get_proposals_auto_grouped(topics_count=100, threshold=.5):
     corpus = [dictionary.doc2bow(x) for x in words]
     tfidf = models.TfidfModel(corpus)
     corpus_tfidf = tfidf[corpus]
-    lsi = models.LsiModel(corpus_tfidf, id2word=dictionary, num_topics=topics_count)
+    lsi = models.LsiModel(corpus_tfidf, id2word=dictionary,
+                            num_topics=topics_count)
     lsi_corpus = lsi[corpus_tfidf]
 
     ms = MatrixSimilarity(lsi_corpus)
 
     neighbors = {}
     for frm, row in zip(ids, lsi_corpus):
-        neighbors[frm] = [ids[n] for n, match in enumerate(ms[row]) if match > threshold and ids[n] != frm]
+        neighbors[frm] = [ids[n] for n, match in enumerate(ms[row])
+                            if match > threshold and ids[n] != frm]
 
     results = []
     groups = {}
