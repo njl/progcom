@@ -233,8 +233,13 @@ def get_auto_grouping():
 @app.route('/admin/rough_scores/')
 def rough_scores():
     proposals = l.scored_proposals()
+    consensus = l.get_batch_coverage()
     for x in proposals:
         x['auto_group'] = ''
+        if x['batchgroup']:
+            x['consensus'] = consensus[x['batch_id']][x['id']]
+        else:
+            x['consensus'] = -1
     return render_template('admin/rough_scores.html',
                             proposals=proposals,
                             groups=l.raw_list_groups())

@@ -344,7 +344,8 @@ def _score_weight_average(v):
 
 def scored_proposals():
     q = '''SELECT scores, nominate, proposal, proposals.title,
-                    batchgroups.name as batchgroup
+                    batchgroups.name as batchgroup,
+                    batchgroups.id as batch_id
             FROM votes
             INNER JOIN proposals ON (votes.proposal = proposals.id)
             LEFT JOIN batchgroups ON (proposals.batchgroup = batchgroups.id)'''
@@ -355,6 +356,7 @@ def scored_proposals():
     nominations = Counter()
     titles = {v.proposal:v.title for v in votes}
     batchgroups = {v.proposal:v.batchgroup for v in votes}
+    batch_ids = {v.proposal:v.batch_id for v in votes}
     for v in votes:
         scores[v.proposal].extend(v.scores.values())
         if v.nominate:
@@ -368,6 +370,7 @@ def scored_proposals():
             'nom_is_green':_score_weight_average(nom_green[k]),
             'greenness':int(100*sum(greenness[k])/len(greenness[k])),
         'nominations': nominations[k], 'title':titles[k],
+        'batch_id': batch_ids[k],
         'batchgroup':batchgroups[k]}
                     for k,v in scores.items()]
     rv.sort(key=lambda x:-x['nom_is_green'])

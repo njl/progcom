@@ -17,29 +17,35 @@
             <th data-column="title">Proposal</th>
             <th data-column="batchgroup">Batch Group</th>
             <th data-column="auto_group">Auto Group</th>
-            <th data-column="score" data-invert="1">Rough Score</th>
-            <th data-column="nom_is_green" data-invert="1">Nomination
+            <th data-column="score" data-reverse="1">Rough Score</th>
+            <th data-column="nom_is_green" data-reverse="1">Nomination
                                             Green Equivalent</th>
-            <th data-column="greenness" data-invert="1">Green Percent</th>
-            <th data-column="delta" data-invert="1">Score Delta</th>
-            <th data-column="nominations" data-invert="1">Nominations</th>
+            <th data-column="greenness" data-reverse="1">Green Percent</th>
+            <th data-column="delta" data-reverse="1">Score Delta</th>
+            <th data-column="nominations" data-reverse="1">Nominations</th>
+            <th data-column="consensus" data-reverse="1">Consensus</th>
         </tr></thead>
     <tbody id="table-body">
     </tbody>
 </table>
 <script type="underscore/template" id="table_row">
-<tr <% if (nom_is_green >= 80 || greenness >= 70 || nominations >= 3){ %>
+<tr <% if (e.nom_is_green >= 80 || e.greenness >= 70 || e.nominations >= 3){ %>
         class="success"
     <% } %> >
-        <td><%=rank+1%></td>
-        <td><a href="/screening/<%=id%>/"><%=title%></a></td>
-        <td class="batchgroup" data-id="<%=id%>"><%=batchgroup%></td>
-        <td><%=auto_group%></td>
-        <td><%=score%></td>
-        <td><%=nom_is_green%></td>
-        <td><%=greenness%></td>
-        <td><%=delta%></td>
-        <td><%=nominations%></td>
+        <td><%=e.rank+1%></td>
+        <td><a href="/screening/<%=e.id%>/"><%=e.title%></a> (#<%=e.id%>) </td>
+        <td class="batchgroup" data-id="<%=e.id%>"><%=e.batchgroup%></td>
+        <td><%=e.auto_group%></td>
+        <td><%=e.score%></td>
+        <td><%=e.nom_is_green%></td>
+        <td><%=e.greenness%></td>
+        <td><%=e.delta%></td>
+        <td><%=e.nominations%></td>
+        <td> 
+            <% if(e.consensus >= 0){ %>
+                <%=e.consensus%>
+            <% } %>
+        </td>
     </tr>
 </script>
 {%endblock body%}
@@ -60,38 +66,6 @@
 var proposals = {{proposals|tojson}};
 
 var groups = {{groups|tojson}};
-
-function render_proposals(){
-    var new_body = "";
-    _.each(proposals, function(p){
-        new_body += TEMPLATES.table_row(p);
-    });
-    $('#table-body').html(new_body);
-}
-
-function handle_click(ev){
-    var $this = $(this);
-    $this.siblings().removeClass('success');
-    if($this.hasClass('success')){
-        proposals = proposals.reverse();
-    }else{
-        var column = $this.data().column;
-        var sort_func = function(x){
-            var val = x[column];
-            if(val){
-                return val;
-            }else{
-                return 'ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ'
-            }
-        }
-        proposals = _.sortBy(proposals, sort_func);
-        if($this.data().invert){
-            proposals = proposals.reverse();
-        }
-        $this.addClass('success');
-    }
-    render_proposals();
-};
 
 function handle_batch_click(ev){
     var $this = $(this);
@@ -140,17 +114,17 @@ function get_groups(ev){
         for(var i=0;i<proposals.length;++i){
             proposals[i].auto_group = data.data[proposals[i].id];
         }
-        render_proposals();
+        $('table').trigger('rerender');
     });
 }
 
 $(document).ready(function(){
-        render_proposals();
-        $('thead th').on('click', handle_click);
-        $('tbody').on('click', '.batchgroup', handle_batch_click);
-        $('tbody').on('change', '.batchgroup select', handle_batch_change);
-        $('#add-group').on('submit', add_group);
-        $('#get-groups').on('click', get_groups);
+    table_sorter($('table'), proposals, TEMPLATES.table_row);
+    $('#get-groups').on('click', get_groups);
+    $('tbody').on('click', '.batchgroup', handle_batch_click);
+    $('tbody').on('change', '.batchgroup select', handle_batch_change);
+    $('thead th').on('click', handle_click);
+    $('#add-group').on('submit', add_group);
 });
 
 </script>

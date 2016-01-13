@@ -147,6 +147,7 @@ function table_sorter($table, data_src, row_template, extra_column_functions){
     }
 
     $table.find('thead th').on('click', handle_click);
+    $table.on('rerender', render);
     render();
 }
 
