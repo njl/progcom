@@ -130,9 +130,11 @@ function table_sorter($table, data_src, row_template, extra_column_functions){
             if(extra_column_functions[column]){
                 value_function = extra_column_functions[column]($this);
             }
-            data = _.sortBy(data, value_function);
-            if($this.data().reverse){
-                data = data.reverse();
+            if (column){
+                data = _.sortBy(data, value_function);
+                if($this.data().reverse){
+                    data = data.reverse();
+                }
             }
         }
         render();
@@ -141,7 +143,7 @@ function table_sorter($table, data_src, row_template, extra_column_functions){
     function render(){
         var result = '';
         for(var i=0; i < data.length; ++i){
-            result += row_template({e:data[i]});
+            result += row_template({e:data[i], index:i});
         }
         $body.html(result);
     }

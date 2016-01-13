@@ -6,6 +6,7 @@
             <th>Id</th>
             <th>Name</th>
             <th>Talk Count</th>
+            <th>Skip Consensus</th>
         </tr>
     </thead>
     <tbody>
@@ -14,6 +15,7 @@
             <td>{{g.id}}</td>
             <td class="name" data-id="{{g.id}}">{{g.name}}</td>
             <td>{{g.talk_count}}</td>
+            <td>{{g.skip_consensus}}</td>
         </tr>
         {% endfor %}
     </tbody>

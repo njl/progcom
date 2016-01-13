@@ -497,11 +497,16 @@ def vote_group(batchgroup, voter, accept):
     execute(q, [[accept, batchgroup, voter]])
 
 def raw_list_groups():
-    return fetchall('''SELECT batchgroups.*, 
+    rv = fetchall('''SELECT batchgroups.*, 
         (SELECT COUNT(*) FROM proposals
             WHERE proposals.batchgroup = batchgroups.id) AS talk_count
             FROM batchgroups
             ORDER BY lower(name)''')
+    rv = [x._asdict() for x in rv]
+    coverage = get_batch_coverage()
+    for g in rv:
+        g['skip_consensus'] = coverage.get(g['id'], {}).get(None)
+    return rv
 
 def get_batch_stats():
     q = 'SELECT batch, COUNT(id) FROM batchmessages GROUP BY batch'
@@ -588,6 +593,8 @@ def get_batch_coverage():
         if not vote.accept:
             groups[vote.batchgroup][None] += 1
         for id in vote.accept:
+            if id not in groups[vote.batchgroup]:
+                groups[vote.batchgroup][id] = 0
             groups[vote.batchgroup][id] += 1
 
     for bg, batch in groups.iteritems():

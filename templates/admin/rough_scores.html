@@ -13,7 +13,7 @@
 
 <table class="table table-striped table-compact">
     <thead>
-        <tr><th data-column="rank">Rank</th>
+        <tr><th>Rank</th>
             <th data-column="title">Proposal</th>
             <th data-column="batchgroup">Batch Group</th>
             <th data-column="auto_group">Auto Group</th>
@@ -32,7 +32,7 @@
 <tr <% if (e.nom_is_green >= 80 || e.greenness >= 70 || e.nominations >= 3){ %>
         class="success"
     <% } %> >
-        <td><%=e.rank+1%></td>
+        <td><%=index+1%></td>
         <td><a href="/screening/<%=e.id%>/"><%=e.title%></a> (#<%=e.id%>) </td>
         <td class="batchgroup" data-id="<%=e.id%>"><%=e.batchgroup%></td>
         <td><%=e.auto_group%></td>
