@@ -12,7 +12,8 @@ CREATE UNIQUE INDEX idx_users_email
 CREATE TABLE batchgroups (
     id              BIGSERIAL PRIMARY KEY,
     name            VARCHAR(254),
-    author_emails   VARCHAR(254)[]
+    author_emails   VARCHAR(254)[],
+    locked          BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE proposals (

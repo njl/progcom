@@ -515,6 +515,9 @@ def raw_list_groups():
     coverage = get_batch_coverage()
     for g in rv:
         g['skip_consensus'] = coverage.get(g['id'], {}).get(None)
+        items = [v for k,v in coverage.get(g['id'], {}).items()
+                                            if k != None and v != 0]
+        g['talk_consensus'] = sorted(items, reverse=True)
     return rv
 
 def get_batch_stats():
