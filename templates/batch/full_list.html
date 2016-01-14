@@ -5,10 +5,11 @@
     <thead>
         <tr>
             <th data-column="batchgroup">Batch Group</th>
-            <th data-column="id">Id</th>
+            <th data-column="id" class="warning">Id</th>
             <th data-column="title">Title</th>
             <th data-column="author_names">Author Names</th>
-            <th data-column="progcom_member">Program Committee Member</th>
+            <th data-column="progcom_member" data-reverse="1">Program Committee Member</th>
+            <th data-column="accepted">Accepted</th>
         </tr>
     </thead>
     <tbody>
@@ -18,46 +19,37 @@
 {%block extrajs%}
 <script type="underscore/template" id="table_row">
     <tr>
-        <td><% if(batch_id){ %>
-            <a href="/batch/<%=batch_id%>/"><%=batchgroup%></a>
+        <td><% if(e.batch_id){ %>
+            <a href="/batch/<%=e.batch_id%>/"><%=e.batchgroup%></a>
             <% } %>
             </td>
-        <td><%=id%></td>
-        <td><a href="<%=id%>/"><%=title%></a></td>
-        <td><%=author_names%></td>
-        <td><%=progcom_member?"*":""%></td>
+        <td><%=e.id%></td>
+        <td><a href="<%=e.id%>/"><%=e.title%></a></td>
+        <td><%=e.author_names%></td>
+        <td>
+            <% if(e.progcom_member){ %>
+                <span class="glyphicon glyphicon-asterisk"></span>
+            <% } %>
+        <td>
+            <% if(e.accepted === null){ %>
+                Undecided
+            <% }else{ %>
+                <%=e.accepted?"Accepted":"Rejected"%>
+            <% } %>
+        </td>
     </tr>
 </script>
 <script type="text/javascript">
     var data = {{proposals|tojson}};
-    function render_table(){
-        var txt = "";
-        for(var i=0;i<data.length;++i){
-            txt += TEMPLATES.table_row(data[i]);
-        }
-        $('tbody').html(txt);
-    }
-    function resort(){
-        var $this = $(this),
-            column = $this.data().column;
-        data = _.sortBy(data, function(x){
-                if(x[column] === ""){
-                    return 'ZZZZZZZZZZZZZZZZ';
-                }
-                return x[column];
-        });
-        if($this.hasClass('success')){
-            $this.addClass('warning').removeClass('success');
-            data = data.reverse();
-        }else{
-            $this.addClass('success').removeClass('warning');
-        }
-        $this.siblings().removeClass('success warning');
-        render_table();
-    }
     $(document).ready(function(){
-            render_table();
-            $('thead th').on('click', resort);
+        table_sorter($('table'), data, TEMPLATES.table_row,
+                {accepted: function(){
+                    return function(e){
+                    if(e.accepted === null){
+                        return 0;
+                    }
+                    return e.accepted?-1:1;
+                    }}});
     });
 </script>
 {%endblock%}

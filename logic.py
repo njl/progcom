@@ -470,14 +470,15 @@ def toggle_lock_batch(id, lock):
     execute(q, lock, id)
 
 def full_proposal_list(email):
-    q = '''SELECT p.id, p.title, bg.id as batch_id,
+    q = '''SELECT p.id, p.title, bg.id as batch_id, p.accepted,
             array_to_string(p.author_names, ', ') AS author_names,
             COALESCE(bg.name, '') AS batchgroup,
             EXISTS (SELECT 1 FROM users
                     WHERE users.email = ANY(p.author_emails)) as progcom_member
             FROM proposals AS p 
             LEFT JOIN batchgroups AS bg ON (p.batchgroup = bg.id)
-            WHERE NOT (%s = ANY(p.author_emails))'''
+            WHERE NOT (%s = ANY(p.author_emails))
+            ORDER BY p.id'''
     return fetchall(q, email)
 
 def create_group(name, proposals):
