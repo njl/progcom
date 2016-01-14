@@ -16,6 +16,7 @@
             <th data-column="nominated_talks">Talks Nominated</th>
             <th data-column="nominations">Total Nominations</th>
             <th data-column="consensus">Consensus</th>
+            <th data-column="locked" data-reverse="1">Locked</th>
         </tr>
     </thead>
     <tbody>
@@ -41,6 +42,10 @@
     <td><%=e.nominated_talks%></td>
     <td><%=e.nominations%></td>
     <td><%=e.consensus%></td>
+    <td>
+        <% if(e.locked){ %>
+            <span class="glyphicon glyphicon-lock"></span>
+        <% } %>
 </tr>
 </script>
 {%endblock%}
