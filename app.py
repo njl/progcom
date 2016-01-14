@@ -328,7 +328,7 @@ def batch_view(id):
 @app.route('/batch/<int:id>/vote/', methods=['POST'])
 def batch_vote(id):
     group = l.get_group(id)
-    if request.user.email in group.author_emails:
+    if request.user.email in group.author_emails or group.locked:
         abort(404)
 
     accept = request.values.getlist('accept', int)
@@ -339,7 +339,7 @@ def batch_vote(id):
 @app.route('/batch/<int:id>/comment/', methods=['POST'])
 def batch_discussion(id):
     group = l.get_group(id)
-    if request.user.email in group.author_emails:
+    if request.user.email in group.author_emails or group.locked:
         abort(404)
     l.add_batch_message(request.user.id, id, request.values.get('comment'))
     return render_template('batch/batch_discussion_snippet.html',

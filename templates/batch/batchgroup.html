@@ -4,7 +4,9 @@
 
 {%block body %}
 <h1>Group: {{group.name}}</h1>
-
+{% if group.locked %}
+<h4>This Group is Locked <span class="glyphicon glyphicon-lock"></span></h4>
+{% endif%}
 <div class="col-md-12" style="margin-bottom:1em;">
         <ul class="nav nav-pills nav-justified" id="proposal-tabs">
             {% for p in proposals %}
@@ -81,6 +83,7 @@
             </div>
             {% endif %}
 
+            {% if not group.locked %}
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Select Talks</h3>
@@ -122,9 +125,11 @@
                 </div>
                 </form>
             </div>
+            {%endif%}
     
-    {{br.batch_discussion(msgs)}}
-            {% if vote %}
+    {{br.batch_discussion(msgs, group.locked)}}
+
+            {% if vote or group.locked %}
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Votes</h3>
