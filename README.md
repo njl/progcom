@@ -33,7 +33,7 @@ up Postgresql, I've included `setup_db.sql` for you. Getting to the point where
 you're able to execute those commands is going to depend on your system. If
 you're on a Ubuntu-like system, and you've installed postgresql via something
 like `apt-get install postgresql`, you can probably run the `psql` command via
-something like `sudo -U postgres psql`. On OSX, if you've installed postgresql
+something like `sudo -u postgres psql`. On OSX, if you've installed postgresql
 via brew, with something like `brew install postgresql`, you can probably just
 type `psql`.
 
