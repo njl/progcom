@@ -36,9 +36,8 @@
       - template: src=deployment/nginx.conf dest=/etc/nginx/sites-enabled/default
         notify: restart nginx
       - lineinfile: dest=/etc/postgresql/9.3/main/pg_hba.conf
-                    regexp="^local.*all.*all.*peer"
                     line="local   all             all                                     md5"
-  #      notify: restart postgresql
+        notify: restart postgresql
 
     #Repo
       - file: path=/opt/progcom state=directory owner=n group=n
