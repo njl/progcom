@@ -4,7 +4,7 @@
 <div class="progress" title="You have voted on {{percent}}% of the batches!">
     <div class="progress-bar" style="width: {{percent}}%;">{{percent}}%</div>
 </div>
-<table class="table table-hover table-striped table-condensed">
+<table class="table table-hover table-bordered table-condensed">
     <thead>
         <tr>
             <th colspan="2" data-column="name" class="warning">Name</th>
@@ -23,7 +23,7 @@
     </tbody>
 </table>
 <script type="underscore/template" id="table_row">
-<tr>
+<tr <%=e.locked?'class="active"':''%>>
     <th><%=e.id%></th>
     <td><a href="<%=e.id%>/"><%=e.name%></a></td>
     <% if(e.voted){ %>
@@ -36,12 +36,12 @@
             <span class="glyphicon glyphicon-envelope"></span>
         <% } %>
     </td>
-    <td><%=e.proposals%></td>
-    <td><%=e.voters%></td>
-    <td><%=e.msgs%></td>
-    <td><%=e.nominated_talks%></td>
-    <td><%=e.nominations%></td>
-    <td><%=e.consensus%></td>
+    <td class="text-right"><%=e.proposals%></td>
+    <td class="text-right"><%=e.voters%></td>
+    <td class="text-right"><%=e.msgs%></td>
+    <td class="text-right"><%=e.nominated_talks%></td>
+    <td class="text-right"><%=e.nominations%></td>
+    <td class="text-right"><%=e.consensus%>%</td>
     <td>
         <% if(e.locked){ %>
             <span class="glyphicon glyphicon-lock"></span>

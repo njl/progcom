@@ -37,6 +37,8 @@
         notify: restart nginx
       - lineinfile: dest=/etc/postgresql/9.3/main/pg_hba.conf
                     line="local   all             all                                     md5"
+                    regexp="local\s+all\s+all\s+peer"
+                    state=present
         notify: restart postgresql
 
     #Repo

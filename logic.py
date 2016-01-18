@@ -569,7 +569,7 @@ def list_groups(userid):
             LEFT JOIN batchvotes as tv 
             ON (tg.id=tv.batchgroup AND tv.voter = %s)
             WHERE NOT (%s = ANY(author_emails))
-            ORDER BY tg.name'''
+            ORDER BY tg.locked, tg.name'''
     return [x for x in fetchall(q, userid, user.email) if x.count]
 
 def get_group(batchgroup):
