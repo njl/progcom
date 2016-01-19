@@ -26,6 +26,13 @@
         <div class="tab-content">
             {% for p in proposals %}
             <div role="tabpanel" class="tab-pane" id="proposal-{{p.proposal.id}}">
+                {%if p.proposal.accepted != None %}
+                    {%if p.proposal.accepted%}
+                    <div class="alert alert-success">This talk has been accepted.</div>
+                    {%else%}
+                    <div class="alert alert-warning">This talk has been declined.</div>
+                    {%endif%}
+                {%endif%}
                 {%if p.voters and vote%}
                 <h4>Nominated by {{p.voters}}</h4>
                 {%endif%}
