@@ -15,6 +15,12 @@
                     {% if p.proposal.count and vote %}
                     <span class="badge">{{p.proposal.count}} nominations</span>
                     {%endif%}
+                    {% if p.proposal.accepted %}
+                    <span class="label label-success">Accepted</span>
+                    {% endif %}
+                    {% if p.proposal.accepted == False %}
+                    <span class="label label-danger">Declined</span>
+                    {% endif %}
                 </a>
             </li>
             {% endfor %}
@@ -78,6 +84,32 @@
     </script>
 
     <div class="col-md-4" id="batch-right-column">
+
+            {% if request.user.email in config.ADMIN_EMAILS%}
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Accept/Decline Talks</h3>
+                </div>
+                <table class="table table-striped">
+                    <tbody>
+                    {% for p in proposals %}
+                    <tr>
+                        <th>{{p.proposal.title}}</th>
+                        <td>
+                            <select class="acceptance" data-id="{{p.proposal.id}}">
+                                {% with accepted = p.proposal.accepted %}
+                                <option {%if accepted%}selected="selected"{%endif%}>Accepted</option>
+                                <option {%if not accepted and accepted == False%}selected="selected"{%endif%}>Declined</option>
+                                <option {%if accepted == None%}selected="selected"{%endif%}>Undecided</option>
+                                {% endwith %}
+                            </select>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
 
             {% if group.progcom_members %}
             <div class="panel panel-warning">
@@ -167,10 +199,23 @@
 
     </div><!--end side column-->
 </div>
-
 <script>
 var TALKS = {{basics|tojson}};
 var VOTE = {{vote|tojson}};
 </script>
-
 {%endblock body%}
+
+{%block extrajs%}
+<script>
+
+function send_acceptance_change(ev){
+    var $this = $(this),
+        args = {'Declined': {'accepted':'false'}, 'Undecided':{},
+            'Accepted': {'accepted':'true'}}[$this.val()];
+    $.post('/admin/talk/'+$this.data().id+'/status/', args);
+}
+$(document).ready(function(){
+    $('.acceptance').on('change', send_acceptance_change);
+});
+</script>
+{%endblock%}

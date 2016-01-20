@@ -659,6 +659,9 @@ def get_my_pycon(user):
                         'consensus': coverage[v.batchgroup][None]})
     return rv
 
+def change_acceptance(id, acceptance):
+    q = 'UPDATE proposals SET accepted=%s WHERE id=%s'
+    execute(q, acceptance, id)
 
 """
 Batch Discussion (this is just easier)
