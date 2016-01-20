@@ -9,6 +9,7 @@
             <th data-column="title">Title</th>
             <th data-column="author_names">Author Names</th>
             <th data-column="consensus">Proposal Consensus</th>
+            <th data-column="accepted">Accepted</th>
         </tr>
     </thead>
     <tbody>
@@ -24,6 +25,13 @@
         <td><a href="/batch/<%=e.batch_id%>/"><%=e.title%></a></td>
         <td><%=e.author_names%></td>
         <td><%=e.consensus%></td>
+        <td><%if(e.accepted === null){ %>
+                Undecided
+            <% }else if(e.accepted){ %>
+                Accepted
+            <% }else{ %>
+                Declined
+            <% } %>
     </tr>
 </script>
 <script type="text/javascript">

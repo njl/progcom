@@ -631,7 +631,8 @@ def get_my_pycon(user):
     votes = fetchall(q, user)
 
     q = '''SELECT title, id,
-            array_to_string(author_names, ', ') AS author_names
+            array_to_string(author_names, ', ') AS author_names,
+            accepted
             FROM proposals WHERE batchgroup IS NOT NULL'''
     proposals = {row.id:row for row in fetchall(q)}
 
@@ -649,6 +650,7 @@ def get_my_pycon(user):
                             'id':p,
                             'title': proposals[p].title,
                             'author_names':proposals[p].author_names,
+                            'accepted': proposals[p].accepted,
                             'consensus':coverage[v.batchgroup][p]})
         else:
             rv.append({'batch_id':v.batchgroup,
