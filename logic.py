@@ -479,7 +479,14 @@ def full_proposal_list(email):
             LEFT JOIN batchgroups AS bg ON (p.batchgroup = bg.id)
             WHERE NOT (%s = ANY(p.author_emails))
             ORDER BY p.id'''
-    return fetchall(q, email)
+    raw = [x._asdict() for x in fetchall(q, email)]
+    batch = get_batch_coverage()
+    for proposal in raw:
+        if not proposal['batch_id']:
+            proposal['consensus'] = -1
+            continue
+        proposal['consensus'] = batch[proposal['batch_id']][proposal['id']]
+    return raw
 
 def create_group(name, proposals):
     q = 'INSERT INTO batchgroups (name) VALUES (%s) RETURNING id'

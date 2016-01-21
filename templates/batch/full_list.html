@@ -8,8 +8,9 @@
             <th data-column="id" class="warning">Id</th>
             <th data-column="title">Title</th>
             <th data-column="author_names">Author Names</th>
-            <th data-column="progcom_member" data-reverse="1">Program Committee Member</th>
+            <th data-column="progcom_member">Program Committee Member</th>
             <th data-column="accepted">Accepted</th>
+            <th data-column="consensus" data-reverse="1">Consensus</th>
         </tr>
     </thead>
     <tbody>
@@ -35,6 +36,11 @@
                 Undecided
             <% }else{ %>
                 <%=e.accepted?"Accepted":"Declined"%>
+            <% } %>
+        </td>
+        <td>
+            <% if(e.consensus >= 0){ %>
+                <%=e.consensus%>%
             <% } %>
         </td>
     </tr>
