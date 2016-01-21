@@ -12,7 +12,7 @@
             {% for p in proposals %}
             <li>
             <a href="#proposal-{{p.proposal.id}}">{{p.proposal.title}} (#{{p.proposal.id}})
-                    {% if p.proposal.count and vote %}
+                    {% if p.proposal.count and (vote or request.user.email in config.OBSERVER_EMAILS) %}
                     <span class="badge">{{p.proposal.count}} nominations</span>
                     {%endif%}
                     {% if p.proposal.accepted %}
@@ -39,7 +39,8 @@
                     <div class="alert alert-warning">This talk has been declined.</div>
                     {%endif%}
                 {%endif%}
-                {%if p.voters and vote%}
+                {%if p.voters 
+                    and (vote or request.user.email in config.OBSERVER_EMAILS) %}
                 <h4>Nominated by {{p.voters}}</h4>
                 {%endif%}
                 {{pr.proposal_render(p.proposal)}}
@@ -122,6 +123,9 @@
             </div>
             {% endif %}
 
+            {% if request.user.email in config.OBSERVER_EMAILS %}
+            <h4>Voting disabled for observers.</h4>
+            {% else %}
             {% if not group.locked %}
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -165,6 +169,7 @@
                 </form>
             </div>
             {%endif%}
+        {%endif%}
     
     {{br.batch_discussion(msgs, group.locked)}}
 

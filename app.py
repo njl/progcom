@@ -35,6 +35,9 @@ app.config.CUTOFF_FEEDBACK = CUTOFF_FEEDBACK
 _ADMIN_EMAILS = set(json.loads(os.environ['ADMIN_EMAILS']))
 app.config.ADMIN_EMAILS = _ADMIN_EMAILS
 
+_OBSERVER_EMAILS = set(json.loads(os.environ['OBSERVER_EMAILS']))
+app.config.OBSERVER_EMAILS = _OBSERVER_EMAILS
+
 if THIS_IS_BATCH:
     print 'THIS IS BATCH'
 else:
