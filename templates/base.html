@@ -59,7 +59,7 @@
                     <li><a href="{{url_for("full_list")}}">Full Proposal List</a></li>
                 {% endif %}
                     {% if request.user.email in config.ADMIN_EMAILS %}
-                    <li><a href="{{url_for("admin_menu")}}">Admin</a></li>
+                    <li><a href="{{url_for("admin.admin_menu")}}">Admin</a></li>
                     {% endif %}
                 </ul>
                 <ul class="nav navbar-nav navbar-right">

@@ -122,7 +122,7 @@ function handle_batch_change(ev){
 function add_group(ev){
     ev.preventDefault();
     var $input = $(this).find('input');
-    $.post('{{url_for('add_batchgroup')}}', {'name':$input.val()},
+    $.post('{{url_for('admin.add_batchgroup')}}', {'name':$input.val()},
             null, 'json').then(function(resp){
         $input.val('');
         groups = resp.groups;
