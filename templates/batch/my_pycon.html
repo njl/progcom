@@ -29,7 +29,7 @@
                 Undecided
             <% }else if(e.accepted){ %>
                 Accepted
-            <% }else{ %>
+            <% }else if(e.accepted == false){ %>
                 Declined
             <% } %>
     </tr>
@@ -43,8 +43,11 @@
                     return -1;
                 }else if(e.accepted === false){
                     return 0;
+                }else if(e.accepted === null){
+                    return 1;
+                }else{
+                    return 2;
                 }
-                return 1;
             }
         }})
     });
