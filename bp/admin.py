@@ -88,3 +88,13 @@ def rough_scores():
     return render_template('admin/rough_scores.html',
                             proposals=proposals,
                             groups=l.raw_list_groups())
+
+
+@app.route('/talk/<int:id>/status/', methods=['POST'])
+def set_status(id):
+    accepted = request.values.get('accepted', None)
+    if accepted != None:
+        accepted = (accepted == 'true')
+    l.l('set_accepted_status', id=id, uid=request.user.id, accepted=accepted)
+    l.change_acceptance(id, accepted)
+    return jsonify(accepted=accepted)
