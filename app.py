@@ -234,7 +234,10 @@ def batch_view(id):
         clean_prop['voters_count'] = len(voters)
         proposals.append(clean_prop)
     proposal_map = {x.id:x for x in raw_proposals}
-    random.shuffle(proposals)
+    if group.locked:
+        proposals.sort(key=lambda x:-x['voters_count'])
+    else:
+        random.shuffle(proposals)
     basics = {x['proposal'].id:x['proposal'].title for x in proposals}
     vote = l.get_batch_vote(id, request.user.id)
     msgs = l.get_batch_messages(id)
