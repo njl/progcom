@@ -90,7 +90,7 @@ def rough_scores():
                             groups=l.raw_list_groups())
 
 
-@app.route('/talk/<int:id>/status/', methods=['POST'])
+@bp.route('/talk/<int:id>/status/', methods=['POST'])
 def set_status(id):
     accepted = request.values.get('accepted', None)
     if accepted != None:
