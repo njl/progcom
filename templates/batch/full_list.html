@@ -1,7 +1,7 @@
 {%extends "base.html"%}
 {%block body %}
 <h4>Batch Review Groups</h4>
-<table class="table table-hover">
+<table class="table table-hover table-condensed">
     <thead>
         <tr>
             <th data-column="batchgroup">Batch Group</th>
@@ -19,7 +19,7 @@
 {%endblock body%}
 {%block extrajs%}
 <script type="underscore/template" id="table_row">
-    <tr>
+<tr <%if(e.accepted){ %>class="success"<% }else if(e.accepted === false){ %>class="active" <% } %>   >
         <td><% if(e.batch_id){ %>
             <a href="/batch/<%=e.batch_id%>/"><%=e.batchgroup%></a>
             <% } %>
