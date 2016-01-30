@@ -222,6 +222,8 @@ def full_list():
 def batch_view(id):
     l.l('batch_view', uid=request.user.id, gid=id)
     group = l.get_group(id)
+    if not group:
+        abort(404)
     if request.user.email in group.author_emails:
         abort(404)
     raw_proposals = l.get_group_proposals(id)
