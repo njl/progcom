@@ -1,0 +1,115 @@
+{%extends "base.html"%}
+
+
+{%block body %}
+
+{% for day, rooms in schedule|groupby('day') %}
+    <h1>Day {{day+1}}</h1>
+    <div class="row">
+    {% for room, blocks in rooms|groupby('room') %}
+        {% with %}
+            {% set minimum = blocks[0].time|minutes %}
+            {% set maximum = blocks[-1].time|minutes %}
+            <div class="col-md-2" style="height: {{54+3*(maximum-minimum+30)}}px;">
+                <h3>Room {{room}}</h3>
+            {% for block in blocks %}
+            <div style="top:{{54+3*(block.time|minutes - minimum)}}px;
+                height:{{3*block.given_duration - 2}}px;"
+                 class="schedule-block" data-slot="{{block.schedule_id}}">
+                <div class="block-header">
+                    <div class="block-when">{{block.time.isoformat()[:5]}}</div>
+                    <div class="block-duration">{{block.given_duration}} Minutes</div>
+                </div>
+                <div class="block-body"
+                    {%if block.proposal_id%}data-proposal="{{block.proposal_id}}"
+                        {%endif%}>
+                </div>
+            </div>
+            {% endfor %}
+        {%endwith%}
+        </div>
+    {% endfor%}
+    </div>
+{% endfor %}
+
+<div id="available" class="list-group">
+</div>
+
+{%endblock%}
+
+{%block extrajs %}
+<script type="underscore/template" id="available_talk">
+    <a class="list-group-item" data-id="<%=e.id%>">
+        <h4 class="list-group-item-heading">#<%=e.id%> <%=e.title%></h4>
+        <p class="list-group-item-text">
+        <strong><%=e.bg_name%></strong><br>
+        <em><%=e.author_names%></em></p>
+    </a>
+</script>
+<script type="underscore/template" id="slot_body">
+<strong>#<%=e.id%> <%=e.title%></strong><br>
+    <em><%=e.author_names%></em>
+</script>
+
+<script>
+var accepted = {{talks|tojson}};
+
+function render_inline(){
+    $('.block-body').each(function(){
+        var $this = $(this),
+            proposal = $this.data().proposal;
+        if(!proposal){
+            $this.html('Available');
+            return;
+        }
+        proposal = _.filter(accepted, function(x){return x.id == proposal})[0];
+        $this.html(TEMPLATES.slot_body({e:proposal}));
+    });
+}
+
+function render_available(){
+    var txt="",
+    taken = {};
+    $('.block-body').each(function(){
+        var data = $(this).data();
+        if(data.proposal){
+            taken[data.proposal] = true;
+        }
+    });
+    console.log(taken);
+    _.each(_.filter(accepted, function(x){return !taken[x.id];}),
+            function(e){
+                txt += TEMPLATES.available_talk({e:e});
+            });
+    $('#available').html(txt);
+}
+
+function available_click(ev){
+    ev.preventDefault();
+    $('#available .list-group-item-success').removeClass('list-group-item-success');
+    $(this).addClass('list-group-item-success');
+}
+
+function schedule_block_click(ev){
+    ev.preventDefault();
+    var $this = $(this),
+        slot = $this.data().slot,
+        data = $('#available .list-group-item-success').data(),
+        proposal = data?data.id:null;
+    if(proposal){
+        $.post('/admin/schedule/', {slot:slot, proposal:proposal}).then(function(){
+            $this.find('.block-body').data('proposal', proposal);
+            render_inline();
+            render_available();
+        });
+    }
+}
+
+$(document).ready(function(){
+    $('.schedule-block').on('click', schedule_block_click);
+    $('#available').on('click', 'a', available_click);
+    render_available();
+    render_inline();
+});
+</script>
+{%endblock%}

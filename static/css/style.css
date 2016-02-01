@@ -16,3 +16,36 @@
 #accept li:hover {
     background-color: #e0ffe0;
 }
+
+.schedule-block {
+    border: 1px solid #bbb;
+    position: absolute;
+    width:95%;
+    margin-right:5%;
+    background:rgba(200,200,200,0.3);
+}
+
+.block-header {
+    display:flex;
+    justify-content: space-between;
+    width:100%;
+    padding: 3px 5%;
+    background-color: #BBB;
+    font-weight: bold;
+}
+
+.block-body {
+    width:100%;
+    padding 1px 5%;
+    font-size: 80%;
+}
+
+#available {
+    position: fixed;
+    right:0;
+    width:20%;
+    height: 30%;
+    top: 69%;
+    overflow-y: scroll;
+    background: rgba(0,0,0,0.3);
+}

@@ -89,7 +89,6 @@ def rough_scores():
                             proposals=proposals,
                             groups=l.raw_list_groups())
 
-
 @bp.route('/talk/<int:id>/status/', methods=['POST'])
 def set_status(id):
     accepted = request.values.get('accepted', None)
@@ -98,3 +97,14 @@ def set_status(id):
     l.l('set_accepted_status', id=id, uid=request.user.id, accepted=accepted)
     l.change_acceptance(id, accepted)
     return jsonify(accepted=accepted)
+
+@bp.route('/schedule/')
+def view_schedule():
+    return render_template('admin/schedule.html', schedule=l.get_schedule(),
+                            talks=l.get_accepted())
+
+@bp.route('/schedule/', methods=['POST'])
+def adjust_schedule():
+    l.set_schedule(request.values.get('proposal'),
+                        request.values.get('slot'))
+    return jsonify(ok='ok')

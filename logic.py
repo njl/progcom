@@ -949,3 +949,59 @@ def get_proposals_auto_grouped(topics_count=100, threshold=.5):
             rv[x] = n
 
     return rv
+
+
+"""
+Schedule
+"""
+
+def get_schedule():
+    q = '''SELECT schedules.proposal, schedules.day,
+                    schedules.room, schedules.time,
+                    schedules.duration as given_duration,
+                    schedules.id as schedule_id,
+                    batchgroups.name AS bg_name,
+                    proposals.title,
+                    proposals.id AS proposal_id,
+                    array_to_string(proposals.author_names, ', ') AS author_names
+            FROM schedules 
+            LEFT JOIN proposals
+                ON (proposals.id = schedules.proposal)
+            LEFT JOIN batchgroups
+                ON (batchgroups.id = proposals.batchgroup)
+            ORDER BY day, room, time'''
+    rv = fetchall(q)
+    if not rv:
+        build_schedule()
+        rv = fetchall(q)
+    return rv
+
+_ROOMS = json.loads(os.environ['ROOMS'])
+_ROOM_SCHEDULES = json.loads(os.environ['ROOM_SCHEDULES'])
+
+def build_schedule():
+    q = '''INSERT INTO schedules (day, room, time, duration)
+            VALUES (%s, %s, %s, %s)'''
+    for room, room_type in _ROOMS.items():
+        schedule = _ROOM_SCHEDULES[str(room_type)]
+        for day, slots in enumerate(schedule):
+            for when, length in slots.items():
+                execute(q, day, room, when, length)
+
+def set_schedule(proposal, slot):
+    q = '''BEGIN;
+            UPDATE schedules SET proposal=NULL WHERE proposal=%s;
+            UPDATE schedules SET proposal=%s WHERE id=%s;
+           COMMIT;'''
+    execute(q, proposal, proposal, slot)
+
+def get_accepted():
+    q = '''SELECT p.id, title,
+            array_to_string(author_names, ', ') AS author_names,
+            bg.name AS bg_name
+            FROM proposals AS p
+                JOIN batchgroups AS bg
+                    ON (p.batchgroup = bg.id)
+                WHERE p.accepted
+            ORDER BY bg_name'''
+    return fetchall(q)

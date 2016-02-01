@@ -49,6 +49,9 @@ def date_filter(d):
         return ''
     return d.strftime('%B %-d, %-I:%M %p')
 
+@app.template_filter('minutes')
+def time_to_minutes(d):
+    return d.hour*60+d.minute
 
 def set_nofollow(attrs, new=False):
     attrs['target'] = '_blank'

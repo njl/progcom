@@ -16,6 +16,7 @@ CREATE TABLE batchgroups (
     locked          BOOLEAN DEFAULT FALSE
 );
 
+
 CREATE TABLE proposals (
     id                      BIGINT PRIMARY KEY,
     updated                 TIMESTAMP WITH TIME ZONE DEFAULT now(),
@@ -42,6 +43,18 @@ CREATE TABLE proposals (
     recording_release       BOOLEAN,
     accepted                BOOLEAN DEFAULT NULL
 );
+
+CREATE TABLE schedules (
+    id          BIGSERIAL PRIMARY KEY,
+    proposal    BIGINT REFERENCES proposals UNIQUE DEFAULT NULL,
+    day         INT,
+    room        VARCHAR(32),
+    time        TIME,
+    duration    INT
+);
+
+CREATE UNIQUE INDEX idx_schedules
+    ON schedules (day, room, time);
 
 DROP AGGREGATE IF EXISTS email_aggregate(VARCHAR(254)[]);
 CREATE AGGREGATE email_aggregate (basetype = VARCHAR(254)[],
