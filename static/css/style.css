@@ -43,9 +43,9 @@
 #available {
     position: fixed;
     right:0;
-    width:20%;
-    height: 30%;
-    top: 69%;
+    width:25%;
+    height: 50%;
+    top: 49%;
     overflow-y: scroll;
-    background: rgba(0,0,0,0.3);
+    opacity: 0.9;
 }

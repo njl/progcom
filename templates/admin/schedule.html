@@ -40,10 +40,9 @@
 {%block extrajs %}
 <script type="underscore/template" id="available_talk">
     <a class="list-group-item" data-id="<%=e.id%>">
-        <h4 class="list-group-item-heading">#<%=e.id%> <%=e.title%></h4>
-        <p class="list-group-item-text">
-        <strong><%=e.bg_name%></strong><br>
-        <em><%=e.author_names%></em></p><br>
+        <strong>#<%=e.id%> <%=e.title%><br>
+        <%=e.bg_name%></strong><br>
+        <em><%=e.author_names%></em><br>
         <%=e.duration%>
     </a>
 </script>
