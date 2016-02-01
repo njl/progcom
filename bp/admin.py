@@ -101,7 +101,7 @@ def set_status(id):
 @bp.route('/schedule/')
 def view_schedule():
     return render_template('admin/schedule.html', schedule=l.get_schedule(),
-                            talks=l.get_accepted())
+                            talks=l.get_accepted(), read_only=False)
 
 @bp.route('/schedule/', methods=['POST'])
 def adjust_schedule():

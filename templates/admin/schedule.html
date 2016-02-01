@@ -53,6 +53,7 @@
 
 <script>
 var accepted = {{talks|tojson}};
+var read_only = {{read_only|tojson}};
 
 function render_inline(){
     $('.block-body').each(function(){
@@ -106,6 +107,11 @@ function schedule_block_click(ev){
 }
 
 $(document).ready(function(){
+    if(read_only){
+        $('#available').hide();
+        render_inline();
+        return;
+    }
     $('.schedule-block').on('click', schedule_block_click);
     $('#available').on('click', 'a', available_click);
     render_available();
