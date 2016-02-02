@@ -437,11 +437,8 @@ Observer View
 
 @app.route('/schedule/')
 def view_schedule():
-    email = request.user.email
-    if email in _OBSERVER_EMAILS or email in _ADMIN_EMAILS:
-        return render_template('admin/schedule.html', schedule=l.get_schedule(),
+    return render_template('admin/schedule.html', schedule=l.get_schedule(),
                                 talks=l.get_accepted(), read_only=True)
-    abort(404)
 """
 Default Action
 """
