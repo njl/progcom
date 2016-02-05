@@ -1,17 +1,18 @@
 Dear {{name}},
 
-I'm very pleased to tell you that your talk,
+Congratulations! Your talk,
 "{{title}}"
-has been accepted to PyCon 2016! Congratulations!
+has been accepted to PyCon 2016!
 
 Please read through this email carefully for your next steps.
 
-The version of your talk that was approved by the committee is
-visible here, {{url}} .
+The committee judged the version of your talk that was submitted by our
+deadline. You can see that version of your talk here,
+{{url}}
 
-Please review your proposal, and let me know if you have any changes
-you will need to make. Visiting that URL will also confirm for us that
-you have received this email.
+Visiting this link will confirm that you've received this email; please
+review your proposal. If you have any changes you need to make, please let
+me know.
 
 We'll be announcing the list of accepted talks shortly. If
 you can no longer give this talk, please contact me right away so I
@@ -23,8 +24,8 @@ you've been allocated a 30 or a 45 minute time slot. We'll be
 announcing the schedule shortly, so please stay tuned.
 
 If you have particular scheduling requirements (if you plan to come to
-PyCon late or leave early, for example), please let me know as soon as
-possible so that I can take your requirements into account.
+PyCon late or leave early, for example), please let me know today or
+tomorrow, so that I can take your requirements into account.
 
 You should register for the conference at
 https://us.pycon.org/2016/registration/
@@ -36,7 +37,7 @@ grassroots, community-organized conference and our core mission is to
 keep costs low. Thus, we ask everybody who can afford to pay to do so.
 However, we recognize that buying tickets and paying for travel can
 represent a financial hardship to some, and we really want to see you
-at PyCon! So, if you can't afford a ticket and/or travel expenses,
+at PyCon! If you can't afford a ticket and/or travel expenses,
 please apply for financial aid.
 
 More information about financial aid can be found at
