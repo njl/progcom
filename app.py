@@ -92,7 +92,8 @@ def security_check():
     if request.user:
         return
 
-    for prefix in ('/static', '/user', '/feedback'):
+    safe_prefixes = ('/static', '/user', '/feedback', '/confirmation')
+    for prefix in safe_prefixes:
         if path.startswith(prefix):
             return
 
@@ -439,6 +440,18 @@ Observer View
 def view_schedule():
     return render_template('admin/schedule.html', schedule=l.get_schedule(),
                                 talks=l.get_accepted(), read_only=True)
+
+"""
+Confirmation
+"""
+@app.route('/confirmation/<key>/')
+def confirmation(key):
+    id = l.acknowledge_confirmation(key)
+    if not id:
+        return render_template('bad_feedback_key.html')
+    return render_template('confirmation.html', proposal=l.get_proposal(id))
+
+
 """
 Default Action
 """

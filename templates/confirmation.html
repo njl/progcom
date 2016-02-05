@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/static/css/bootstrap-theme.min.css">
+    </head>
+    <body>
+
+
+{%import "proposal_render.html" as pr%}
+
+<div class="container">
+<h3>Congratulations!</h3>
+<p>Your proposal, listed below, was accepted to PyCon 2016! If you have any
+    questions, want to make any changes or updates to your title or abstract,
+    have scheduling requirements, or are unable to give your talk, please let me 
+    (<a href="mailto:njl@njl.us">njl@njl.us</a>) know as soon as possible!</p>
+<hr>
+{{pr.proposal_render(proposal, hidetimes=True)}}
+</div>
+    </body>
+</html>

@@ -156,3 +156,10 @@ CREATE TABLE batchunread (
     voter       BIGINT REFERENCES users,
     PRIMARY KEY (batch, voter)
 );
+
+CREATE TABLE confirmations (
+    id              BIGSERIAL PRIMARY KEY,
+    proposal        BIGINT REFERENCES proposals,
+    email           VARCHAR(254),
+    acknowledged    BOOLEAN DEFAULT NULL
+);

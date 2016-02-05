@@ -1006,3 +1006,57 @@ def get_accepted():
                 WHERE p.accepted
             ORDER BY bg_name'''
     return fetchall(q)
+
+"""
+Confirmation
+"""
+
+_CONFIRMATION_ITSD = itsdangerous.URLSafeSerializer(os.environ['ITSD_KEY'],
+                                                            salt='ack')
+
+def acknowledge_confirmation(s):
+    try:
+        id = _CONFIRMATION_ITSD.loads(s)
+    except:
+        l('failed_acknowledge_confirm', s=s)
+        return 0
+    q = '''UPDATE confirmations SET acknowledged = TRUE
+            WHERE id=%s RETURNING proposal'''
+    return scalar(q, id)
+
+def send_emails():
+    accepted = _JINJA.get_template('email/accept.txt')
+    decline = _JINJA.get_template('email/decline.txt')
+    acceptance = 0
+    declined = 0
+    for p in fetchall('SELECT * FROM proposals'):
+        for name, email in zip(p.author_names, p.author_emails):
+            if not email:
+                continue
+            if not p.accepted:
+                text = decline.render(name=name, title=p.title)
+                msg = {'text':text,
+                        'subject': u'PyCon 2016: Proposal Decision -- '+p.title,
+                        'from_email': 'njl@njl.us',
+                        'from_name': 'Ned Jackson Lovely',
+                        'to':[{'email':email}],
+                        'auto_html':False}
+                print _MANDRILL.messages.send(msg)
+                declined +=1
+                continue
+            q = '''INSERT INTO confirmations (proposal, email)
+                    VALUES (%s, %s) RETURNING id'''
+            id = scalar(q, p.id, email)
+            key = _CONFIRMATION_ITSD.dumps(id)
+            url = 'http://{}/confirmation/{}/'.format(_WEB_HOST, key)
+            text = accepted.render(name=name, title=p.title, url=url)
+            msg = {'text': text,
+                    'subject': 'PyCon 2016: Talk Acceptance -- '+p.title,
+                        'from_email': 'njl@njl.us',
+                        'from_name': 'Ned Jackson Lovely',
+                        'to':[{'email':email}],
+                        'auto_html':False}
+            print _MANDRILL.messages.send(msg)
+            acceptance +=1
+    print 'Declined: {}'.format(declined)
+    print 'Accepted: {}'.format(acceptance)

@@ -1,6 +1,7 @@
 {%import "vote_display.html" as vd%}
 
-{%macro proposal_render(proposal, bookmarked=False, anonymize=False) %}
+{%macro proposal_render(proposal, bookmarked=False, anonymize=False, 
+                        hidetimes=False) %}
         <h1>{{proposal.title}}</h1>
         <table class="table">
           <tbody>
@@ -16,10 +17,12 @@
               {% endif %}
               <tr><th># Speakers</th>
               <td>{{proposal.authors|length}}</td></tr>
+              {% if not hidetimes%}
               <tr><th>Created</th>
               <td>{{proposal.added_on|date}}</td></tr>
               <tr><th>Last Updated</th>
               <td>{{proposal.updated|date}}</td></tr>
+              {%endif%}
           </tbody>
         </table>
         {% if anonymize %}

@@ -1,0 +1,45 @@
+Dear {{name}},
+
+Thank you very much for your PyCon 2016 talk proposal,
+"{{title}}".
+
+Unfortunately, your talk was not one of the ones selected to appear at
+PyCon 2016.
+
+Each year brings more talk submissions than the year before, and this
+year was no exception. Both the quantity and the quality of proposals
+we received were extraordinary. Unfortunately, we only have 95 spaces
+in the schedule, and we had to make many hard choices.
+
+I hope you still decide to attend PyCon! It's an amazing conference,
+and we still have several venues in which you could deliver your
+material. Lightning talks are quick, five-minute talks on any topic,
+and open spaces provide dedicated rooms for informal, unscheduled
+proposals and discussions.
+
+You can learn more at https://us.pycon.org/2016/about/
+
+If you plan to come, you should register at
+https://us.pycon.org/2016/registration/ as soon as possible. We have
+a limited number of tickets, and we expect to sell out. Waiting to buy
+tickets means you might not be able to come!
+
+If you need assistance with visas or immigration documents, please
+contact our registration team (pycon2016@cteusa.com).
+
+If you have any other questions, comments, or feedback, please feel
+free to contact me (njl@njl.us), my co-chair Karen Rustad Tölva, 
+(karen.rustad@gmail.com), or the conference chair, Brandon Rhodes
+(pycon.brandon@gmail.com).
+
+On behalf of the PyCon staff, I want to thank you again for your
+submission. You made our job of picking talks very hard, and the
+conference will be better for it.
+
+I hope to see you in Portland!
+
+
+
+Ned Jackson Lovely
+Program Chair, PyCon 2016
+njl@njl.us
