@@ -76,10 +76,9 @@ def main():
     q = '''SELECT count(*), batchgroup from batchvotes group by batchgroup
             order by count'''
     batch_count = l.fetchall(q)
-    print 'Every batch got at least {} votes'.format(batch_count[0].count)
+    print 'Every batch got at least {} reviews'.format(batch_count[0].count)
 
     print 'to arrive at our final 95 accepted talks!'
-
 
 
 if __name__ == '__main__':
