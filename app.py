@@ -186,11 +186,6 @@ def show_votes():
     return render_template('my_votes.html', votes=votes, percent=percent,
                             standards = l.get_standards())
 
-@app.route('/bookmarks/')
-def show_bookmarks():
-    return render_template('bookmarks.html',
-                            bookmarks=l.get_bookmarks(request.user.id))
-
 @app.route('/unread/')
 def show_unread():
     return render_template('unread.html', unread=l.get_unread(request.user.id)) 
@@ -319,7 +314,6 @@ def screening(id):
     discussion = l.get_discussion(id)
 
     standards = l.get_standards()
-    bookmarked = l.has_bookmark(request.user.id, id)
 
     existing_vote = l.get_user_vote(request.user.id, id)
     votes = l.get_votes(id)
@@ -330,7 +324,6 @@ def screening(id):
     return render_template('screening_proposal.html', proposal=proposal,
                             votes=votes, discussion=discussion,
                             standards=standards,
-                            bookmarked=bookmarked,
                             existing_vote=existing_vote,
                             unread=unread,
                             percent=percent)
@@ -367,18 +360,6 @@ def feedback(id):
     return render_template('discussion_snippet.html', 
             unread = l.is_unread(request.user.id, id),
             discussion = l.get_discussion(id))
-
-@app.route('/screening/<int:id>/bookmark/add/', methods=['POST'])
-def add_bookmark(id):
-    l.add_bookmark(request.user.id, id)
-    return render_template('proposal_snippet.html', proposal=l.get_proposal(id),
-                            bookmarked=l.has_bookmark(request.user.id, id))
-
-@app.route('/screening/<int:id>/bookmark/remove/', methods=['POST'])
-def remove_bookmark(id):
-    l.remove_bookmark(request.user.id, id)
-    return render_template('proposal_snippet.html', proposal=l.get_proposal(id),
-                            bookmarked=l.has_bookmark(request.user.id, id))
 
 @app.route('/screening/<int:id>/mark_read/', methods=['POST'])
 def mark_read(id):

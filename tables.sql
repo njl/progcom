@@ -85,12 +85,6 @@ CREATE TABLE batchvotes (
 
 );
 
-CREATE TABLE bookmarks (
-    voter       BIGINT,
-    proposal    BIGINT,
-    UNIQUE (voter, proposal)
-);
-
 CREATE TABLE standards (
     id          BIGSERIAL PRIMARY KEY,
     description VARCHAR(127)

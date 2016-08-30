@@ -50,7 +50,6 @@
                 <ul class="nav navbar-nav">
                 {% if not config.THIS_IS_BATCH %}
                     <li><a href="{{url_for("show_votes")}}">Previous Votes</a></li>
-                    <li><a href="{{url_for("show_bookmarks")}}">Bookmarks</a></li>
                     <li><a href="{{url_for("screening_stats")}}">Stats</a></li>
                 {% else %}
                     <li><a href="{{url_for("batch_splash_page")}}">Batch Groups</a></li>

@@ -1,6 +1,6 @@
 {%import "vote_display.html" as vd%}
 
-{%macro proposal_render(proposal, bookmarked=False, anonymize=False, 
+{%macro proposal_render(proposal, anonymize=False, 
                         hidetimes=False) %}
         <h1>{{proposal.title}}</h1>
         <table class="table">
@@ -25,18 +25,6 @@
               {%endif%}
           </tbody>
         </table>
-        {% if anonymize %}
-            {% if bookmarked %}
-                <form method="POST" action="bookmark/remove/" id="bookmark-form">
-                    <button type="submit" class="btn btn-info"><span class="glyphicon glyphicon-bookmark"></span> Proposal Bookmarked</button>
-                </form>
-            {% else %}
-                <form method="POST" action="bookmark/add/" id="bookmark-form">
-                    <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-bookmark"></span> Bookmark</button>
-                </form>
-            {% endif%}
-        {% endif %}
-
         <h3>Audience</h3>
         <p>
         {{proposal.audience}}

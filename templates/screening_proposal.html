@@ -9,7 +9,7 @@
 </div>
 <div class="row">
     <div class="col-md-8" id="left-column">
-        {{ pr.proposal_render(proposal, bookmarked, anonymize=True)}}
+        {{ pr.proposal_render(proposal, anonymize=True)}}
     </div>
     <div class="col-md-4" id="right-column">
         {{ pr.user_vote_render(standards, existing_vote) }}

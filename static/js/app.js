@@ -96,13 +96,6 @@ function leave_comment(ev){
     });
 }
 
-function toggle_bookmark(ev){
-    ev.preventDefault();
-    $.post($(this).attr('action')).then(function(data){
-        $('#left-column').empty().html(data);
-    });
-}
-
 function batch_add_comment(ev){
     ev.preventDefault();
     $.post('comment/', $('#add-comment').serialize()).then(function(text){
@@ -179,7 +172,6 @@ $(document).ready(function(){
     $('#right-column').on('click', '#mark-read', mark_read);
     $('#right-column').on('submit', '#feedback-form', give_feedback);
     $('#right-column').on('submit', '#comment-form', leave_comment);
-    $('#left-column').on('submit', '#bookmark-form', toggle_bookmark);
 
     if($("#vote-form").length > 0){
         nominate_status();

@@ -216,35 +216,6 @@ def get_all_proposal_ids():
     return [x.id for x in fetchall(q)]
 
 """
-Bookmarks
-"""
-
-def add_bookmark(uid, proposal):
-    l('bookmark', uid=uid, id=proposal)
-    q = 'INSERT INTO bookmarks (voter, proposal) VALUES (%s, %s)'
-    try:
-        execute(q, uid, proposal)
-    except IntegrityError as e:
-        pass
-
-def remove_bookmark(uid, proposal):
-    l('remove_bookmark', uid=uid, id=proposal)
-    q = 'DELETE FROM bookmarks WHERE voter=%s AND proposal=%s'
-    execute(q, uid, proposal)
-
-def has_bookmark(uid, proposal):
-    q = 'SELECT 1 FROM bookmarks WHERE voter=%s and proposal=%s'
-    return scalar(q, uid, proposal)
-
-def get_bookmarks(uid):
-    q = '''SELECT proposals.id as id, proposals.title as title
-            FROM bookmarks INNER JOIN proposals 
-                            ON (bookmarks.proposal = proposals.id)
-            WHERE voter=%s'''
-    return fetchall(q, uid)
-
-
-"""
 Screening Voting
 """
 
