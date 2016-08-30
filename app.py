@@ -286,11 +286,6 @@ Screening Actions
 def activity_buttons():
     return render_template('activity_button_fragment.html')
 
-@app.route('/votes/reconsider/')
-def reconsider():
-    return render_template('reconsider.html',
-                            talks=l.get_reconsider(request.user.id))
-
 
 @app.route('/screening/stats/')
 def screening_stats():
@@ -308,7 +303,6 @@ def screening_stats():
                             total_votes=sum(u.votes for u in users),
                             total_proposals=sum(p.quantity for p in progress),
                             active_discussions=active_discussions,
-                            reconsideration=l.get_reconsider_left(),
                             votes_when=votes_when)
 
 @app.route('/screening/<int:id>/')
@@ -460,13 +454,6 @@ def pick():
     if THIS_IS_BATCH:
         return redirect(url_for('batch_splash_page'))
 
-    reconsider = l.get_reconsider(request.user.id)
-
-    if reconsider:
-        msg = """You voted on this proposal before the change to standard #4.
-                 Please reconsider and save your vote!"""
-        flash(msg)
-        return redirect(url_for('screening', id=reconsider[0].id))
 
     if request.user.revisit:
         data = [x for x in l.get_my_votes(request.user.id) if x.updated]
