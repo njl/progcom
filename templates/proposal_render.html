@@ -6,11 +6,11 @@
         <table class="table">
           <tbody>
               <tr><th>Category</th>
-              <td>{{proposal.category}}</td></tr>
+              <td>{{proposal.data.category}}</td></tr>
               <tr><th>Duration</th>
-              <td>{{proposal.duration}}</td></tr>
+              <td>{{proposal.data.duration}}</td></tr>
               <tr><th>Audience Level</th>
-              <td>{{proposal.audience_level}}</td></tr>
+              <td>{{proposal.data.audience_level}}</td></tr>
               {% if not anonymize %}
                   <tr><th>Proposer(s)</th>
                   <td>{{proposal.authors|map(attribute='name')|join(", ")}}</td></tr>
@@ -31,29 +31,29 @@
         </p>
         <h3>Description</h3>
         <p>
-        {{proposal.description|markdown}}
+        {{proposal.data.description|markdown}}
         </p>
         <h3>Objective</h3>
         <p>
-        {{proposal.objective|markdown}}
+        {{proposal.data.objective|markdown}}
         </p>
         <h3>Detailed Abstract</h3>
         <p>
-        {{proposal.abstract|markdown}}
+        {{proposal.data.abstract|markdown}}
         </p>
         <h3>Outline</h3>
         <p>
-        {{proposal.outline|markdown}}
+        {{proposal.data.outline|markdown}}
         </p>
         {% if not anonymize %}
         <h3>Additional Notes</h3>
         <p>
-        {{proposal.notes|markdown}}
+        {{proposal.data.notes|markdown}}
         </p>
         {% endif %}
         <h3>Additional Requirements</h3>
         <p>
-        {{proposal.additional_requirements|markdown}}
+        {{proposal.data.additional_requirements|markdown}}
         </p>
 {%endmacro%}
 

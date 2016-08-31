@@ -29,18 +29,10 @@ CREATE TABLE proposals (
 
     author_emails           VARCHAR(254)[],
     author_names            VARCHAR(254)[],
-    title                   VARCHAR(254),
-    category                VARCHAR(127),
-    duration                VARCHAR(63),
-    description             TEXT,
-    audience                TEXT,
-    audience_level          VARCHAR(63),
-    objective               TEXT,
-    abstract                TEXT,
-    outline                 TEXT,
-    notes                   TEXT,
-    additional_requirements TEXT,
-    recording_release       BOOLEAN,
+
+    data                    JSONB,
+    data_history            JSONB DEFAULT '[]'::jsonb,
+
     accepted                BOOLEAN DEFAULT NULL
 );
 

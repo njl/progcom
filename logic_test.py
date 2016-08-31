@@ -82,7 +82,7 @@ data = {'id': 123, 'title': 'Title Here', 'category': 'Python',
 def test_proposal_basics():
     assert l.add_proposal(data)
     assert not l.add_proposal(data)
-    assert l.get_proposal(data['id']).outline == data['outline']
+    assert l.get_proposal(data['id']).data['outline'] == data['outline']
 
     changed = data.copy()
     changed['abstract'] = 'This is a longer abstract.'

@@ -13,6 +13,7 @@ import mandrill
 import bcrypt
 from sqlalchemy import create_engine
 from sqlalchemy.exc import IntegrityError
+from psycopg2.extras import Json
 from jinja2 import Environment, FileSystemLoader
 
 from gensim import corpora, models, similarities
@@ -163,14 +164,14 @@ def get_proposal(id):
 def add_proposal(data):
     data = data.copy()
     emails, names = zip(*((x['email'], x['name']) for x in data['authors']))
-    data['author_emails'] = list(emails)
-    data['author_names'] = list(names)
     del data['authors']
 
-    keys = ('id', 'author_emails', 'author_names', 'title',
+    keys = ('id', 'title',
             'category', 'duration', 'description', 'audience',
             'audience_level', 'objective', 'abstract', 'outline',
             'notes', 'additional_requirements', 'recording_release')
+
+    cleaned_data = {k:data[k] for k in keys}
 
     """
     print 'Missing:', set(keys) - set(data.keys())
@@ -178,29 +179,23 @@ def add_proposal(data):
     """
 
 
-    q = 'SELECT {} FROM proposals WHERE id=%s'.format(', '.join(keys))
+    q = 'SELECT * FROM proposals WHERE id=%s'
     proposal = fetchone(q, data['id'])
 
-    if proposal:
-        proposal = proposal._asdict()
-        for k in set(proposal.keys()) - set(keys):
-            del proposal[k]
+    if not proposal:
+        q = 'INSERT INTO proposals (id, author_emails, author_names, data) VALUES (%s, %s, %s, %s)'
+        execute(q, (data['id'], list(emails), list(names), Json(cleaned_data)))
+        return data['id']
 
-    for k in set(data.keys()) - set(keys):
-        del data[k]
-
-
-    if proposal == data:
+    if proposal.data == cleaned_data:
         return None
 
-    if not proposal:
-        q = 'INSERT INTO proposals ({}) VALUES ({})'
-        q = q.format(', '.join(keys), ', '.join('%({})s'.format(x) for x in keys))
-    else:
-        q = 'UPDATE proposals SET {}, updated=now() WHERE id=%(id)s'
-        q = q.format(', '.join('{0}=%({0})s'.format(x) for x in keys))
+    q = 'UPDATE proposals SET data=%s, data_history=%s, updated=now() WHERE id=%s'
+    proposal.data['when'] = proposal.updated.isoformat()
+    data_history = proposal.data_history
+    data_history.append(proposal.data)
+    execute(q, (Json(cleaned_data), Json(data_history), data['id']))
 
-    execute(q, **data)
     return data['id']
 
 def get_vote_percentage(email, id):
@@ -284,7 +279,8 @@ def needs_votes(email, uid):
 
 def get_my_votes(uid):
     q = '''SELECT votes.*, proposals.updated > votes.updated_on AS updated,
-            proposals.title AS title, proposals.updated AS proposal_updated
+            proposals.data->>'title' as title,
+            proposals.updated AS proposal_updated
             FROM votes INNER JOIN proposals ON (votes.proposal = proposals.id)
             WHERE votes.voter=%s ORDER BY updated DESC'''
     return [_clean_vote(v) for v in fetchall(q, uid)]
@@ -298,7 +294,7 @@ def _score_weight_average(v):
     return int(100*sum(v)/(2.0*len(v)))
 
 def scored_proposals():
-    q = '''SELECT scores, nominate, proposal, proposals.title,
+    q = '''SELECT scores, nominate, proposal, proposals.data->>'title',
                     proposals.accepted,
                     batchgroups.name as batchgroup,
                     batchgroups.id as batch_id
@@ -402,10 +398,10 @@ def votes_last_week():
     return scalar(q)
 
 def active_discussions():
-    q = '''SELECT COUNT(d.id) as count, p.title as title, p.id as id
+    q = '''SELECT COUNT(d.id) as count, p.data->>'title' as title, p.id as id
             FROM discussion as d INNER JOIN proposals AS p ON (d.proposal=p.id)
             WHERE d.created > current_date - interval '7 days'
-            GROUP BY p.title, p.id
+            GROUP BY title, p.id
             ORDER BY count DESC'''
     return [x for x in fetchall(q) if x.count > 2]
 
@@ -424,7 +420,7 @@ def toggle_lock_batch(id, lock):
     execute(q, lock, id)
 
 def full_proposal_list(email):
-    q = '''SELECT p.id, p.title, bg.id as batch_id, p.accepted,
+    q = '''SELECT p.id, p.data->>'title', bg.id as batch_id, p.accepted,
             array_to_string(p.author_names, ', ') AS author_names,
             COALESCE(bg.name, '') AS batchgroup,
             EXISTS (SELECT 1 FROM users
@@ -561,7 +557,7 @@ def get_batch_vote(batchgroup, voter):
     return fetchone(q, batchgroup, voter)
 
 def get_batch_coverage():
-    q = '''SELECT id, title, author_names, batchgroup
+    q = '''SELECT id, data->>'title' as title, author_names, batchgroup
             FROM proposals WHERE batchgroup IS NOT NULL'''
     groups = defaultdict(dict)
     for row in fetchall(q):
@@ -591,7 +587,7 @@ def get_my_pycon(user):
     q = 'SELECT batchgroup, accept FROM batchvotes WHERE voter=%s'
     votes = fetchall(q, user)
 
-    q = '''SELECT title, id,
+    q = '''SELECT data->>'title', id,
             array_to_string(author_names, ', ') AS author_names,
             accepted
             FROM proposals WHERE batchgroup IS NOT NULL'''
@@ -727,7 +723,7 @@ def mark_read(userid, proposal):
     execute(q, userid, proposal)
 
 def get_unread(userid):
-    q = '''SELECT unread.proposal as id, proposals.title as title
+    q = '''SELECT unread.proposal as id, proposals.data->>'title' as title
                 FROM unread
                 LEFT JOIN proposals ON (unread.proposal = proposals.id)
                 WHERE voter=%s'''
@@ -915,7 +911,7 @@ def get_schedule():
                     schedules.duration as given_duration,
                     schedules.id as schedule_id,
                     batchgroups.name AS bg_name,
-                    proposals.title,
+                    proposals.data->>'title',
                     proposals.id AS proposal_id,
                     array_to_string(proposals.author_names, ', ') AS author_names
             FROM schedules 
@@ -950,7 +946,7 @@ def set_schedule(proposal, slot):
     execute(q, proposal, proposal, slot)
 
 def get_accepted():
-    q = '''SELECT p.id, title,
+    q = '''SELECT p.id, data->>'title',
             array_to_string(author_names, ', ') AS author_names,
             bg.name AS bg_name,
             duration
