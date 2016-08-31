@@ -183,8 +183,10 @@ def add_proposal(data):
     proposal = fetchone(q, data['id'])
 
     if not proposal:
-        q = 'INSERT INTO proposals (id, author_emails, author_names, data) VALUES (%s, %s, %s, %s)'
-        execute(q, (data['id'], list(emails), list(names), Json(cleaned_data)))
+        q = 'INSERT INTO proposals (id, author_emails, author_names, data, data_history) VALUES (%s, %s, %s, %s, %s)'
+        cloned_data = cleaned_data.copy()
+        cloned_data['when'] = datetime.datetime.now().isoformat()
+        execute(q, (data['id'], list(emails), list(names), Json(cleaned_data), Json([cloned_data])))
         return data['id']
 
     if proposal.data == cleaned_data:

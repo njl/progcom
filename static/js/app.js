@@ -172,6 +172,11 @@ $(document).ready(function(){
     $('#right-column').on('click', '#mark-read', mark_read);
     $('#right-column').on('submit', '#feedback-form', give_feedback);
     $('#right-column').on('submit', '#comment-form', leave_comment);
+    
+    $('.tab-button').on('click', function(ev){
+        console.log('click', $(this));
+        ev.preventDefault();$(this).tab('show')
+    });
 
     if($("#vote-form").length > 0){
         nominate_status();

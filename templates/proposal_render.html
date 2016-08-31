@@ -2,15 +2,25 @@
 
 {%macro proposal_render(proposal, anonymize=False, 
                         hidetimes=False) %}
-        <h1>{{proposal.title}}</h1>
+
+  <ul class="nav nav-tabs" role="tablist">
+      {%for version in proposal.data_history%}
+      <li class="{%if loop.first%} active{%endif%}"><a class="tab-button" href="#rev-{{loop.index0}}">{{version.when}}</a></li>
+      {%endfor%}
+  </ul>
+
+  <div class="tab-content">
+    {% for version in proposal.data_history%}
+    <div class="tab-pane{%if loop.first%} active{%endif%}" id="rev-{{loop.index0}}">
+        <h1>{{version.title}}</h1>
         <table class="table">
           <tbody>
               <tr><th>Category</th>
-              <td>{{proposal.data.category}}</td></tr>
+              <td>{{version.category}}</td></tr>
               <tr><th>Duration</th>
-              <td>{{proposal.data.duration}}</td></tr>
+              <td>{{version.duration}}</td></tr>
               <tr><th>Audience Level</th>
-              <td>{{proposal.data.audience_level}}</td></tr>
+              <td>{{version.audience_level}}</td></tr>
               {% if not anonymize %}
                   <tr><th>Proposer(s)</th>
                   <td>{{proposal.authors|map(attribute='name')|join(", ")}}</td></tr>
@@ -27,34 +37,37 @@
         </table>
         <h3>Audience</h3>
         <p>
-        {{proposal.audience}}
+        {{version.audience}}
         </p>
         <h3>Description</h3>
         <p>
-        {{proposal.data.description|markdown}}
+        {{version.description|markdown}}
         </p>
         <h3>Objective</h3>
         <p>
-        {{proposal.data.objective|markdown}}
+        {{version.objective|markdown}}
         </p>
         <h3>Detailed Abstract</h3>
         <p>
-        {{proposal.data.abstract|markdown}}
+        {{version.abstract|markdown}}
         </p>
         <h3>Outline</h3>
         <p>
-        {{proposal.data.outline|markdown}}
+        {{version.outline|markdown}}
         </p>
         {% if not anonymize %}
         <h3>Additional Notes</h3>
         <p>
-        {{proposal.data.notes|markdown}}
+        {{version.notes|markdown}}
         </p>
         {% endif %}
         <h3>Additional Requirements</h3>
         <p>
-        {{proposal.data.additional_requirements|markdown}}
+        {{version.additional_requirements|markdown}}
         </p>
+    </div>
+{%endfor%}
+  </div>
 {%endmacro%}
 
 {%macro user_vote_render(standards, existing_vote)%}

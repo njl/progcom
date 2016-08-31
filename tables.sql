@@ -31,7 +31,7 @@ CREATE TABLE proposals (
     author_names            VARCHAR(254)[],
 
     data                    JSONB,
-    data_history            JSONB DEFAULT '[]'::jsonb,
+    data_history            JSONB,
 
     accepted                BOOLEAN DEFAULT NULL
 );
