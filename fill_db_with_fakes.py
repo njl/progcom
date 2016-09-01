@@ -56,7 +56,7 @@ def main():
                 l.vote(random.choice(user_ids), prop_id, vote)
 
         if random.randint(0, 3) == 0:
-            data['notes'] = 'UPDATED' + ipsum(2)
+            data['description'] = 'UPDATED ' + ipsum(4)
             l.add_proposal(data)
 
 

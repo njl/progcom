@@ -193,9 +193,10 @@ def add_proposal(data):
         return None
 
     q = 'UPDATE proposals SET data=%s, data_history=%s, updated=now() WHERE id=%s'
-    proposal.data['when'] = proposal.updated.isoformat()
+    new_data = cleaned_data.copy()
+    new_data['when'] = datetime.datetime.now().isoformat()
     data_history = proposal.data_history
-    data_history.append(proposal.data)
+    data_history.insert(0, new_data)
     execute(q, (Json(cleaned_data), Json(data_history), data['id']))
 
     return data['id']

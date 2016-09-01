@@ -12,7 +12,7 @@
   <div class="tab-content">
     {% for version in proposal.data_history%}
     <div class="tab-pane{%if loop.first%} active{%endif%}" id="rev-{{loop.index0}}">
-        <h1>{{version.title}}</h1>
+        <h1>{{version.title}} {{loop.index0}}</h1>
         <table class="table">
           <tbody>
               <tr><th>Category</th>
@@ -31,7 +31,7 @@
               <tr><th>Created</th>
               <td>{{proposal.added_on|date}}</td></tr>
               <tr><th>Last Updated</th>
-              <td>{{proposal.updated|date}}</td></tr>
+              <td>{{version.when}}</td></tr>
               {%endif%}
           </tbody>
         </table>
