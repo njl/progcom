@@ -2,7 +2,7 @@ Dear {{name}},
 
 Congratulations! Your talk,
 "{{title}}"
-has been accepted to PyCon 2016!
+has been accepted to PyCon 2017!
 
 Please read through this email carefully for your next steps.
 
@@ -28,7 +28,7 @@ PyCon late or leave early, for example), please let me know today or
 tomorrow, so that I can take your requirements into account.
 
 You should register for the conference at
-https://us.pycon.org/2016/registration/
+https://us.pycon.org/2017/registration/
 as soon as possible; please don't delay, tickets do sell out!
 
 Unlike many conferences, PyCon doesn't give free tickets to speakers,
@@ -41,12 +41,12 @@ at PyCon! If you can't afford a ticket and/or travel expenses,
 please apply for financial aid.
 
 More information about financial aid can be found at
-https://us.pycon.org/2016/assistance/. If you're applying, make sure
+https://us.pycon.org/2017/assistance/. If you're applying, make sure
 to mention that you're an accepted speaker.  Please contact the financial
 aid team at pycon-aid@python.org if you have any questions.
 
 If you need assistance with visas or immigration documents, please
-contact our registration team (pycon2016@cteusa.com).
+contact our registration team (pycon2017@cteusa.com).
 
 If you have any other questions, comments, or feedback, please feel
 free to contact me (njl@njl.us), my co-chair Karen Rustad Tölva, 
@@ -54,7 +54,7 @@ free to contact me (njl@njl.us), my co-chair Karen Rustad Tölva,
 (pycon.brandon@gmail.com).
 
 On behalf of the PyCon staff, I want to thank you for your submission.
-We're really looking forward to seeing you at the conference; PyCon 2016
+We're really looking forward to seeing you at the conference; PyCon 2017
 promises to be the best PyCon yet, and that's because of our amazing
 speakers. We're thrilled that you're one of them.
 
@@ -63,5 +63,5 @@ See you in Portland!
 
 
 Ned Jackson Lovely
-Program Chair, PyCon 2016
+Program Chair, PyCon 2017
 njl@njl.us

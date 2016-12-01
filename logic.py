@@ -707,7 +707,7 @@ def add_to_discussion(userid, proposal, body, feedback=False, name=None):
         email = _JINJA.get_template('email/feedback_notice.txt')
         for to, key in generate_author_keys(proposal).items():
             url = 'http://{}/feedback/{}'.format(_WEB_HOST, key)
-            edit_url = 'https://us.pycon.org/2016/proposals/{}/'.format(proposal)
+            edit_url = 'https://us.pycon.org/2017/proposals/{}/'.format(proposal)
             rendered = email.render(proposal=full_proposal, body=body, 
                                 url=url, edit_url=edit_url) 
             msg = {'text': rendered,
@@ -989,7 +989,7 @@ def send_emails():
             if not p.accepted:
                 text = decline.render(name=name, title=p.title)
                 msg = {'text':text,
-                        'subject': u'PyCon 2016: Proposal Decision -- '+p.title,
+                        'subject': u'PyCon 2017: Proposal Decision -- '+p.title,
                         'from_email': 'njl@njl.us',
                         'from_name': 'Ned Jackson Lovely',
                         'to':[{'email':email}],
@@ -1004,7 +1004,7 @@ def send_emails():
             url = 'http://{}/confirmation/{}/'.format(_WEB_HOST, key)
             text = accepted.render(name=name, title=p.title, url=url)
             msg = {'text': text,
-                    'subject': 'PyCon 2016: Talk Acceptance -- '+p.title,
+                    'subject': 'PyCon 2017: Talk Acceptance -- '+p.title,
                         'from_email': 'njl@njl.us',
                         'from_name': 'Ned Jackson Lovely',
                         'to':[{'email':email}],
