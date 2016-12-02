@@ -35,10 +35,10 @@
       - template: src=certs/progcom.njl.us.key dest=/etc/nginx/progcom.njl.us.key
       - template: src=deployment/nginx.conf dest=/etc/nginx/sites-enabled/default
         notify: restart nginx
-      - lineinfile: dest=/etc/postgresql/9.3/main/pg_hba.conf
+      - lineinfile: dest=/etc/postgresql/9.5/main/pg_hba.conf
                     line="local   all             all                                     md5"
                     regexp="local\s+all\s+all\s+peer"
-                    state=present
+                    state=present backrefs=yes
         notify: restart postgresql
 
     #Repo
@@ -54,7 +54,7 @@
         notify: restart progcom
 
     #Envdir
-      - file: path=/opt/progcom-envdir state=directory
+      - file: path=/opt/progcom-envdir state=directory owner=n group=n
       - synchronize: src=deploy-config/ dest=/opt/progcom-envdir/
                         delete=yes
         become: no
