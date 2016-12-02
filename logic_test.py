@@ -6,8 +6,8 @@ import mock
 
 import logic as l
 
-l._M_OLD = l._MANDRILL
-l._MANDRILL = mock.Mock()
+l._S_OLD = l._SENDGRID
+l._SENDGRID = mock.Mock()
 
 
 @pytest.fixture(autouse=True)

@@ -3,7 +3,7 @@ sqlalchemy
 bcrypt
 psycopg2
 itsdangerous
-mandrill
+sendgrid
 bleach
 markdown2
 simplejson
