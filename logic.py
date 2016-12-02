@@ -9,7 +9,8 @@ import re
 
 import pandas as pd
 import itsdangerous
-import mandrill
+import sendgrid
+
 import bcrypt
 from sqlalchemy import create_engine
 from sqlalchemy.exc import IntegrityError
@@ -664,7 +665,7 @@ def mark_batch_read(batch, user):
 Discussion
 """
 _USER_FB_ITSD = itsdangerous.URLSafeSerializer(os.environ['ITSD_KEY'])
-_MANDRILL = mandrill.Mandrill(os.environ['MANDRILL_API_KEY'])
+_SENDGRID = sendgrid.SendGridAPIClient(apikey=os.environ['SENDGRID_API_KEY'])
 _EMAIL_FROM = os.environ['EMAIL_FROM']
 _WEB_HOST = os.environ['WEB_HOST']
 
@@ -710,14 +711,25 @@ def add_to_discussion(userid, proposal, body, feedback=False, name=None):
             edit_url = 'https://us.pycon.org/2017/proposals/{}/'.format(proposal)
             rendered = email.render(proposal=full_proposal, body=body, 
                                 url=url, edit_url=edit_url) 
-            msg = {'text': rendered,
-                    'subject': 'Feedback on Your PyCon Talk Proposal',
-                    'from_email': _EMAIL_FROM,
-                    'from_name': 'PyCon Program Committee',
-                    'to': [{'email':to}],
-                    'auto_html':False,}
-            l('filter_email_sent', api_result=_MANDRILL.messages.send(msg),
-                    to=to)
+            msg = {
+                "personalizations": [
+                    {
+                        "to": [{"email": to}],
+                        "subject": 'Feedback on Your PyCon Talk Proposal',
+                    }
+                ],
+                "from": {
+                    "email": _EMAIL_FROM,
+                    "name": "PyCon Program Committee"
+                },
+                "content": [
+                    {
+                        "type": "text/plain",
+                        "value": rendered,
+                    }
+                ]
+            }
+            l('filter_email_sent', api_result=_SENDGRID.client.mail.send.post(request_body=msg), to=to)
 
 
 def mark_read(userid, proposal):
@@ -769,12 +781,26 @@ def send_login_email(email):
     url = 'http://{}/user/login/{}/'.format(_WEB_HOST, key)
     body = body.render(url=url)
 
-    msg = {'text':body,
-            'subject': 'PyCon Program Committee Password Reset',
-            'from_email':'njl@njl.us',
-            'from_name':'Ned Jackson Lovely',
-            'to':[{'email':user.email}]}
-    _MANDRILL.messages.send(msg)
+    msg = {
+        "personalizations": [
+            {
+                "to": [{"email": user.email}],
+                "subject": 'PyCon Program Committee Password Reset',
+            }
+        ],
+        "from": {
+            "email": "njl@njl.us",
+            "name": "Ned Jackson Lovely"
+        },
+        "content": [
+            {
+                "type": "text/plain",
+                "value": body,
+            }
+        ]
+    }
+
+    _SENDGRID.client.mail.send.post(request_body=msg)
     l('successful_pw_reset_request', email=email, id=user.id)
     return True
 
@@ -788,23 +814,53 @@ def test_login_string(s):
 
 def email_approved(id):
     user = get_user(id)
-    msg = {'text': _JINJA.get_template('email/welcome_user.txt').render(),
-            'subject': 'Welcome to the Program Committee Web App!',
-            'from_email': 'njl@njl.us',
-            'from_name':'Ned Jackson Lovely',
-            'to':[{'email':user.email}] 
-                + [{'email':x, 'type':'cc'} for x in _ADMIN_EMAILS]}
-    _MANDRILL.messages.send(msg)
+
+    msg = {
+        "personalizations": [
+            {
+                "to": [{"email": user.email}],
+                "subject": 'Welcome to the Program Committee Web App!',
+                "cc": [{"email": x} for x in _ADMIN_EMAILS],
+            }
+        ],
+        "from": {
+            "email": "njl@njl.us",
+            "name": "Ned Jackson Lovely"
+        },
+        "content": [
+            {
+                "type": "text/plain",
+                "value": _JINJA.get_template('email/welcome_user.txt').render(),
+            }
+        ]
+    }
+
+    _SENDGRID.client.mail.send.post(request_body=msg)
 
 def email_new_user_pending(email, name):
     body = _JINJA.get_template('email/new_user_pending.txt').render(name=name,
                                                             email=email)
-    msg = {'text': body,
-            'subject': 'New Progcom User',
-            'from_email': 'njl@njl.us',
-            'from_name':'PyCon Program Committee Robot',
-            'to':[{'email':x} for x in _ADMIN_EMAILS]}
-    _MANDRILL.messages.send(msg)
+
+    msg = {
+        "personalizations": [
+            {
+                "to": [{"email": x} for x in _ADMIN_EMAILS],
+                "subject": 'New Progcom User',
+            }
+        ],
+        "from": {
+            "email": "njl@njl.us",
+            "name": "PyCon Program Committee Robot"
+        },
+        "content": [
+            {
+                "type": "text/plain",
+                "value": body,
+            }
+        ]
+    }
+
+    _SENDGRID.client.mail.send.post(request_body=msg)
  
 def send_weekly_update():
     body = _JINJA.get_template('email/weekly_email.txt')
@@ -813,12 +869,28 @@ def send_weekly_update():
                         votes_last_week=votes_last_week(),
                         active_discussions=active_discussions(),
                         screening_progress=screening_progress())
-    msg = {'text':body,
-            'subject':'Weekly Program Committee Status',
-            'from_email': 'njl@njl.us',
-            'from_name': 'PyCon Program Committee Robot',
-            'to':[{'email':'pycon-pc@python.org'}]}
-    _MANDRILL.messages.send(msg)
+
+    msg = {
+        "personalizations": [
+            {
+                "to": [{"email": "pycon-pc@python.org"}],
+                "subject": 'Weekly Program Committee Status',
+            }
+        ],
+        "from": {
+            "email": "njl@njl.us",
+            "name": "PyCon Program Committee Robot"
+        },
+        "content": [
+            {
+                "type": "text/plain",
+                "value": body,
+            }
+        ]
+    }
+
+    _SENDGRID.client.mail.send.post(request_body=msg)
+
 
 """
 Experimental Topic Grouping
@@ -988,13 +1060,26 @@ def send_emails():
                 continue
             if not p.accepted:
                 text = decline.render(name=name, title=p.title)
-                msg = {'text':text,
-                        'subject': u'PyCon 2017: Proposal Decision -- '+p.title,
-                        'from_email': 'njl@njl.us',
-                        'from_name': 'Ned Jackson Lovely',
-                        'to':[{'email':email}],
-                        'auto_html':False}
-                print _MANDRILL.messages.send(msg)
+                msg = {
+                    "personalizations": [
+                        {
+                            "to": [{"email": email}],
+                            "subject": u'PyCon 2017: Proposal Decision -- '+p.title,
+                        }
+                    ],
+                    "from": {
+                        "email": "njl@njl.us",
+                        "name": "Ned Jackson Lovely"
+                    },
+                    "content": [
+                        {
+                            "type": "text/plain",
+                            "value": text,
+                        }
+                    ]
+                }
+
+                print _SENDGRID.client.mail.send.post(request_body=msg)
                 declined +=1
                 continue
             q = '''INSERT INTO confirmations (proposal, email)
@@ -1003,13 +1088,27 @@ def send_emails():
             key = _CONFIRMATION_ITSD.dumps(id)
             url = 'http://{}/confirmation/{}/'.format(_WEB_HOST, key)
             text = accepted.render(name=name, title=p.title, url=url)
-            msg = {'text': text,
-                    'subject': 'PyCon 2017: Talk Acceptance -- '+p.title,
-                        'from_email': 'njl@njl.us',
-                        'from_name': 'Ned Jackson Lovely',
-                        'to':[{'email':email}],
-                        'auto_html':False}
-            print _MANDRILL.messages.send(msg)
+            msg = {
+                "personalizations": [
+                    {
+                        "to": [{"email": email}],
+                        "subject": u'PyCon 2017: Talk Acceptance -- '+p.title,
+                    }
+                ],
+                "from": {
+                    "email": "njl@njl.us",
+                    "name": "Ned Jackson Lovely"
+                },
+                "content": [
+                    {
+                        "type": "text/plain",
+                        "value": text,
+                    }
+                ]
+            }
+
+            print _SENDGRID.client.mail.send.post(request_body=msg)
+
             acceptance +=1
     print 'Declined: {}'.format(declined)
     print 'Accepted: {}'.format(acceptance)
