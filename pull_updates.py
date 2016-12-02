@@ -42,13 +42,13 @@ TALK_IDS_FORCE = [1553, 1554, 1555, 1556, 1557, 1559, 1560, 1561, 1562, 1565,
                   2135, 2136, 2143, 2144, 2145, 2210]
 
 def fetch_ids():
-    raw = api_call('/2016/pycon_api/proposals/?type=talk')
+    raw = api_call('/2017/pycon_api/proposals/?type=talk')
     #print len(raw['data'])
     rv = [x['id'] for x in raw['data']]
     return list(set(TALK_IDS_FORCE + rv + l.get_all_proposal_ids()))
 
 def fetch_talk(id):
-    rv = api_call('/2016/pycon_api/proposals/{}/'.format(id))
+    rv = api_call('/2017/pycon_api/proposals/{}/'.format(id))
     if not rv or 'data' not in rv:
         return {}
     rv = rv['data']

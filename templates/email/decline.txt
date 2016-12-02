@@ -1,10 +1,10 @@
 Dear {{name}},
 
-Thank you very much for your PyCon 2016 talk proposal,
+Thank you very much for your PyCon 2017 talk proposal,
 "{{title}}".
 
 Unfortunately, your talk was not one of the ones selected to appear at
-PyCon 2016.
+PyCon 2017.
 
 Each year brings more talk submissions than the year before, and this
 year was no exception. Both the quantity and the quality of proposals
@@ -17,10 +17,10 @@ material. Lightning talks are quick, five-minute talks on any topic,
 and open spaces provide dedicated rooms for informal, unscheduled
 proposals and discussions.
 
-You can learn more at https://us.pycon.org/2016/about/
+You can learn more at https://us.pycon.org/2017/about/
 
 If you plan to come, you should register at
-https://us.pycon.org/2016/registration/ as soon as possible. We have
+https://us.pycon.org/2017/registration/ as soon as possible. We have
 a limited number of tickets, and we expect to sell out. Waiting to buy
 tickets means you might not be able to come!
 
@@ -38,5 +38,5 @@ I hope to see you in Portland!
 
 
 Ned Jackson Lovely
-Program Chair, PyCon 2016
+Program Chair, PyCon 2017
 njl@njl.us
