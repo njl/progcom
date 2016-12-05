@@ -168,7 +168,7 @@ def add_proposal(data):
     del data['authors']
 
     keys = ('id', 'description', 'duration', 'audience',
-                'abstract', 'recording_release', 'notes', 'titles', 'outline',)
+                'abstract', 'recording_release', 'notes', 'title', 'outline',)
 
     cleaned_data = {k:data[k] for k in keys}
 
