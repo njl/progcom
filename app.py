@@ -61,7 +61,7 @@ def set_nofollow(attrs, new=False):
 __ALLOWED_TAGS =['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'br', 'hr', 'pre']
 @app.template_filter('markdown')
 def markdown_filter(s):
-    raw = bleach.clean(markdown.markdown(s), 
+    raw = bleach.clean(markdown.markdown('' if not s else s), 
                     tags=bleach.ALLOWED_TAGS+__ALLOWED_TAGS)
     raw = bleach.linkify(raw, callbacks=[set_nofollow])
     return Markup(raw)
