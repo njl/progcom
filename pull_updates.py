@@ -29,9 +29,9 @@ def api_call(uri):
         )))
 
     headers = {
-            'X-API-Key': API_KEY,
-            'X-API-Signature': sha1(base_string.encode('utf-8')).hexdigest(),
-            'X-API-Timestamp': timestamp,
+            'X-API-Key': str(API_KEY),
+            'X-API-Signature': str(sha1(base_string.encode('utf-8')).hexdigest()),
+            'X-API-Timestamp': str(timestamp),
             }
     url = 'http://{}{}'.format(API_HOST, uri)
     return requests.get(url, headers=headers).json()
