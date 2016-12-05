@@ -9,6 +9,7 @@ markdown2
 simplejson
 pandas
 gensim
+dateutil
 
 requests[security]
 pytz
