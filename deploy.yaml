@@ -60,19 +60,19 @@
         become: no
         notify: restart progcom
 
-    #Supervisor
-      - template: src=deployment/web-supervisor.conf dest=/etc/supervisor/conf.d/progcom.conf
-      - supervisorctl: name=progcom state=started
-
     #Backup (Installed tarsnap by hand with `./configure #--prefix=/opt/tarsnap`)
       - file: path=/opt/progcom-backup/db state=directory
       - file: path=/opt/progcom-backup/logs state=directory
       - file: path=/opt/progcom-backup-cache state=directory
       - cron: name="backup" minute="0" hour="1" job="/opt/progcom/bin/backup >/dev/null 2>&1"
 
+    #Supervisor
+      - template: src=deployment/web-supervisor.conf dest=/etc/supervisor/conf.d/progcom.conf
+      - supervisorctl: name=progcom state=started
+
 
     #us.pycon.org pull
-      - cron: name="pycon pull" minute="0,15,30,45" job="/opt/progcom/bin/pull >/dev/null 2>&1" state=absent
+      - cron: name="pycon pull" minute="0,15,30,45" job="/opt/progcom/bin/pull >/dev/null 2>&1"
       - cron: name="pycon update" minute="20" hour="7" weekday="1" job="/opt/progcom/bin/weekly_email >/dev/null 2>&1" state=absent
 
       - name: Notify in slack channel

@@ -4,3 +4,4 @@ dev-config/THIS_IS_BATCH
 dev-config/CUTOFF_FEEDBACK
 *.pyc
 certs
+deploy.retry
