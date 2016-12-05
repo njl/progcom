@@ -5,7 +5,7 @@
 
   <ul class="nav nav-tabs" role="tablist">
       {%for version in proposal.data_history%}
-      <li class="{%if loop.first%} active{%endif%}"><a class="tab-button" href="#rev-{{loop.index0}}">{{version.when}}</a></li>
+      <li class="{%if loop.first%} active{%endif%}"><a class="tab-button" href="#rev-{{loop.index0}}">{{version.when|date}}</a></li>
       {%endfor%}
   </ul>
 
@@ -27,21 +27,17 @@
               <tr><th>Created</th>
               <td>{{proposal.added_on|date}}</td></tr>
               <tr><th>Last Updated</th>
-              <td>{{version.when}}</td></tr>
+              <td>{{version.when|date}}</td></tr>
               {%endif%}
           </tbody>
         </table>
-        <h3>Audience</h3>
-        <p>
-        {{version.audience}}
-        </p>
         <h3>Description</h3>
         <p>
         {{version.description|markdown}}
         </p>
-        <h3>Abstract</h3>
+        <h3>Audience</h3>
         <p>
-        {{version.abstract|markdown}}
+        {{version.audience}}
         </p>
         <h3>Outline</h3>
         <p>
@@ -53,10 +49,6 @@
         {{version.notes|markdown}}
         </p>
         {% endif %}
-        <h3>Additional Requirements</h3>
-        <p>
-        {{version.additional_requirements|markdown}}
-        </p>
     </div>
 {%endfor%}
   </div>
