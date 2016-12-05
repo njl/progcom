@@ -12,15 +12,11 @@
   <div class="tab-content">
     {% for version in proposal.data_history%}
     <div class="tab-pane{%if loop.first%} active{%endif%}" id="rev-{{loop.index0}}">
-        <h1>{{version.title}} {{loop.index0}}</h1>
+        <h1>{{version.title}}</h1>
         <table class="table">
           <tbody>
-              <tr><th>Category</th>
-              <td>{{version.category}}</td></tr>
               <tr><th>Duration</th>
               <td>{{version.duration}}</td></tr>
-              <tr><th>Audience Level</th>
-              <td>{{version.audience_level}}</td></tr>
               {% if not anonymize %}
                   <tr><th>Proposer(s)</th>
                   <td>{{proposal.authors|map(attribute='name')|join(", ")}}</td></tr>
@@ -43,11 +39,7 @@
         <p>
         {{version.description|markdown}}
         </p>
-        <h3>Objective</h3>
-        <p>
-        {{version.objective|markdown}}
-        </p>
-        <h3>Detailed Abstract</h3>
+        <h3>Abstract</h3>
         <p>
         {{version.abstract|markdown}}
         </p>
