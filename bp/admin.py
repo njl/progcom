@@ -1,6 +1,6 @@
 from flask import (Blueprint, render_template, jsonify, request,
                     redirect, url_for, flash)
-
+import requests, os
 import logic as l
 
 bp = Blueprint('admin', __name__)
@@ -58,6 +58,8 @@ def approve_user(uid):
     user = l.get_user(uid)
     flash('Approved user {}'.format(user.email))
     l.email_approved(uid)
+    requests.post('https://slack.com/api/users.admin.invite', 
+                    data = dict(token=os.environ['SLACK_TOKEN'], email=user.email)
     return redirect(url_for('admin.list_users'))
 
 @bp.route('/standards/')

@@ -1,7 +1,7 @@
 Welcome to PyCon Program Committee Talk Review!
 
 If you aren't already subscribed to the pycon-pc mailing list, please take the
-time to do that now!
+time to do that now! We use the mailing list for announcements and organization.
 
 https://mail.python.org/mailman/listinfo/pycon-pc
 
@@ -25,6 +25,9 @@ and reevaluate them if necessary.
 Right now we are in the screening stage of talk proposal evaluation. Later stages
 of review will also occur on http://progcom.njl.us/, but we'll describe how those
 will work in a future mailing list message.
+
+We talk about proposals on a slack channel; you should receive an invite to the
+slack at https://pyconprogramcommittee.slack.com/ shortly.
 
 Thank you so much for your help in making this year's PyCon program--we can't do
 it without your time and thoughtful input. We hope you have fun reading these
