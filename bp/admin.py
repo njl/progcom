@@ -59,7 +59,7 @@ def approve_user(uid):
     flash('Approved user {}'.format(user.email))
     l.email_approved(uid)
     requests.post('https://slack.com/api/users.admin.invite', 
-                    data = dict(token=os.environ['SLACK_TOKEN'], email=user.email)
+                    data = dict(token=os.environ['SLACK_TOKEN'], email=user.email))
     return redirect(url_for('admin.list_users'))
 
 @bp.route('/standards/')
