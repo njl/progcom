@@ -727,7 +727,7 @@ def add_to_discussion(userid, proposal, body, feedback=False, name=None):
                     }
                 ]
             }
-            l('filter_email_sent', api_result=_SENDGRID.client.mail.send.post(request_body=msg), to=to)
+            l('filter_email_sent', api_result=_SENDGRID.client.mail.send.post(request_body=msg).body, to=to)
 
 
 def mark_read(userid, proposal):
