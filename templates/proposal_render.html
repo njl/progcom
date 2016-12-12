@@ -180,9 +180,11 @@
                     {% if d.feedback %}list-group-item-danger
                     {% elif d.name %}list-group-item-success
                     {%else%}disabled{%endif%}" style="display:flex;justify-content:space-between">
+            <div>
             {%if d.name%}Proposal Author{%else%}<strong>{{d.display_name}}</strong>{%endif%}
+            {%if d.feedback%}<br><strong>To Author</strong>{%endif%}
+            </div>
             <span style="order:1">{{d.created|date}}</span>
-            {%if d.feedback%}<strong>To Author</strong>{%endif%}
             {%if d.name%}<strong>From Author</strong>{%endif%}
         </li>
         <li class="list-group-item" style="overflow-wrap: break-word;word-wrap: break-word;">
