@@ -296,7 +296,7 @@ def _score_weight_average(v):
     return int(100*sum(v)/(2.0*len(v)))
 
 def scored_proposals():
-    q = '''SELECT scores, nominate, proposal, proposals.data->>'title',
+    q = '''SELECT scores, nominate, proposal, proposals.data->>'title' AS title,
                     proposals.accepted,
                     batchgroups.name as batchgroup,
                     batchgroups.id as batch_id
