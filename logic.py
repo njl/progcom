@@ -920,14 +920,14 @@ def _get_words(s):
     return [x for x in s.lower().split() if x and x not in _NLTK_ENGLISH_STOPWORDS]
 
 def _get_raw_docs():
-    fields = ('title', 'category', 'description', 'audience', 'objective',
-                'abstract', 'outline', 'notes')
-    q = 'SELECT id, {} FROM proposals'.format(', '.join(fields))
+    ignore_keys = {'id', 'recording_release', 'duration'}
+    q = 'SELECT id, data FROM proposals'
     raw_documents = fetchall(q)
     rv = {}
     all_words = Counter()
     for row in raw_documents:
-        rv[row.id] = _get_words(' '.join(getattr(row, k) for k in fields))
+        rv[row.id] = _get_words(' '.join(v for k,v in row.data.items() 
+                                                if k not in ignore_keys))
         all_words.update(set(rv[row.id]))
 
     useful_words = set(k for k,v in all_words.items() if v > 1)
