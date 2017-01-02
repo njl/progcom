@@ -8,6 +8,8 @@ import sys
 import pytz
 import requests
 from raven import Client
+from simplejson import JSONDecodeError
+from requests.exceptions import RequestException
 
 import logic as l
 
@@ -34,7 +36,10 @@ def api_call(uri):
             'X-API-Timestamp': str(timestamp),
             }
     url = 'http://{}{}'.format(API_HOST, uri)
-    return requests.get(url, headers=headers).json()
+    try:
+        return requests.get(url, headers=headers).json()
+    except JSONDecodeError, RequestException:
+        sys.exit(1)
 
 """
 TALK_IDS_FORCE = [1553, 1554, 1555, 1556, 1557, 1559, 1560, 1561, 1562, 1565,
