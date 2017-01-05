@@ -127,11 +127,10 @@ function get_groups(ev){
     });
 }
 
-function batchgroup_val(e){
-    if(e.batchgroup){
-        return e.batchgroup;
-    }
-    return 'ZZZZZZZZZZZZZZ';
+function batchgroup_val(){
+    return function(e){
+        e.batchgroup?e.batchgroup:'ZZZZZZZZZZ';
+    };
 }
 
 $(document).ready(function(){
