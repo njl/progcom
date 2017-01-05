@@ -10,7 +10,6 @@
 </form>
 
 <button type="button" class="btn btn-default" id="get-groups">Get Groupings</button>
-<button type="button" class="btn btn-default" id="show-unassigned">Show/Hide Unassigned</button>
 
 <table class="table table-striped table-compact">
     <thead>
@@ -32,9 +31,7 @@
 </table>
 <script type="underscore/template" id="table_row">
 
-<% if(e.batchgroup || (show_unassigned && e.batchgroup === null)){ %>
-
-<tr <% if(show_unassigned && (e.nom_is_green >= 80 || e.greenness >= 70 || e.nominations >= 3)){ %>
+<tr <% if(e.nom_is_green >= 80 || e.greenness >= 70 || e.nominations >= 3){ %>
         class="success"
     <% } %> >
         <td><%=index+1%></td>
@@ -59,7 +56,6 @@
             <% } %>
         </td>
     </tr>
-<% } %>
 </script>
 {%endblock body%}
 {%block extrajs %}
@@ -79,13 +75,6 @@
 var proposals = {{proposals|tojson}};
 
 var groups = {{groups|tojson}};
-
-var show_unassigned = true;
-
-function toggle_hide_unassigned(){
-    show_unassigned = !show_unassigned;
-    $('table').trigger('rerender');
-}
 
 function handle_batch_click(ev){
     var $this = $(this);
@@ -151,7 +140,6 @@ $(document).ready(function(){
     $('tbody').on('click', '.batchgroup', handle_batch_click);
     $('tbody').on('change', '.batchgroup select', handle_batch_change);
     $('#add-group').on('submit', add_group);
-    $('#show-unassigned').on('click', toggle_hide_unassigned);
 });
 
 </script>
