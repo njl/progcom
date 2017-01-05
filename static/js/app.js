@@ -118,7 +118,7 @@ function table_sorter($table, data_src, row_template, extra_column_functions){
             $this.addClass('warning');
             var column = $this.data().column;
             var value_function = function(x){
-                return x[column];
+                return x[column]?x[column]:'';
             }
             if(extra_column_functions[column]){
                 value_function = extra_column_functions[column]($this);
