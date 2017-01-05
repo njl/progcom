@@ -138,8 +138,15 @@ function get_groups(ev){
     });
 }
 
+function batchgroup_val(e){
+    if(e.batchgroup){
+        return e.batchgroup;
+    }
+    return 'ZZZZZZZZZZZZZZ';
+}
+
 $(document).ready(function(){
-    table_sorter($('table'), proposals, TEMPLATES.table_row);
+    table_sorter($('table'), proposals, TEMPLATES.table_row, {batchgroup:batchgroup_val});
     $('#get-groups').on('click', get_groups);
     $('tbody').on('click', '.batchgroup', handle_batch_click);
     $('tbody').on('change', '.batchgroup select', handle_batch_change);
