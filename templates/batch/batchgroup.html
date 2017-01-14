@@ -95,7 +95,7 @@
                     <tbody>
                     {% for p in proposals %}
                     <tr>
-                        <th>{{p.proposal.title}}</th>
+                        <th>{{p.proposal.data.title}}</th>
                         <td>
                             <select class="acceptance" data-id="{{p.proposal.id}}">
                                 {% with accepted = p.proposal.accepted %}
