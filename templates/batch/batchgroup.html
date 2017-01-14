@@ -8,10 +8,10 @@
 <h4>This Group is Locked <span class="glyphicon glyphicon-lock"></span></h4>
 {% endif%}
 <div class="col-md-12" style="margin-bottom:1em;">
-        <ul class="nav nav-pills nav-justified" id="proposal-tabs">
+        <ul class="nav nav-pills nav-justified" id="proposal-tabs" style="display:flex;flex-direction:row;flex-wrap:wrap;justify-content:flex-start;align-items:stretch;">
             {% for p in proposals %}
-            <li>
-            <a href="#proposal-{{p.proposal.id}}">{{p.proposal.title}} (#{{p.proposal.id}})
+            <li style="width:20%;padding-bottom:0;border:1px solid #eee;">
+                <a href="#proposal-{{p.proposal.id}}" style="height:100%;">{{p.proposal.data.title}} (#{{p.proposal.id}})
                     {% if p.proposal.count and (vote or request.user.email in config.OBSERVER_EMAILS) %}
                     <span class="badge">{{p.proposal.count}} nominations</span>
                     {%endif%}
@@ -80,7 +80,7 @@
     </div>
 
     <script type="underscore/template" id="ordered_row">
-<li class="list-group-item"><span class="glyphicon glyphicon-star"></span> <%=title%> (#<%=id%>)
+<li class="list-group-item"><span class="glyphicon glyphicon-star"></span> <%=data.title%> (#<%=id%>)
             <input type="hidden" name="accept" value="<%=id%>"></li>
     </script>
 
@@ -156,7 +156,7 @@
                             style="display:none;"
                             {%endif%}
                             >
-                            {{p.proposal.title}} (#{{p.proposal.id}})
+                            {{p.proposal.data.title}} (#{{p.proposal.id}})
                         </li>
                             {% endfor %}
                     </ul>

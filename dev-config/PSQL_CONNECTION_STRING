@@ -1,1 +1,1 @@
-postgresql+psycopg2://test:test@localhost:5432/test
+postgresql+psycopg2://progcom:progcom@localhost:5432/progcom

@@ -422,7 +422,7 @@ def toggle_lock_batch(id, lock):
     execute(q, lock, id)
 
 def full_proposal_list(email):
-    q = '''SELECT p.id, p.data->>'title', bg.id as batch_id, p.accepted,
+    q = '''SELECT p.id, p.data->>'title' AS title, bg.id as batch_id, p.accepted,
             array_to_string(p.author_names, ', ') AS author_names,
             COALESCE(bg.name, '') AS batchgroup,
             EXISTS (SELECT 1 FROM users
@@ -589,7 +589,7 @@ def get_my_pycon(user):
     q = 'SELECT batchgroup, accept FROM batchvotes WHERE voter=%s'
     votes = fetchall(q, user)
 
-    q = '''SELECT data->>'title', id,
+    q = '''SELECT data->>'title' AS title, id,
             array_to_string(author_names, ', ') AS author_names,
             accepted
             FROM proposals WHERE batchgroup IS NOT NULL'''
