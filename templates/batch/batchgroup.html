@@ -80,7 +80,7 @@
     </div>
 
     <script type="underscore/template" id="ordered_row">
-<li class="list-group-item"><span class="glyphicon glyphicon-star"></span> <%=data.title%> (#<%=id%>)
+<li class="list-group-item"><span class="glyphicon glyphicon-star"></span> <%=title%> (#<%=id%>)
             <input type="hidden" name="accept" value="<%=id%>"></li>
     </script>
 
@@ -139,7 +139,7 @@
                         {% if v in proposal_map %}
                         <li class="list-group-item batch-vote">
                         <span class="glyphicon glyphicon-star"></span> 
-                        {{proposal_map[v].title}} (#{{v}})
+                        {{proposal_map[v].data.title}} (#{{v}})
                             <input type="hidden" name="accept" value="{{v}}">
                         </li>
                         {% endif %}
@@ -187,7 +187,7 @@
                                 {% for id in v.accept %}
                                 <ul class="list-inline">
                                 {% if id in proposal_map %}
-                                <li>{{proposal_map[id].title}} (#{{id}})</li>
+                                <li>{{proposal_map[id].data.title}} (#{{id}})</li>
                                 {% endif %}
                                 </ul>
                                 {% else %}
