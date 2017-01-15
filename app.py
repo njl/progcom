@@ -268,7 +268,9 @@ def batch_discussion(id):
     group = l.get_group(id)
     if request.user.email in group.author_emails or group.locked:
         abort(404)
-    l.add_batch_message(request.user.id, id, request.values.get('comment'))
+    txt = request.values.get('comment','').strip()
+    if txt:
+        l.add_batch_message(request.user.id, id, txt)
     return render_template('batch/batch_discussion_snippet.html',
                             msgs=l.get_batch_messages(id))
 
