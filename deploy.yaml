@@ -72,7 +72,7 @@
 
 
     #us.pycon.org pull
-      - cron: name="pycon pull" minute="0,15,30,45" job="/opt/progcom/bin/pull >/dev/null 2>&1"
+      - cron: name="pycon pull" minute="0,15,30,45" job="/opt/progcom/bin/pull >/dev/null 2>&1" state=absent
       - cron: name="pycon update" minute="20" hour="7" weekday="1" job="/opt/progcom/bin/weekly_email >/dev/null 2>&1" state=absent
 
       - name: Notify in slack channel
