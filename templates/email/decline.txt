@@ -25,8 +25,7 @@ a limited number of tickets, and we expect to sell out. Waiting to buy
 tickets means you might not be able to come!
 
 If you have any other questions, comments, or feedback, please feel
-free to contact me (njl@njl.us), my co-chair Karen Rustad Tölva, 
-(karen.rustad@gmail.com), or the conference chair, Brandon Rhodes
+free to contact me (njl@njl.us), or the conference chair, Brandon Rhodes
 (pycon.brandon@gmail.com).
 
 On behalf of the PyCon staff, I want to thank you again for your

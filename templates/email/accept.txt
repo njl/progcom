@@ -41,7 +41,7 @@ at PyCon! If you can't afford a ticket and/or travel expenses,
 please apply for financial aid.
 
 More information about financial aid can be found at
-https://us.pycon.org/2017/assistance/. If you're applying, make sure
+https://us.pycon.org/2017/financial-assistance/. If you're applying, make sure
 to mention that you're an accepted speaker.  Please contact the financial
 aid team at pycon-aid@python.org if you have any questions.
 
@@ -49,8 +49,7 @@ If you need assistance with visas or immigration documents, please
 contact our registration team (pycon2017@cteusa.com).
 
 If you have any other questions, comments, or feedback, please feel
-free to contact me (njl@njl.us), my co-chair Karen Rustad Tölva, 
-(karen.rustad@gmail.com), or the conference chair, Brandon Rhodes
+free to contact me (njl@njl.us), or the conference chair, Brandon Rhodes
 (pycon.brandon@gmail.com).
 
 On behalf of the PyCon staff, I want to thank you for your submission.
