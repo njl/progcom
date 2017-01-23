@@ -1027,7 +1027,7 @@ def get_accepted():
                 JOIN batchgroups AS bg
                     ON (p.batchgroup = bg.id)
                 WHERE p.accepted
-            ORDER BY bg_name'''
+            ORDER BY data->>'duration', bg_name'''
     return fetchall(q)
 
 """
@@ -1077,7 +1077,7 @@ def send_emails():
                     ]
                 }
 
-                print _SENDGRID.client.mail.send.post(request_body=msg)
+                print _SENDGRID.client.mail.send.post(request_body=msg).body
                 declined +=1
                 continue
             q = '''INSERT INTO confirmations (proposal, email)
@@ -1105,7 +1105,7 @@ def send_emails():
                 ]
             }
 
-            print _SENDGRID.client.mail.send.post(request_body=msg)
+            print _SENDGRID.client.mail.send.post(request_body=msg).body
 
             acceptance +=1
     print 'Declined: {}'.format(declined)

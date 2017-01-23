@@ -13,8 +13,9 @@ and we had to make many hard choices.
 
 We'd like to have a collection of past proposals we can use in the
 future to help potential PyCon speakers out. If you are amenable
-to us publicly (and potentially anonymously) sharing your proposal, please
-reply to this email and let me know!
+to us publicly sharing your proposal, please reply to this email and
+let me know! We will work with you to make sure we anonymize your
+proposal properly.
 
 I hope you still decide to attend PyCon! It's an amazing conference,
 and we still have several venues in which you could deliver your
@@ -24,8 +25,8 @@ proposals and discussions.
 
 Many subjects that aren't good fits for formal, scheduled talks are
 excellent subjects for open spaces! If you have a passion for your
-topic, an open space is a great way to share your knowledge and passion
-with others.
+topic, an open space is a great way to connect with others who
+share your interest.
 
 You can learn more at https://us.pycon.org/2017/about/
 
