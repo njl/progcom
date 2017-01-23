@@ -1019,10 +1019,10 @@ def set_schedule(proposal, slot):
     execute(q, proposal, proposal, slot)
 
 def get_accepted():
-    q = '''SELECT p.id, data->>'title',
+    q = '''SELECT p.id, data->>'title' AS title,
             array_to_string(author_names, ', ') AS author_names,
             bg.name AS bg_name,
-            duration
+            data->>'duration' AS duration
             FROM proposals AS p
                 JOIN batchgroups AS bg
                     ON (p.batchgroup = bg.id)
