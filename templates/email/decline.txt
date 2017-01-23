@@ -24,11 +24,10 @@ and open spaces provide dedicated rooms for informal, unscheduled
 proposals and discussions.
 
 Many subjects that aren't good fits for formal, scheduled talks are
-excellent subjects for open spaces! If you have a passion for your
-topic, an open space is a great way to connect with others who
-share your interest.
-
-You can learn more at https://us.pycon.org/2017/about/
+excellent subjects for open spaces! If you have a passion for your topic,
+then scheduling and hosting an open space is a great way to connect with
+others who share your interest. You can learn more about open spaces on
+the PyCon website, https://us.pycon.org/2017/events/open-spaces/
 
 If you plan to come, you should register at
 https://us.pycon.org/2017/registration/ as soon as possible. We have
