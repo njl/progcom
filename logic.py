@@ -1052,9 +1052,15 @@ def send_emails():
     decline = _JINJA.get_template('email/decline.txt')
     acceptance = 0
     declined = 0
+    q = 'SELECT proposal, email FROM confirmations'
+    already_sent = {(x.proposal, x.email) 
+                        for x in fetchall(q)}
     for p in fetchall('SELECT * FROM proposals'):
         for name, email in zip(p.author_names, p.author_emails):
-            if not email:
+            if not email or '@' not in email:
+                continue
+            if (p.id, email) in already_sent:
+                print 'ALREADY SENT PROPOSAL #{} TO {}'.format(p.id, email)
                 continue
             if not p.accepted:
                 text = decline.render(name=name, title=p.data['title'])
