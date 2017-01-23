@@ -984,7 +984,7 @@ def get_schedule():
                     schedules.duration as given_duration,
                     schedules.id as schedule_id,
                     batchgroups.name AS bg_name,
-                    proposals.data->>'title',
+                    proposals.data->>'title' AS title,
                     proposals.id AS proposal_id,
                     array_to_string(proposals.author_names, ', ') AS author_names
             FROM schedules 
