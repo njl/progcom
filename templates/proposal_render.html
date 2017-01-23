@@ -3,11 +3,13 @@
 {%macro proposal_render(proposal, anonymize=False, 
                         hidetimes=False) %}
 
+      {% if not hidetimes %}
   <ul class="nav nav-tabs" role="tablist">
       {%for version in proposal.data_history%}
       <li class="{%if loop.first%} active{%endif%}"><a class="tab-button" href="#rev-{{loop.index0}}">{{version.when|date}}</a></li>
       {%endfor%}
   </ul>
+    {% endif %}
 
   <div class="tab-content">
     {% for version in proposal.data_history%}

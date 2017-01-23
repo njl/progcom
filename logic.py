@@ -1057,12 +1057,12 @@ def send_emails():
             if not email:
                 continue
             if not p.accepted:
-                text = decline.render(name=name, title=p.title)
+                text = decline.render(name=name, title=p.data['title'])
                 msg = {
                     "personalizations": [
                         {
                             "to": [{"email": email}],
-                            "subject": u'PyCon 2017: Proposal Decision -- '+p.title,
+                            "subject": u'PyCon 2017: Proposal Decision -- '+p.data['title'],
                         }
                     ],
                     "from": {
@@ -1085,12 +1085,12 @@ def send_emails():
             id = scalar(q, p.id, email)
             key = _CONFIRMATION_ITSD.dumps(id)
             url = 'http://{}/confirmation/{}/'.format(_WEB_HOST, key)
-            text = accepted.render(name=name, title=p.title, url=url)
+            text = accepted.render(name=name, title=p.data['title'], url=url)
             msg = {
                 "personalizations": [
                     {
                         "to": [{"email": email}],
-                        "subject": u'PyCon 2017: Talk Acceptance -- '+p.title,
+                        "subject": u'PyCon 2017: Talk Acceptance -- '+p.data['title'],
                     }
                 ],
                 "from": {
