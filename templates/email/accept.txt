@@ -64,3 +64,8 @@ See you in Portland!
 Ned Jackson Lovely
 Program Chair, PyCon 2017
 njl@njl.us
+
+P.S. We'd like to have a collection of past proposals we can use in the
+future to help potential PyCon speakers out. If you are amenable
+to us publicly sharing your proposal, please reply to this email and let
+me know!

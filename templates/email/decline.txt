@@ -17,6 +17,11 @@ material. Lightning talks are quick, five-minute talks on any topic,
 and open spaces provide dedicated rooms for informal, unscheduled
 proposals and discussions.
 
+Many subjects that aren't good fits for formal, scheduled talks are
+excellent subjects for open spaces! If you have a passion for your
+topic, an open space is a great way to share your knowledge and passion
+with others.
+
 You can learn more at https://us.pycon.org/2017/about/
 
 If you plan to come, you should register at
@@ -39,3 +44,8 @@ I hope to see you in Portland!
 Ned Jackson Lovely
 Program Chair, PyCon 2017
 njl@njl.us
+
+P.S. We'd like to have a collection of past proposals we can use in the
+future to help potential PyCon speakers out. If you are amenable
+to us publicly (and potentially anonymously) sharing your proposal, please
+reply to this email and let me know!
