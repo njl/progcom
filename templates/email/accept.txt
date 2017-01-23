@@ -27,6 +27,11 @@ If you have particular scheduling requirements (if you plan to come to
 PyCon late or leave early, for example), please let me know today or
 tomorrow, so that I can take your requirements into account.
 
+We'd like to have a collection of past proposals we can use in the
+future to help potential PyCon speakers out. If you are amenable
+to us publicly sharing your proposal, please reply to this email and let
+me know!
+
 You should register for the conference at
 https://us.pycon.org/2017/registration/
 as soon as possible; please don't delay, tickets do sell out!
@@ -41,9 +46,11 @@ at PyCon! If you can't afford a ticket and/or travel expenses,
 please apply for financial aid.
 
 More information about financial aid can be found at
-https://us.pycon.org/2017/financial-assistance/. If you're applying, make sure
-to mention that you're an accepted speaker.  Please contact the financial
-aid team at pycon-aid@python.org if you have any questions.
+https://us.pycon.org/2017/financial-assistance/
+
+If you're applying for financial aid, make sure to mention that you're
+an accepted speaker.  Please contact the financial aid team at
+pycon-aid@python.org if you have any questions.
 
 If you need assistance with visas or immigration documents, please
 contact our registration team (pycon2017@cteusa.com).
@@ -60,12 +67,6 @@ speakers. We're thrilled that you're one of them.
 See you in Portland!
 
 
-
 Ned Jackson Lovely
 Program Chair, PyCon 2017
 njl@njl.us
-
-P.S. We'd like to have a collection of past proposals we can use in the
-future to help potential PyCon speakers out. If you are amenable
-to us publicly sharing your proposal, please reply to this email and let
-me know!

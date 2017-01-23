@@ -11,6 +11,11 @@ year was no exception. Both the quantity and the quality of proposals
 we received were extraordinary. We only have 95 spaces in the schedule,
 and we had to make many hard choices.
 
+We'd like to have a collection of past proposals we can use in the
+future to help potential PyCon speakers out. If you are amenable
+to us publicly (and potentially anonymously) sharing your proposal, please
+reply to this email and let me know!
+
 I hope you still decide to attend PyCon! It's an amazing conference,
 and we still have several venues in which you could deliver your
 material. Lightning talks are quick, five-minute talks on any topic,
@@ -44,8 +49,3 @@ I hope to see you in Portland!
 Ned Jackson Lovely
 Program Chair, PyCon 2017
 njl@njl.us
-
-P.S. We'd like to have a collection of past proposals we can use in the
-future to help potential PyCon speakers out. If you are amenable
-to us publicly (and potentially anonymously) sharing your proposal, please
-reply to this email and let me know!
