@@ -5,7 +5,7 @@ import csv
 import sys
 
 def main(out):
-    q = 'SELECT schedules.*, proposals.title from schedules JOIN proposals ON proposals.id=schedules.proposal'
+    q = "SELECT schedules.*, proposals.data->>'title' as title from schedules JOIN proposals ON proposals.id=schedules.proposal"
     keys = ('proposal', 'day', 'room', 'time', 'duration', 'title')
     with open(out, 'wb') as csvfile:
         writer = csv.writer(csvfile)
